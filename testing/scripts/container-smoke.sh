@@ -56,8 +56,12 @@ $drafts = $ability->execute(
     )
 );
 
-if ( is_wp_error( $published ) || is_wp_error( $drafts ) ) {
-    fwrite( STDERR, "Author could not execute Kiln post discovery.\n" );
+if ( is_wp_error( $published ) ) {
+    fwrite( STDERR, "Author could not list published posts: " . $published->get_error_code() . ": " . $published->get_error_message() . "\n" );
+    exit( 1 );
+}
+if ( is_wp_error( $drafts ) ) {
+    fwrite( STDERR, "Author could not list drafts: " . $drafts->get_error_code() . ": " . $drafts->get_error_message() . "\n" );
     exit( 1 );
 }
 
