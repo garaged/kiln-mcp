@@ -13,10 +13,13 @@ use KilnMcp\Capability\SiteHealthSummary\SiteHealthSummary;
 use KilnMcp\Domain\Policy\ToolPolicy;
 use KilnMcp\Infrastructure\WordPress\AdapterDependency;
 use KilnMcp\Infrastructure\WordPress\AuditReceiptStore;
+use KilnMcp\Infrastructure\WordPress\ContentWorkflowRegistrar;
 use KilnMcp\Infrastructure\WordPress\DraftAuthoringRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
+use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
+use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
 /**
  * Composes bounded capabilities after all required WordPress plugins load.
@@ -63,9 +66,12 @@ final class Plugin {
 
 		$health_registrar          = new SiteHealthSummaryRegistrar( new SiteHealthSummary( $this->version ) );
 		$audit_store               = new AuditReceiptStore();
+		$approval_store            = new WorkflowApprovalStore();
 		$post_registrar            = new PostDiscoveryRegistrar( $audit_store );
 		$post_read_registrar       = new PostReadRegistrar( $audit_store );
 		$draft_authoring_registrar = new DraftAuthoringRegistrar( $audit_store );
+		$workflow_registrar        = new ContentWorkflowRegistrar( $audit_store, $approval_store );
+		$approval_page             = new WorkflowApprovalPage( $approval_store );
 
 		add_action( 'wp_abilities_api_categories_init', array( $health_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $health_registrar, 'register_ability' ) );
@@ -74,6 +80,9 @@ final class Plugin {
 		add_action( 'wp_abilities_api_init', array( $post_read_registrar, 'register_ability' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $draft_authoring_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $draft_authoring_registrar, 'register_abilities' ) );
+		add_action( 'wp_abilities_api_categories_init', array( $workflow_registrar, 'register_category' ) );
+		add_action( 'wp_abilities_api_init', array( $workflow_registrar, 'register_abilities' ) );
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
+		add_action( 'admin_menu', array( $approval_page, 'register_page' ) );
 	}
 }

@@ -13,10 +13,14 @@ namespace KilnMcp\Capability\PostDiscovery;
  * Creates a receipt without caller, request, or content data.
  */
 final class AuditReceipt {
-	public const LIST_POSTS_ABILITY_NAME        = 'kiln/list-posts';
-	public const READ_POST_ABILITY_NAME         = 'kiln/read-post';
-	public const CREATE_POST_DRAFT_ABILITY_NAME = 'kiln/create-post-draft';
-	public const UPDATE_POST_DRAFT_ABILITY_NAME = 'kiln/update-post-draft';
+	public const LIST_POSTS_ABILITY_NAME                = 'kiln/list-posts';
+	public const READ_POST_ABILITY_NAME                 = 'kiln/read-post';
+	public const CREATE_POST_DRAFT_ABILITY_NAME         = 'kiln/create-post-draft';
+	public const UPDATE_POST_DRAFT_ABILITY_NAME         = 'kiln/update-post-draft';
+	public const PUBLISH_POST_ABILITY_NAME              = 'kiln/publish-post';
+	public const SCHEDULE_POST_PUBLICATION_ABILITY_NAME = 'kiln/schedule-post-publication';
+	public const TRASH_POST_ABILITY_NAME                = 'kiln/trash-post';
+	public const RESTORE_POST_ABILITY_NAME              = 'kiln/restore-post';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
