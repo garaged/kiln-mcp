@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+class WP_Post {
+	public int $ID;
+	public string $post_title;
+	public string $post_status;
+}
+
 /**
  * Static-analysis-only declarations for WordPress runtime APIs.
  *
@@ -35,6 +41,13 @@ function current_user_can( string $capability ): bool {
 }
 
 /**
+ * @return int
+ */
+function get_current_user_id(): int {
+	return 0;
+}
+
+/**
  * @return string
  */
 function get_bloginfo( string $show ): string {
@@ -60,4 +73,44 @@ function get_stylesheet(): string {
  */
 function __( string $text, string $domain = 'default' ): string {
 	return $text;
+}
+
+/**
+ * @param array<string, int|string> $args Query arguments.
+ * @return array<int, WP_Post>
+ */
+function get_posts( array $args ): array {
+	return array();
+}
+
+/**
+ * @param WP_Post $post Post returned by query.
+ * @return string
+ */
+function get_post_modified_time( string $format, bool $gmt, WP_Post $post ): string {
+	return '';
+}
+
+/**
+ * @param WP_Post $post Post returned by query.
+ * @return string
+ */
+function get_permalink( WP_Post $post ): string {
+	return '';
+}
+
+/**
+ * @param mixed $default Default value.
+ * @return mixed
+ */
+function get_option( string $option, mixed $default = false ): mixed {
+	return $default;
+}
+
+/**
+ * @param mixed $value Option value.
+ * @return bool
+ */
+function update_option( string $option, mixed $value, bool $autoload = false ): bool {
+	return true;
 }

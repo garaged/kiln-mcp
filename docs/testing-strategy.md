@@ -14,9 +14,11 @@
 
 A unit-test count is not a coverage target. Every requirement has a behavior-focused test at the lowest credible layer; boundary and security properties receive integration or contract coverage.
 
-## M1 test boundary
+## Milestone boundaries
 
-M1 combines unit tests for the exact data/schema allow-list with a real WordPress contract test. The container runs the official MCP Adapter plus Kiln, obtains the registered ability, verifies administrator execution and expected keys, then proves a subscriber receives a WordPress permission error. Protocol-stream interoperability is deliberately deferred until the first content capability adds a fixture-driven MCP client contract.
+M1 combines unit tests for the exact data/schema allow-list with a real WordPress contract test. The container runs the official MCP Adapter plus Kiln, obtains the registered ability, verifies administrator execution and expected keys, then proves a subscriber receives a WordPress permission error.
+
+M2 adds unit coverage for strict discovery input and receipt redaction. Its real-WordPress smoke runner creates published, private, and per-author draft fixtures; it proves the hard 20-item bound, the exact metadata-only response contract, author draft isolation, subscriber denial, and storage of allowed and denied redacted receipts. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
 
 ## Container baseline
 

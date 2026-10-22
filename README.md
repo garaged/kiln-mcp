@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: Milestone 1. The first administrator-only, read-only diagnostic capability is available.
+> Status: Milestone 2 in development. The first diagnostic capability is available; bounded, audited content discovery is being validated.
 
 ## Principles
 
@@ -15,11 +15,17 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 - **Auditable.** Security-relevant actions must produce redacted, locally retained audit evidence.
 - **FLOSS.** GPL-2.0-or-later, no telemetry, no SaaS dependency, no proprietary runtime.
 
-## First capability
+## Available capability
 
 `kiln/site-health-summary` is discoverable through the official adapter, but only a WordPress identity with `manage_options` can execute it. Its result is deliberately limited to Kiln/WordPress/PHP major-minor versions, multisite state, active-theme stylesheet, and `available` status.
 
 It does not expose site title or URL, users, credentials, options, plugin inventory, database details, filesystem paths, or arbitrary server diagnostics.
+
+## In-progress capability: bounded post discovery
+
+Milestone 2 adds `kiln/list-posts` for identities with `edit_posts`. It accepts only a post status (`publish` or `draft`), a 1–20 result limit, and a positive page number. It returns only post ID, title, status, modification time, and permalink; it never returns bodies, private posts, arbitrary query filters, or bulk output. Authors without `edit_others_posts` are restricted to their own drafts.
+
+Every successful or denied discovery attempt stores a bounded, local receipt containing only schema version, timestamp, ability name, outcome, caller capability class, and result count. It never retains request input, content, URLs, user identity, or credentials.
 
 Install and activate [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) before activating Kiln. For local clients, use the adapter's documented WP-CLI/STDIO server. For remote access, use its authenticated HTTP transport over HTTPS; Kiln does not add a relay.
 
@@ -42,6 +48,6 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 ## Status and roadmap
 
-Milestone 1 adds a single, safe, end-to-end diagnostic capability. It deliberately excludes content access, configuration UI, audit persistence, public unauthenticated access, relays, and all site-changing tools.
+Milestone 1 delivered a single, safe, end-to-end diagnostic capability. Milestone 2 is implementing bounded, read-only post metadata discovery with redacted local audit receipts. Both deliberately exclude public unauthenticated access, relays, generic content/database access, and site-changing tools.
 
-The roadmap and acceptance criteria live in [specs/requirements/m1-read-only-diagnostics.md](specs/requirements/m1-read-only-diagnostics.md).
+The current acceptance criteria live in [specs/requirements/m2-content-discovery-audit.md](specs/requirements/m2-content-discovery-audit.md).

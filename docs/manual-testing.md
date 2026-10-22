@@ -1,6 +1,6 @@
 # Manual testing
 
-## Milestone 1
+## Milestone 2
 
 ### Automated real-WordPress contract
 
@@ -10,7 +10,13 @@ Run:
     make container-test
     make container-down
 
-Expected result: the runner installs a pinned MCP Adapter plugin, activates Kiln MCP, confirms the `kiln/site-health-summary` ability is registered, confirms its exact output contract for an administrator, and proves that a subscriber is denied.
+Expected result: the runner installs a pinned MCP Adapter plugin, activates Kiln MCP, confirms the diagnostic and discovery abilities are registered, and proves all of the following in a real WordPress instance:
+
+- an author can retrieve at most 20 public or self-authored draft metadata records;
+- the response contains only ID, title, status, modification time, and permalink;
+- private posts and another user's draft are not exposed;
+- a subscriber is denied both capabilities; and
+- successful and denied discovery attempts create only redacted local audit receipts.
 
 ### Local quality
 
