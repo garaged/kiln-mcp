@@ -88,10 +88,15 @@ final class PostDiscoveryRegistrar {
 	 * @return array<string, array<int, array<string, int|string>>>
 	 */
 	public function execute( array $input ): array {
-		$request = PostDiscoveryRequest::from_input( $input );
-		$items   = array();
+		$request    = PostDiscoveryRequest::from_input( $input );
+		$query_args = $request->to_query_arguments();
+		$items      = array();
 
-		foreach ( get_posts( $request->to_query_arguments() ) as $post ) {
+		if ( 'draft' === $request->status && ! current_user_can( 'edit_others_posts' ) ) {
+			$query_args['author'] = get_current_user_id();
+		}
+
+		foreach ( get_posts( $query_args ) as $post ) {
 			$items[] = array(
 				'id'          => $post->ID,
 				'title'       => $post->post_title,
@@ -101,7 +106,7 @@ final class PostDiscoveryRegistrar {
 			);
 		}
 
-		$this->audit_store->append( AuditReceipt::create( 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) ) );
+		$this->audit_store->append( AuditReceipt::create( 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) );
 
 		return array( 'items' => $items );
 	}
@@ -141,8 +146,9 @@ final class PostDiscoveryRegistrar {
 			'additionalProperties' => false,
 			'properties'           => array(
 				'items' => array(
-					'type'  => 'array',
-					'items' => array(
+					'type'     => 'array',
+					'maxItems' => 20,
+					'items'    => array(
 						'type'                 => 'object',
 						'additionalProperties' => false,
 						'properties'           => array(

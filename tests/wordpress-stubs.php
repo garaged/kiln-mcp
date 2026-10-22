@@ -41,6 +41,13 @@ function current_user_can( string $capability ): bool {
 }
 
 /**
+ * @return int
+ */
+function get_current_user_id(): int {
+	return 0;
+}
+
+/**
  * @return string
  */
 function get_bloginfo( string $show ): string {
