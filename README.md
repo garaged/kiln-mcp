@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: Milestone 3 in validation. Diagnostics, bounded discovery, and redacted single-post reading are available for acceptance testing.
+> Status: Milestone 4 is in development. M0–M3 delivered secure diagnostics, bounded discovery, and redacted single-post reading; M4 adds draft-only authoring with conflict refusal.
 
 ## Principles
 
@@ -48,6 +48,6 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 ## Status and roadmap
 
-M3 is validating narrow, per-post content access. It deliberately excludes public unauthenticated access, relays, generic content/database access, and site-changing tools.
+The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-The current acceptance criteria live in [specs/requirements/m3-single-post-read.md](specs/requirements/m3-single-post-read.md).
+M4's acceptance criteria are in [specs/requirements/m4-safe-draft-authoring.md](specs/requirements/m4-safe-draft-authoring.md). It deliberately excludes publishing, deletion, site configuration, generic content/database access, and relays.

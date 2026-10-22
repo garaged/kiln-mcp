@@ -18,7 +18,11 @@ A unit-test count is not a coverage target. Every requirement has a behavior-foc
 
 M1 combines unit tests for the exact data/schema allow-list with a real WordPress contract test. The container runs the official MCP Adapter plus Kiln, obtains the registered ability, verifies administrator execution and expected keys, then proves a subscriber receives a WordPress permission error.
 
-M2 adds unit coverage for strict discovery input and receipt redaction. Its real-WordPress smoke runner creates published, private, and per-author draft fixtures; it proves the hard 20-item bound, the exact metadata-only response contract, author draft isolation, subscriber denial, and storage of allowed and denied redacted receipts. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
+M2 adds unit coverage for strict discovery input and receipt redaction. Its real-WordPress smoke runner creates published, private, and per-author draft fixtures; it proves the hard 20-item bound, the exact metadata-only response contract, author draft isolation, subscriber denial, and storage of allowed and denied redacted receipts.
+
+M3 adds unit coverage for exact-ID read input and content redaction. Its real-WordPress contract proves per-post authorization, markup/shortcode removal, private exclusion, owned-draft access, output bounds, and redacted denied receipts.
+
+M4 adds pure tests for closed draft-create/update requests and deterministic modification-token construction. Its real-WordPress contract proves creation under active-user ownership, exact draft update, stale-token conflict refusal, status preservation, author/editor/subscriber policy, markup/unknown-input refusal, output shape, and receipt redaction. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
 
 ## Container baseline
 
