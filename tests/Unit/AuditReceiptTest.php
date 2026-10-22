@@ -14,8 +14,8 @@ final class AuditReceiptTest extends TestCase {
 		self::assertSame(
 			array(
 				'schema_version'          => '1.0',
-				'occurred_at'             => '2026-10-22T00:00:00+00:00',
-				'ability_id'              => 'kiln/list-posts',
+				'timestamp'               => '2026-10-22T00:00:00+00:00',
+				'ability'                 => 'kiln/list-posts',
 				'outcome'                 => 'allowed',
 				'caller_capability_class' => 'edit_posts',
 				'result_count'            => 3,

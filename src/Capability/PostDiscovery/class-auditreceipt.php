@@ -18,11 +18,11 @@ final class AuditReceipt {
 	/**
 	 * @return array<string, int|string>
 	 */
-	public static function create( string $outcome, string $capability_class, int $result_count, string $occurred_at ): array {
+	public static function create( string $outcome, string $capability_class, int $result_count, string $timestamp ): array {
 		return array(
 			'schema_version'          => '1.0',
-			'occurred_at'             => $occurred_at,
-			'ability_id'              => self::ABILITY_NAME,
+			'timestamp'               => $timestamp,
+			'ability'                 => self::ABILITY_NAME,
 			'outcome'                 => $outcome,
 			'caller_capability_class' => $capability_class,
 			'result_count'            => $result_count,
