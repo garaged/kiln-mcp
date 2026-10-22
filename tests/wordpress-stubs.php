@@ -165,7 +165,7 @@ function wp_strip_all_tags( string $content, bool $remove_breaks = false ): stri
  * @return int|WP_Error
  */
 function wp_insert_post( array $postarr, bool $wp_error = false ): int|WP_Error {
-	return 1;
+	return $wp_error ? new WP_Error() : 1;
 }
 
 /**
@@ -173,7 +173,7 @@ function wp_insert_post( array $postarr, bool $wp_error = false ): int|WP_Error 
  * @return int|WP_Error
  */
 function wp_update_post( array $postarr, bool $wp_error = false ): int|WP_Error {
-	return 1;
+	return $wp_error ? new WP_Error() : 1;
 }
 
 /**
@@ -195,8 +195,7 @@ function wp_generate_uuid4(): string {
 	return '00000000-0000-4000-8000-000000000000';
 }
 
-function update_post_meta( int $post_id, string $meta_key, string $meta_value ): bool {
-	return true;
+function update_post_meta( int $post_id, string $meta_key, string $meta_value ): void {
 }
 
 function get_post_meta( int $post_id, string $meta_key, bool $single = false ): string {

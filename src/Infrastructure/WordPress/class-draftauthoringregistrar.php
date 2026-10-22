@@ -128,7 +128,7 @@ final class DraftAuthoringRegistrar {
 	 */
 	public function create_draft( array $input ): array|WP_Error {
 		$permission = $this->can_create_draft( $input );
-		if ( true !== $permission ) {
+		if ( $permission instanceof WP_Error ) {
 			return $permission;
 		}
 
@@ -201,7 +201,7 @@ final class DraftAuthoringRegistrar {
 	 */
 	public function update_draft( array $input ): array|WP_Error {
 		$permission = $this->can_update_draft( $input );
-		if ( true !== $permission ) {
+		if ( $permission instanceof WP_Error ) {
 			return $permission;
 		}
 
