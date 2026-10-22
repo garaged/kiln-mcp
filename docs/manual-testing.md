@@ -1,5 +1,25 @@
 # Manual testing
 
+## Milestone 5
+
+### Automated real-WordPress contract
+
+Run:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: M1–M4 regression coverage remains green, and M5 additionally proves that an exact current draft can be published or scheduled; a published post can be moved to WordPress Trash then restored as a draft; a consumed approval cannot be replayed; raw approval values are absent from local approval storage; and a subscriber is denied every workflow ability.
+
+### Local administrator flow
+
+1. Sign in as a WordPress administrator and open **Tools → Kiln MCP approvals**.
+2. Select the exact action and enter one admitted standard-post ID. The page refuses an unavailable source state.
+3. Copy the displayed token immediately. It expires after ten minutes and is not shown again.
+4. Use it only with the matching M5 ability, target ID, and current `modified_token` from `kiln/read-post`.
+5. Confirm that reuse, a changed post version, a different action or ID, and an expired token are refused. No permanent deletion route exists.
+
 ## Milestone 4
 
 ### Automated real-WordPress contract

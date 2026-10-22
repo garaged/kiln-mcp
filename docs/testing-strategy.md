@@ -22,7 +22,9 @@ M2 adds unit coverage for strict discovery input and receipt redaction. Its real
 
 M3 adds unit coverage for exact-ID read input and content redaction. Its real-WordPress contract proves per-post authorization, markup/shortcode removal, private exclusion, owned-draft access, output bounds, and redacted denied receipts.
 
-M4 adds pure tests for closed draft-create/update requests and deterministic modification-token construction. Its real-WordPress contract proves creation under active-user ownership, exact draft update, stale-token conflict refusal, status preservation, author/editor/subscriber policy, markup/unknown-input refusal, output shape, and receipt redaction. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
+M4 adds pure tests for closed draft-create/update requests and deterministic modification-token construction. Its real-WordPress contract proves creation under active-user ownership, exact draft update, stale-token conflict refusal, status preservation, author/editor/subscriber policy, markup/unknown-input refusal, output shape, and receipt redaction.
+
+M5 adds pure approval-record tests and a real-WordPress lifecycle contract. It proves hash-only local approval storage, exact action/target/version binding, expiry semantics, single-use replay refusal, administrator-only local issuance wiring, current-token rechecks, publish/schedule/trash/restore result states, recovery from Trash, fixed metadata, redacted receipts, and subscriber denial. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
 
 ## Container baseline
 

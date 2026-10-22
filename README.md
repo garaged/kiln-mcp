@@ -22,10 +22,16 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 | `kiln/site-health-summary` | `manage_options` | fixed, allow-listed runtime summary |
 | `kiln/list-posts` | `edit_posts` | maximum 20 public or authorized draft metadata records |
 | `kiln/read-post` | `edit_post` for the exact post | one standard published/draft post as up to 12,000 characters of plain text |
+| `kiln/publish-post` | `edit_post` plus local administrator approval | one current unprotected draft → published |
+| `kiln/schedule-post-publication` | `edit_post` plus local administrator approval | one current unprotected draft → future UTC publication |
+| `kiln/trash-post` | `edit_post` plus local administrator approval | one current unprotected draft/published post → WordPress Trash |
+| `kiln/restore-post` | `edit_post` plus local administrator approval | one current unprotected trashed post → draft |
 
 The post reader excludes private, scheduled, trashed, password-protected, and custom-post-type content. It removes shortcodes and markup, reports truncation, and labels returned content as untrusted data. It does not expose user identity, comments, revisions, custom fields, media metadata, raw HTML, or generic post properties.
 
-All discovery and post-read outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
+Lifecycle approvals are issued only from **Tools → Kiln MCP approvals** by a `manage_options` administrator. Kiln stores only an approval hash, exact action/target/version binding, expiry, and consumed state; tokens expire in ten minutes, are one-time, and are never issued or returned through MCP.
+
+All discovery, authoring, and lifecycle outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
 
 Install and activate [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) before activating Kiln. For local clients, use the adapter's documented WP-CLI/STDIO server. For remote access, use its authenticated HTTP transport over HTTPS; Kiln does not add a relay.
 

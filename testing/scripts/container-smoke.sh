@@ -200,8 +200,112 @@ if ( is_wp_error( $current ) || is_wp_error( $updated ) || "draft" !== $updated[
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-author '
+$create   = wp_get_ability( "kiln/create-post-draft" );
+$publish  = wp_get_ability( "kiln/publish-post" );
+$schedule = wp_get_ability( "kiln/schedule-post-publication" );
+$trash    = wp_get_ability( "kiln/trash-post" );
+$restore  = wp_get_ability( "kiln/restore-post" );
+$store    = new \KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore();
+
+if ( null === $create || null === $publish || null === $schedule || null === $trash || null === $restore ) {
+    fwrite( STDERR, "Kiln M5 workflow abilities were not registered.\n" );
+    exit( 1 );
+}
+
+$published_draft = $create->execute(
+    array(
+        "title"   => "Kiln M5 publish fixture",
+        "content" => "Publish fixture body",
+    )
+);
+if ( is_wp_error( $published_draft ) ) {
+    fwrite( STDERR, "Could not create the M5 publish fixture.\n" );
+    exit( 1 );
+}
+
+$publish_approval = $store->issue( "publish", $published_draft["id"], $published_draft["modified_token"] );
+$published = $publish->execute(
+    array(
+        "post_id"                 => $published_draft["id"],
+        "expected_modified_token" => $published_draft["modified_token"],
+        "approval_token"          => $publish_approval,
+    )
+);
+$expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink" );
+if ( is_wp_error( $published ) || $expected_keys !== array_keys( $published ) || "publish" !== $published["status"] || $published_draft["modified_token"] === $published["modified_token"] ) {
+    fwrite( STDERR, "Kiln M5 did not publish one approved current draft.\n" );
+    exit( 1 );
+}
+
+$publish_replay = $publish->execute(
+    array(
+        "post_id"                 => $published_draft["id"],
+        "expected_modified_token" => $published_draft["modified_token"],
+        "approval_token"          => $publish_approval,
+    )
+);
+if ( ! is_wp_error( $publish_replay ) || "publish" !== get_post_status( $published_draft["id"] ) ) {
+    fwrite( STDERR, "Kiln M5 did not refuse approval replay.\n" );
+    exit( 1 );
+}
+
+$trash_approval = $store->issue( "trash", $published["id"], $published["modified_token"] );
+$trashed = $trash->execute(
+    array(
+        "post_id"                 => $published["id"],
+        "expected_modified_token" => $published["modified_token"],
+        "approval_token"          => $trash_approval,
+    )
+);
+if ( is_wp_error( $trashed ) || "trash" !== $trashed["status"] ) {
+    fwrite( STDERR, "Kiln M5 did not trash an approved published post.\n" );
+    exit( 1 );
+}
+
+$restore_approval = $store->issue( "restore", $trashed["id"], $trashed["modified_token"] );
+$restored = $restore->execute(
+    array(
+        "post_id"                 => $trashed["id"],
+        "expected_modified_token" => $trashed["modified_token"],
+        "approval_token"          => $restore_approval,
+    )
+);
+if ( is_wp_error( $restored ) || "draft" !== $restored["status"] ) {
+    fwrite( STDERR, "Kiln M5 did not restore an approved trashed post as a draft.\n" );
+    exit( 1 );
+}
+
+$scheduled_draft = $create->execute(
+    array(
+        "title"   => "Kiln M5 schedule fixture",
+        "content" => "Schedule fixture body",
+    )
+);
+$publish_at = gmdate( "c", time() + HOUR_IN_SECONDS );
+$schedule_approval = $store->issue( "schedule", $scheduled_draft["id"], $scheduled_draft["modified_token"] );
+$scheduled = $schedule->execute(
+    array(
+        "post_id"                 => $scheduled_draft["id"],
+        "expected_modified_token" => $scheduled_draft["modified_token"],
+        "approval_token"          => $schedule_approval,
+        "publish_at"              => $publish_at,
+    )
+);
+if ( is_wp_error( $scheduled ) || "future" !== $scheduled["status"] || get_post_time( "c", true, $scheduled["id"] ) !== $publish_at ) {
+    fwrite( STDERR, "Kiln M5 did not schedule one approved draft at the requested UTC time.\n" );
+    exit( 1 );
+}
+
+$records = get_option( "kiln_mcp_workflow_approvals", array() );
+if ( ! is_array( $records ) || false !== strpos( serialize( $records ), $publish_approval ) ) {
+    fwrite( STDERR, "Kiln M5 approval storage retained a raw approval token.\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
         "kiln/read-post" === $ability_name
