@@ -352,18 +352,67 @@ final class DraftAuthoringRegistrar {
 	 * @return array<string, mixed>
 	 */
 	private static function update_input_schema(): array {
-		$schema                                = self::create_input_schema();
-		$schema['properties']['post_id']        = array(
+		$schema = self::create_input_schema();
+
+		$schema['properties']['post_id'] = array(
 			'type'    => 'integer',
 			'minimum' => 1,
 		);
+
 		$schema['properties']['expected_modified_token'] = array(
 			'type'      => 'string',
 			'minLength' => 64,
 			'maxLength' => 64,
-			'pattern'   => '^[a-f0-9]{64}$',
+			'pattern'   => '^[a-f0-9]{64}
+
+		return $schema;
+	}
+
+	/**
+	 * Returns the fixed draft metadata output JSON Schema.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function output_schema(): array {
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(
+				'id'             => array( 'type' => 'integer' ),
+				'title'          => array( 'type' => 'string' ),
+				'status'         => array(
+					'type' => 'string',
+					'enum' => array( 'draft' ),
+				),
+				'modified_at'    => array( 'type' => 'string' ),
+				'modified_token' => array(
+					'type'      => 'string',
+					'minLength' => 64,
+					'maxLength' => 64,
+					'pattern'   => '^[a-f0-9]{64}$',
+				),
+				'permalink'      => array( 'type' => 'string' ),
+			),
+			'required'             => array(
+				'id',
+				'title',
+				'status',
+				'modified_at',
+				'modified_token',
+				'permalink',
+			),
 		);
-		$schema['required'] = array( 'post_id', 'expected_modified_token', 'title', 'content' );
+	}
+}
+,
+		);
+
+		$schema['required'] = array(
+			'post_id',
+			'expected_modified_token',
+			'title',
+			'content',
+		);
 
 		return $schema;
 	}

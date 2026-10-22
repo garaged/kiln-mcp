@@ -183,20 +183,7 @@ final class PostReadRegistrar {
 					'type'      => 'string',
 					'minLength' => 64,
 					'maxLength' => 64,
-					'pattern'   => '^[a-f0-9]{64}
-				'permalink'             => array( 'type' => 'string' ),
-				'content_text'          => array(
-					'type'      => 'string',
-					'maxLength' => PostContentRedactor::MAX_CHARACTERS,
-				),
-				'content_truncated'     => array( 'type' => 'boolean' ),
-				'untrusted_data_notice' => array( 'type' => 'string' ),
-			),
-			'required'             => array( 'id', 'title', 'status', 'modified_at', 'modified_token', 'permalink', 'content_text', 'content_truncated', 'untrusted_data_notice' ),
-		);
-	}
-}
-,
+					'pattern'   => '^[a-f0-9]{64}$',
 				),
 				'permalink'             => array( 'type' => 'string' ),
 				'content_text'          => array(
@@ -206,7 +193,17 @@ final class PostReadRegistrar {
 				'content_truncated'     => array( 'type' => 'boolean' ),
 				'untrusted_data_notice' => array( 'type' => 'string' ),
 			),
-			'required'             => array( 'id', 'title', 'status', 'modified_at', 'permalink', 'content_text', 'content_truncated', 'untrusted_data_notice' ),
+			'required'             => array(
+				'id',
+				'title',
+				'status',
+				'modified_at',
+				'modified_token',
+				'permalink',
+				'content_text',
+				'content_truncated',
+				'untrusted_data_notice',
+			),
 		);
 	}
 }
