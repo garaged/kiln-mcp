@@ -15,6 +15,14 @@ namespace KilnMcp\Infrastructure\WordPress;
 final class AdapterDependency {
 	public const MINIMUM_VERSION = '0.7.1';
 
+	/**
+	 * Determines whether the supported official integration is available.
+	 *
+	 * @param bool        $adapter_class_available Whether the adapter class is loaded.
+	 * @param bool        $abilities_api_available Whether WordPress exposes ability registration.
+	 * @param string|null $adapter_version         Installed adapter version.
+	 * @return bool Whether Kiln may register abilities.
+	 */
 	public static function is_available(
 		bool $adapter_class_available,
 		bool $abilities_api_available,

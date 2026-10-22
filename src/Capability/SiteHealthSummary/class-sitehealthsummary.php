@@ -15,12 +15,19 @@ namespace KilnMcp\Capability\SiteHealthSummary;
 final class SiteHealthSummary {
 	public const ABILITY_NAME = 'kiln/site-health-summary';
 
+	/**
+	 * Creates a summary contract for one Kiln version.
+	 *
+	 * @param string $kiln_version Version declared by this plugin.
+	 */
 	public function __construct(
 		private readonly string $kiln_version,
 	) {
 	}
 
 	/**
+	 * Returns the empty, closed input shape.
+	 *
 	 * @return array<string, mixed>
 	 */
 	public static function input_schema(): array {
@@ -32,6 +39,8 @@ final class SiteHealthSummary {
 	}
 
 	/**
+	 * Returns the closed, allow-listed output shape.
+	 *
 	 * @return array<string, mixed>
 	 */
 	public static function output_schema(): array {
@@ -61,6 +70,12 @@ final class SiteHealthSummary {
 	}
 
 	/**
+	 * Builds a deliberately bounded summary.
+	 *
+	 * @param string $wordpress_version       WordPress runtime version.
+	 * @param string $php_version             PHP runtime version.
+	 * @param bool   $is_multisite            Whether multisite is enabled.
+	 * @param string $active_theme_stylesheet Active theme stylesheet identifier.
 	 * @return array<string, bool|string>
 	 */
 	public function execute(
@@ -79,6 +94,12 @@ final class SiteHealthSummary {
 		);
 	}
 
+	/**
+	 * Reduces a runtime version to its major and minor components.
+	 *
+	 * @param string $version Runtime version.
+	 * @return string Major and minor version, or unknown.
+	 */
 	private function major_minor_version( string $version ): string {
 		if ( 1 !== preg_match( '/^([0-9]+\.[0-9]+)/', $version, $matches ) ) {
 			return 'unknown';

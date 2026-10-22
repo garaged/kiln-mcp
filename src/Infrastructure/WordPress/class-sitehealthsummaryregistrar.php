@@ -17,12 +17,19 @@ use KilnMcp\Capability\SiteHealthSummary\SiteHealthSummary;
 final class SiteHealthSummaryRegistrar {
 	private const CATEGORY = 'kiln-diagnostics';
 
+	/**
+	 * Creates a WordPress adapter around the pure capability contract.
+	 *
+	 * @param SiteHealthSummary $summary Pure capability contract.
+	 */
 	public function __construct(
 		private readonly SiteHealthSummary $summary,
 	) {
 	}
 
 	/**
+	 * Registers the diagnostic ability category.
+	 *
 	 * @return void
 	 */
 	public function register_category(): void {
@@ -36,6 +43,8 @@ final class SiteHealthSummaryRegistrar {
 	}
 
 	/**
+	 * Registers the site-health ability during WordPress API initialization.
+	 *
 	 * @return void
 	 */
 	public function register_ability(): void {
@@ -61,11 +70,18 @@ final class SiteHealthSummaryRegistrar {
 		);
 	}
 
+	/**
+	 * Grants execution only to site administrators.
+	 *
+	 * @return bool Whether the active identity may execute.
+	 */
 	public function can_execute(): bool {
 		return current_user_can( 'manage_options' );
 	}
 
 	/**
+	 * Collects only values admitted by the summary contract.
+	 *
 	 * @return array<string, bool|string>
 	 */
 	public function execute(): array {
