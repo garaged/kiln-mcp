@@ -6,6 +6,12 @@ class WP_Post {
 	public int $ID;
 	public string $post_title;
 	public string $post_status;
+	public string $post_type;
+	public string $post_password;
+	public string $post_content;
+}
+
+class WP_Error {
 }
 
 /**
@@ -36,7 +42,7 @@ function wp_register_ability( string $name, array $args ): void {
 /**
  * @return bool
  */
-function current_user_can( string $capability ): bool {
+function current_user_can( string $capability, mixed ...$args ): bool {
 	return false;
 }
 
@@ -113,4 +119,26 @@ function get_option( string $option, mixed $default = false ): mixed {
  */
 function update_option( string $option, mixed $value, bool $autoload = false ): bool {
 	return true;
+}
+
+
+/**
+ * @return WP_Post|null
+ */
+function get_post( int $post_id ): ?WP_Post {
+	return null;
+}
+
+/**
+ * @return string
+ */
+function strip_shortcodes( string $content ): string {
+	return $content;
+}
+
+/**
+ * @return string
+ */
+function wp_strip_all_tags( string $content, bool $remove_breaks = false ): string {
+	return $content;
 }

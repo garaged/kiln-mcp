@@ -50,7 +50,7 @@ final class PostDiscoveryRegistrar {
 	 */
 	public function register_ability(): void {
 		wp_register_ability(
-			AuditReceipt::ABILITY_NAME,
+			AuditReceipt::LIST_POSTS_ABILITY_NAME,
 			array(
 				'label'               => __( 'List WordPress posts', 'kiln-mcp' ),
 				'description'         => __( 'Lists a bounded page of public or draft post metadata and records a local redacted receipt.', 'kiln-mcp' ),
@@ -79,7 +79,7 @@ final class PostDiscoveryRegistrar {
 	public function can_execute(): bool {
 		$allowed = current_user_can( 'edit_posts' );
 		if ( ! $allowed ) {
-			$this->audit_store->append( AuditReceipt::create( 'denied', 'not_edit_posts', 0, gmdate( 'c' ) ) );
+			$this->audit_store->append( AuditReceipt::create( AuditReceipt::LIST_POSTS_ABILITY_NAME, 'denied', 'not_edit_posts', 0, gmdate( 'c' ) ) );
 		}
 
 		return $allowed;
@@ -110,7 +110,7 @@ final class PostDiscoveryRegistrar {
 			);
 		}
 
-		$this->audit_store->append( AuditReceipt::create( 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) ) );
+		$this->audit_store->append( AuditReceipt::create( AuditReceipt::LIST_POSTS_ABILITY_NAME, 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) ) );
 
 		return array( 'items' => $items );
 	}
