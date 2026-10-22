@@ -38,20 +38,24 @@ final readonly class ToolPolicy {
 	}
 
 	/**
-	 * Produces a policy allowing only declared tool IDs at their declared risk.
+	 * Validates external policy input into an explicit allow-list.
 	 *
-	 * @param array<string, ToolRisk> $allowed_tools Explicit allow-list.
+	 * @param array<string, mixed> $allowed_tools Candidate allow-list.
 	 * @return self
 	 * @throws InvalidArgumentException When a tool ID or risk is invalid.
 	 */
 	public static function from_allow_list( array $allowed_tools ): self {
+		$validated_tools = array();
+
 		foreach ( $allowed_tools as $tool_id => $risk ) {
 			if ( ! self::is_valid_tool_id( $tool_id ) || ! $risk instanceof ToolRisk ) {
 				throw new InvalidArgumentException( 'Tool policies require stable IDs and ToolRisk values.' );
 			}
+
+			$validated_tools[ $tool_id ] = $risk;
 		}
 
-		return new self( $allowed_tools );
+		return new self( $validated_tools );
 	}
 
 	/**

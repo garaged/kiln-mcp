@@ -3,12 +3,11 @@
 declare(strict_types=1);
 
 /**
- * Static-analysis-only declarations for the WordPress hooks used by the
- * composition root. WordPress provides these functions at runtime.
+ * Static-analysis-only declaration for the WordPress hook used by the
+ * composition root. WordPress provides this function at runtime.
  *
  * @param callable $callback Callback registered for the hook.
- * @return true
+ * @return void
  */
-function add_action( string $hook_name, callable $callback ): bool {
-	return true;
+function add_action( string $hook_name, callable $callback ): void {
 }
