@@ -2,4 +2,3 @@
 /.phpunit.cache/
 /build/
 /coverage/
-/composer.lock
