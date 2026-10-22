@@ -19,6 +19,8 @@ final class PostDiscoveryRegistrar {
 	private const CATEGORY = 'kiln-content-discovery';
 
 	/**
+	 * Creates the post-discovery WordPress adapter.
+	 *
 	 * @param AuditReceiptStore $audit_store Locally retained receipt store.
 	 */
 	public function __construct(
@@ -84,6 +86,8 @@ final class PostDiscoveryRegistrar {
 	}
 
 	/**
+	 * Returns a bounded metadata page and appends an allowed receipt.
+	 *
 	 * @param array<string, mixed> $input Closed ability input.
 	 * @return array<string, array<int, array<string, int|string>>>
 	 */
@@ -112,6 +116,8 @@ final class PostDiscoveryRegistrar {
 	}
 
 	/**
+	 * Returns the closed request JSON Schema.
+	 *
 	 * @return array<string, mixed>
 	 */
 	private static function input_schema(): array {
@@ -138,6 +144,8 @@ final class PostDiscoveryRegistrar {
 	}
 
 	/**
+	 * Returns the bounded metadata-only response JSON Schema.
+	 *
 	 * @return array<string, mixed>
 	 */
 	private static function output_schema(): array {

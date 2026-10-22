@@ -16,6 +16,8 @@ use InvalidArgumentException;
  */
 final class PostDiscoveryRequest {
 	/**
+	 * Creates an immutable validated discovery request.
+	 *
 	 * @param string $status Requested public or draft status.
 	 * @param int    $limit  Maximum result count.
 	 * @param int    $page   One-based page number.
@@ -28,8 +30,11 @@ final class PostDiscoveryRequest {
 	}
 
 	/**
+	 * Validates a complete closed discovery input object.
+	 *
 	 * @param array<string, mixed> $input MCP ability input.
 	 * @return self A validated request.
+	 * @throws InvalidArgumentException When the input is not an allowed bounded shape.
 	 */
 	public static function from_input( array $input ): self {
 		$allowed_keys = array( 'status', 'limit', 'page' );
@@ -57,6 +62,8 @@ final class PostDiscoveryRequest {
 	}
 
 	/**
+	 * Converts a validated request into bounded WordPress query arguments.
+	 *
 	 * @return array<string, int|string>
 	 */
 	public function to_query_arguments(): array {

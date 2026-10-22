@@ -16,6 +16,12 @@ final class AuditReceipt {
 	public const ABILITY_NAME = 'kiln/list-posts';
 
 	/**
+	 * Creates one fixed-shape redacted audit receipt.
+	 *
+	 * @param string $outcome          Allowed or denied outcome.
+	 * @param string $capability_class Capability class used for the decision.
+	 * @param int    $result_count     Number of records returned.
+	 * @param string $timestamp        ISO 8601 receipt timestamp.
 	 * @return array<string, int|string>
 	 */
 	public static function create( string $outcome, string $capability_class, int $result_count, string $timestamp ): array {

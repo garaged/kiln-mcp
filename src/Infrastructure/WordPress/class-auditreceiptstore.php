@@ -13,7 +13,7 @@ namespace KilnMcp\Infrastructure\WordPress;
  * Retains a bounded collection of redacted audit receipts.
  */
 final class AuditReceiptStore {
-	private const OPTION_NAME = 'kiln_mcp_audit_receipts';
+	private const OPTION_NAME  = 'kiln_mcp_audit_receipts';
 	private const MAX_RECEIPTS = 100;
 
 	/**
