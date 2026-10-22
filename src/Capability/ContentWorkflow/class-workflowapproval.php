@@ -61,7 +61,7 @@ final class WorkflowApproval {
 	public static function matches( array $record, string $action, int $post_id, string $modified_token, string $approval_token, int $now ): bool {
 		$expected_keys = array( 'action', 'post_id', 'modified_token', 'token_hash', 'expires_at', 'consumed_at' );
 
-		if ( $expected_keys !== array_keys( $record )
+		if ( array_keys( $record ) !== $expected_keys
 			|| ! is_string( $record['action'] )
 			|| ! is_int( $record['post_id'] )
 			|| ! is_string( $record['modified_token'] )

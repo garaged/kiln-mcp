@@ -15,8 +15,8 @@ use KilnMcp\Capability\ContentWorkflow\WorkflowApproval;
  * Issues and atomically claims local administrator approvals.
  */
 final class WorkflowApprovalStore {
-	private const OPTION_NAME  = 'kiln_mcp_workflow_approvals';
-	private const LOCK_PREFIX  = 'kiln_mcp_workflow_claim_';
+	private const OPTION_NAME   = 'kiln_mcp_workflow_approvals';
+	private const LOCK_PREFIX   = 'kiln_mcp_workflow_claim_';
 	private const MAX_APPROVALS = 50;
 
 	/**

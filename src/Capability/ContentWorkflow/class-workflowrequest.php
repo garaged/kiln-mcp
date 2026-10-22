@@ -68,7 +68,7 @@ final class WorkflowRequest {
 			}
 
 			$parsed = DateTimeImmutable::createFromFormat( DateTimeInterface::ATOM, $input['publish_at'], new DateTimeZone( 'UTC' ) );
-			if ( ! $parsed instanceof DateTimeImmutable || $parsed->format( DateTimeInterface::ATOM ) !== $input['publish_at'] || 0 !== $parsed->getOffset() ) {
+			if ( ! $parsed instanceof DateTimeImmutable || $input['publish_at'] !== $parsed->format( DateTimeInterface::ATOM ) || 0 !== $parsed->getOffset() ) {
 				throw new InvalidArgumentException( 'Workflow schedule time must be a canonical UTC timestamp.' );
 			}
 			$publish_at = $input['publish_at'];
