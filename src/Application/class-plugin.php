@@ -25,8 +25,10 @@ final class Plugin {
 	}
 
 	/**
-	 * Creates the policy nucleus. Future capability modules receive policy through
-	 * this composition root; they must not construct competing policy stores.
+	 * Creates the policy nucleus.
+	 *
+	 * Future capability modules receive policy through this composition root;
+	 * they must not construct competing policy stores.
 	 *
 	 * @return void
 	 */

@@ -19,6 +19,8 @@ use InvalidArgumentException;
  */
 final readonly class ToolPolicy {
 	/**
+	 * Creates an immutable policy.
+	 *
 	 * @param array<string, ToolRisk> $allowed_tools Explicit allow-list keyed by stable tool ID.
 	 */
 	private function __construct(
@@ -40,6 +42,7 @@ final readonly class ToolPolicy {
 	 *
 	 * @param array<string, ToolRisk> $allowed_tools Explicit allow-list.
 	 * @return self
+	 * @throws InvalidArgumentException When a tool ID or risk is invalid.
 	 */
 	public static function from_allow_list( array $allowed_tools ): self {
 		foreach ( $allowed_tools as $tool_id => $risk ) {
@@ -63,6 +66,8 @@ final readonly class ToolPolicy {
 	}
 
 	/**
+	 * Validates a stable tool identifier.
+	 *
 	 * @param string $tool_id Tool identifier.
 	 * @return bool
 	 */
