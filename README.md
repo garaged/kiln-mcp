@@ -19,15 +19,21 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 
 Prerequisites: PHP 8.2+, Composer 2, and Make.
 
-```sh
-composer install
-make check
-```
+    composer install
+    make check
 
-See [CONTRIBUTING.md](CONTRIBUTING.md), [docs/constitution.md](docs/constitution.md), and [docs/architecture.md](docs/architecture.md).
+## Real WordPress container tests
+
+The portable test path is Docker Compose. It supports Rancher Desktop on macOS and Docker Compose on Linux, uses native multi-architecture images, and binds the test site to loopback only.
+
+    make container-preflight
+    make container-test
+    make container-down
+
+See [the container-test guide](docs/testing-environment.md) for Rancher Desktop setup, architecture, troubleshooting, and command details.
 
 ## Status and roadmap
 
-Milestone 0 establishes governance, an executable policy nucleus, static analysis, unit tests, and CI. It deliberately does **not** expose MCP tools or change a WordPress site.
+Milestone 0 establishes governance, an executable policy nucleus, static analysis, unit tests, containerized real-WordPress smoke tests, and CI. It deliberately does **not** expose MCP tools or change a WordPress site.
 
 The roadmap and acceptance criteria live in [specs/requirements/m0-foundation.md](specs/requirements/m0-foundation.md).

@@ -27,6 +27,20 @@ jobs:
       - name: Execute foundation gates
         run: make ci
 
+  container-smoke:
+    name: Container smoke
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run disposable real-WordPress smoke test
+        run: make container-test
+      - name: Collect container diagnostics on failure
+        if: failure()
+        run: make container-logs
+      - name: Remove disposable test environment
+        if: always()
+        run: make container-down
+
   secret-scan:
     name: Secret scan
     runs-on: ubuntu-24.04

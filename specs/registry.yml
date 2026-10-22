@@ -15,3 +15,9 @@ requirements:
     validation:
       - docs/threat-model.md
       - docs/manual-testing.md
+  - id: REQ-M0-005
+    source: specs/requirements/m0-foundation.md
+    validation:
+      - testing/compose.yaml
+      - scripts/container-preflight.sh
+      - docs/testing-environment.md
