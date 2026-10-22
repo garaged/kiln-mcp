@@ -127,6 +127,7 @@ final class WorkflowApprovalStore {
 		$valid_records = array();
 		foreach ( $records as $record ) {
 			if ( is_array( $record ) ) {
+				/** @var array<string, mixed> $record */
 				$valid_records[] = $record;
 			}
 		}
