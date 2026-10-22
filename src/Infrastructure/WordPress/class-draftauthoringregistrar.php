@@ -352,28 +352,32 @@ final class DraftAuthoringRegistrar {
 	 * @return array<string, mixed>
 	 */
 	private static function update_input_schema(): array {
-		$schema = self::create_input_schema();
-
-		$schema['properties']['post_id'] = array(
-			'type'    => 'integer',
-			'minimum' => 1,
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(
+				'post_id'                 => array(
+					'type'    => 'integer',
+					'minimum' => 1,
+				),
+				'expected_modified_token' => array(
+					'type'      => 'string',
+					'minLength' => 64,
+					'maxLength' => 64,
+					'pattern'   => '^[a-f0-9]{64}$',
+				),
+				'title'                   => array(
+					'type'      => 'string',
+					'minLength' => 1,
+					'maxLength' => DraftCreateRequest::MAX_TITLE_CHARACTERS,
+				),
+				'content'                 => array(
+					'type'      => 'string',
+					'maxLength' => DraftCreateRequest::MAX_CONTENT_CHARACTERS,
+				),
+			),
+			'required'             => array( 'post_id', 'expected_modified_token', 'title', 'content' ),
 		);
-
-		$schema['properties']['expected_modified_token'] = array(
-			'type'      => 'string',
-			'minLength' => 64,
-			'maxLength' => 64,
-			'pattern'   => '^[a-f0-9]{64}$',
-		);
-
-		$schema['required'] = array(
-			'post_id',
-			'expected_modified_token',
-			'title',
-			'content',
-		);
-
-		return $schema;
 	}
 
 	/**

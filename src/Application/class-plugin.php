@@ -13,6 +13,7 @@ use KilnMcp\Capability\SiteHealthSummary\SiteHealthSummary;
 use KilnMcp\Domain\Policy\ToolPolicy;
 use KilnMcp\Infrastructure\WordPress\AdapterDependency;
 use KilnMcp\Infrastructure\WordPress\AuditReceiptStore;
+use KilnMcp\Infrastructure\WordPress\DraftAuthoringRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
