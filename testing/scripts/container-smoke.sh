@@ -14,7 +14,7 @@ if ! wp plugin is-active kiln-mcp --allow-root --path="$wp_path"; then
 fi
 
 php -r '
-$response = @file_get_contents("http://wordpress/wp-json/");
+$response = @file_get_contents("http://wordpress/?rest_route=/");
 if (false === $response) {
     fwrite(STDERR, "Unable to retrieve the WordPress REST index.\n");
     exit(1);
@@ -23,7 +23,6 @@ if (false === $response) {
 $index = json_decode($response, true);
 if (! is_array($index) || ! isset($index["routes"]) || ! is_array($index["routes"])) {
     fwrite(STDERR, "WordPress REST index was not valid route data: " . json_last_error_msg() . "\n");
-    fwrite(STDERR, "Response preview: " . substr($response, 0, 300) . "\n");
     exit(1);
 }
 
