@@ -1,0 +1,6 @@
+.git
+.github
+vendor
+.phpunit.cache
+build
+coverage

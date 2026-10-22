@@ -1,0 +1,45 @@
+{
+  "name": "garaged/kiln-mcp",
+  "description": "A fully FLOSS, self-hosted, security-first MCP development toolkit for WordPress.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": "^8.2"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^11.5",
+    "wp-coding-standards/wpcs": "^3.1"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "KilnMcp\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "phpcs",
+    "analyse": "phpstan analyse --memory-limit=512M",
+    "spec-check": "php scripts/spec-check.php",
+    "architecture-check": "php scripts/architecture-check.php",
+    "check": [
+      "@spec-check",
+      "@architecture-check",
+      "@lint",
+      "@analyse",
+      "@test"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  }
+}

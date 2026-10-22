@@ -1,0 +1,107 @@
+name: kiln-mcp-test
+
+services:
+  database:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: kiln_test_password
+      MARIADB_ROOT_PASSWORD: kiln_test_root_password
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping --host=localhost --user=root --password=$$MARIADB_ROOT_PASSWORD --silent"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    volumes:
+      - database_data:/var/lib/mysql
+    networks:
+      - kiln_test
+
+  bootstrap:
+    build:
+      context: ..
+      dockerfile: testing/Dockerfile.wordpress
+      args:
+        WORDPRESS_IMAGE: ${WORDPRESS_IMAGE:-wordpress:7.1.3-php8.2-apache}
+        WPCLI_IMAGE: ${WPCLI_IMAGE:-wordpress:cli-2.12.0-php8.2}
+        COMPOSER_IMAGE: ${COMPOSER_IMAGE:-composer:2.8}
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: kiln_test_password
+      WORDPRESS_URL: http://wordpress
+    depends_on:
+      database:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/opt/kiln/scripts/bootstrap-wordpress.sh"]
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - kiln_test
+    restart: "no"
+
+  wordpress:
+    build:
+      context: ..
+      dockerfile: testing/Dockerfile.wordpress
+      args:
+        WORDPRESS_IMAGE: ${WORDPRESS_IMAGE:-wordpress:7.1.3-php8.2-apache}
+        WPCLI_IMAGE: ${WPCLI_IMAGE:-wordpress:cli-2.12.0-php8.2}
+        COMPOSER_IMAGE: ${COMPOSER_IMAGE:-composer:2.8}
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: kiln_test_password
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:${KILN_MCP_TEST_PORT:-8080}:80"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          php -r 'exit(false === @file_get_contents("http://localhost/wp-login.php") ? 1 : 0);'
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - kiln_test
+
+  test-runner:
+    build:
+      context: ..
+      dockerfile: testing/Dockerfile.wordpress
+      args:
+        WORDPRESS_IMAGE: ${WORDPRESS_IMAGE:-wordpress:7.1.3-php8.2-apache}
+        WPCLI_IMAGE: ${WPCLI_IMAGE:-wordpress:cli-2.12.0-php8.2}
+        COMPOSER_IMAGE: ${COMPOSER_IMAGE:-composer:2.8}
+    environment:
+      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: kiln_test_password
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/opt/kiln/scripts/container-smoke.sh"]
+    volumes:
+      - wordpress_data:/var/www/html:ro
+    networks:
+      - kiln_test
+    restart: "no"
+
+networks:
+  kiln_test:
+    driver: bridge
+
+volumes:
+  database_data:
+  wordpress_data:

@@ -1,0 +1,10 @@
+parameters:
+  level: max
+  paths:
+    - src
+    - tests
+  scanFiles:
+    - tests/wordpress-stubs.php
+  excludePaths:
+    - vendor
+  treatPhpDocTypesAsCertain: true
