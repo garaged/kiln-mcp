@@ -10,7 +10,7 @@ fi
 wp config create --allow-root --path="$wp_path" --dbname="$WORDPRESS_DB_NAME" --dbuser="$WORDPRESS_DB_USER" --dbpass="$WORDPRESS_DB_PASSWORD" --dbhost="$WORDPRESS_DB_HOST" --skip-check --force
 
 database_attempt=0
-until wp db check --allow-root --path="$wp_path" >/dev/null 2>&1; do
+until wp eval --allow-root --path="$wp_path" 'global $wpdb; exit( $wpdb->check_connection() ? 0 : 1 );' >/dev/null 2>&1; do
   database_attempt=$((database_attempt + 1))
   if [ "$database_attempt" -ge 30 ]; then
     echo "WordPress could not connect to the test database after 30 attempts." >&2

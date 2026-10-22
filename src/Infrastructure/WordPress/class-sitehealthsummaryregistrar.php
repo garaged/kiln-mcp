@@ -59,11 +59,11 @@ final class SiteHealthSummaryRegistrar {
 				'execute_callback'    => array( $this, 'execute' ),
 				'permission_callback' => array( $this, 'can_execute' ),
 				'meta'                => array(
-					'annotations' => array(
+					'annotations'  => array(
 						'readonly'   => true,
 						'idempotent' => true,
 					),
-					'public'      => true,
+					'public'       => true,
 					'show_in_rest' => false,
 				),
 			)
