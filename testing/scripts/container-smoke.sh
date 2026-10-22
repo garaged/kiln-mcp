@@ -13,18 +13,25 @@ if ! wp plugin is-active kiln-mcp --allow-root --path="$wp_path"; then
   exit 1
 fi
 
-if ! response="$(php -r '$response = @file_get_contents("http://wordpress/wp-json/"); if (false === $response) { fwrite(STDERR, "Unable to retrieve the WordPress REST index.\\n"); exit(1); } echo $response;')"; then
-  exit 1
-fi
+php -r '
+$response = @file_get_contents("http://wordpress/wp-json/");
+if (false === $response) {
+    fwrite(STDERR, "Unable to retrieve the WordPress REST index.\\n");
+    exit(1);
+}
 
-if ! printf '%s' "$response" | grep -q '"namespaces"'; then
-  echo "WordPress REST index did not contain namespaces." >&2
-  exit 1
-fi
+$index = json_decode($response, true);
+if (! is_array($index) || ! isset($index["routes"]) || ! is_array($index["routes"])) {
+    fwrite(STDERR, "WordPress REST index was not valid route data.\\n");
+    exit(1);
+}
 
-if printf '%s' "$response" | grep -q '"kiln-mcp'; then
-  echo "Kiln MCP must not expose an MCP namespace in Milestone 0." >&2
-  exit 1
-fi
+foreach (array_keys($index["routes"]) as $route) {
+    if (false !== strpos($route, "kiln-mcp")) {
+        fwrite(STDERR, "Kiln MCP must not expose an MCP route in Milestone 0.\\n");
+        exit(1);
+    }
+}
+'
 
 echo "Container smoke checks passed."
