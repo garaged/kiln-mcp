@@ -35,7 +35,6 @@ requirements:
   - id: REQ-M1-003
     source: specs/requirements/m1-read-only-diagnostics.md
     validation:
-      - tests/Integration/SiteHealthSummaryIntegrationTest.php
       - testing/scripts/container-smoke.sh
   - id: REQ-M1-004
     source: specs/requirements/m1-read-only-diagnostics.md
@@ -46,4 +45,23 @@ requirements:
     validation:
       - testing/compose.yaml
       - testing/scripts/bootstrap-wordpress.sh
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M2-001
+    source: specs/requirements/m2-content-discovery-audit.md
+    validation:
+      - src/Capability/PostDiscovery
+      - tests/Unit/PostDiscoveryTest.php
+  - id: REQ-M2-002
+    source: specs/requirements/m2-content-discovery-audit.md
+    validation:
+      - tests/Integration/PostDiscoveryIntegrationTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M2-003
+    source: specs/requirements/m2-content-discovery-audit.md
+    validation:
+      - src/Infrastructure/WordPress
+      - tests/Unit/AuditReceiptTest.php
+  - id: REQ-M2-004
+    source: specs/requirements/m2-content-discovery-audit.md
+    validation:
       - testing/scripts/container-smoke.sh
