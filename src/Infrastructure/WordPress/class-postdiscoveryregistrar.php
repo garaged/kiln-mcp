@@ -106,7 +106,7 @@ final class PostDiscoveryRegistrar {
 			);
 		}
 
-		$this->audit_store->append( AuditReceipt::create( 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) );
+		$this->audit_store->append( AuditReceipt::create( 'allowed', 'edit_posts', count( $items ), gmdate( 'c' ) ) );
 
 		return array( 'items' => $items );
 	}
