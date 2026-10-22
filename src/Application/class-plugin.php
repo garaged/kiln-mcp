@@ -18,12 +18,19 @@ use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
  * Composes bounded capabilities after all required WordPress plugins load.
  */
 final class Plugin {
+	/**
+	 * Creates the composition root for a specific Kiln version.
+	 *
+	 * @param string $version Kiln plugin version.
+	 */
 	public function __construct(
 		private readonly string $version,
 	) {
 	}
 
 	/**
+	 * Registers the composition root with WordPress.
+	 *
 	 * @return void
 	 */
 	public function register(): void {
@@ -31,6 +38,8 @@ final class Plugin {
 	}
 
 	/**
+	 * Creates policy and conditionally wires the supported adapter integration.
+	 *
 	 * Failing the adapter check does not register any Kiln capability.
 	 *
 	 * @return void
