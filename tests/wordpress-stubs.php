@@ -12,11 +12,16 @@ class WP_Post {
 }
 
 class WP_Error {
+	public string $code;
+	public string $message;
+
 	/**
 	 * @param string $code Error code.
 	 * @param string $message Error message.
 	 */
 	public function __construct( string $code = '', string $message = '' ) {
+		$this->code    = $code;
+		$this->message = $message;
 	}
 }
 
