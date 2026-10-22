@@ -3,34 +3,44 @@ set -eu
 
 wp_path=/var/www/html
 
-if ! wp core is-installed --allow-root --path="$wp_path"; then
-  echo "WordPress is not installed in the shared test volume." >&2
-  exit 1
-fi
+wp core is-installed --allow-root --path="$wp_path"
+wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
+wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
-if ! wp plugin is-active kiln-mcp --allow-root --path="$wp_path"; then
-  echo "Kiln MCP is not active in the disposable WordPress site." >&2
-  exit 1
-fi
-
-php -r '
-$response = @file_get_contents("http://wordpress/?rest_route=/");
-if (false === $response) {
-    fwrite(STDERR, "Unable to retrieve the WordPress REST index.\n");
-    exit(1);
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$ability = wp_get_ability( "kiln/site-health-summary" );
+if ( null === $ability ) {
+    fwrite( STDERR, "Kiln site health summary was not registered.\n" );
+    exit( 1 );
 }
 
-$index = json_decode($response, true);
-if (! is_array($index) || ! isset($index["routes"]) || ! is_array($index["routes"])) {
-    fwrite(STDERR, "WordPress REST index was not valid route data: " . json_last_error_msg() . "\n");
-    exit(1);
+$result = $ability->execute( array() );
+if ( is_wp_error( $result ) ) {
+    fwrite( STDERR, "Administrator could not execute Kiln site health summary.\n" );
+    exit( 1 );
 }
 
-foreach (array_keys($index["routes"]) as $route) {
-    if (false !== strpos($route, "kiln-mcp")) {
-        fwrite(STDERR, "Kiln MCP must not expose an MCP route in Milestone 0.\n");
-        exit(1);
-    }
+$expected_keys = array(
+    "kiln_version",
+    "wordpress_version",
+    "php_version",
+    "is_multisite",
+    "active_theme_stylesheet",
+    "status",
+);
+if ( $expected_keys !== array_keys( $result ) || "available" !== $result["status"] ) {
+    fwrite( STDERR, "Kiln site health summary returned an unexpected contract.\n" );
+    exit( 1 );
+}
+'
+
+wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
+$ability = wp_get_ability( "kiln/site-health-summary" );
+$result  = null === $ability ? null : $ability->execute( array() );
+
+if ( ! is_wp_error( $result ) ) {
+    fwrite( STDERR, "Subscriber unexpectedly executed Kiln site health summary.\n" );
+    exit( 1 );
 }
 '
 

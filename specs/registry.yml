@@ -21,3 +21,29 @@ requirements:
       - testing/compose.yaml
       - scripts/container-preflight.sh
       - docs/testing-environment.md
+  - id: REQ-M1-001
+    source: specs/requirements/m1-read-only-diagnostics.md
+    validation:
+      - kiln-mcp.php
+      - tests/Unit/AdapterDependencyTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M1-002
+    source: specs/requirements/m1-read-only-diagnostics.md
+    validation:
+      - src/Capability/SiteHealthSummary
+      - tests/Unit/SiteHealthSummaryTest.php
+  - id: REQ-M1-003
+    source: specs/requirements/m1-read-only-diagnostics.md
+    validation:
+      - tests/Integration/SiteHealthSummaryIntegrationTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M1-004
+    source: specs/requirements/m1-read-only-diagnostics.md
+    validation:
+      - tests/Unit/SiteHealthSummaryTest.php
+  - id: REQ-M1-005
+    source: specs/requirements/m1-read-only-diagnostics.md
+    validation:
+      - testing/compose.yaml
+      - testing/scripts/bootstrap-wordpress.sh
+      - testing/scripts/container-smoke.sh
