@@ -30,6 +30,7 @@ wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
 wp user create kiln-subscriber kiln-subscriber@example.test --role=subscriber --user_pass=kiln_test_subscriber_password --allow-root --path="$wp_path"
 wp user create kiln-author kiln-author@example.test --role=author --user_pass=kiln_test_author_password --allow-root --path="$wp_path"
+wp user create kiln-editor kiln-editor@example.test --role=editor --user_pass=kiln_test_editor_password --allow-root --path="$wp_path"
 
 author_id="$(wp user get kiln-author --field=ID --allow-root --path="$wp_path")"
 

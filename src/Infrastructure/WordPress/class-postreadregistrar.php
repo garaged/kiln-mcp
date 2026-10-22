@@ -115,6 +115,7 @@ final class PostReadRegistrar {
 			'title'                 => $post->post_title,
 			'status'                => $post->post_status,
 			'modified_at'           => (string) get_post_modified_time( 'c', true, $post ),
+			'modified_token'        => PostVersion::token( $post->ID, $post->post_modified_gmt, (string) get_post_meta( $post->ID, PostVersion::META_KEY, true ) ),
 			'permalink'             => get_permalink( $post ),
 			'content_text'          => $content['content_text'],
 			'content_truncated'     => $content['content_truncated'],
@@ -178,6 +179,25 @@ final class PostReadRegistrar {
 				'title'                 => array( 'type' => 'string' ),
 				'status'                => array( 'type' => 'string' ),
 				'modified_at'           => array( 'type' => 'string' ),
+				'modified_token'        => array(
+					'type'      => 'string',
+					'minLength' => 64,
+					'maxLength' => 64,
+					'pattern'   => '^[a-f0-9]{64}
+				'permalink'             => array( 'type' => 'string' ),
+				'content_text'          => array(
+					'type'      => 'string',
+					'maxLength' => PostContentRedactor::MAX_CHARACTERS,
+				),
+				'content_truncated'     => array( 'type' => 'boolean' ),
+				'untrusted_data_notice' => array( 'type' => 'string' ),
+			),
+			'required'             => array( 'id', 'title', 'status', 'modified_at', 'modified_token', 'permalink', 'content_text', 'content_truncated', 'untrusted_data_notice' ),
+		);
+	}
+}
+,
+				),
 				'permalink'             => array( 'type' => 'string' ),
 				'content_text'          => array(
 					'type'      => 'string',

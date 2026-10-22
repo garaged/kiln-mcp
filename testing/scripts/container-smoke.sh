@@ -96,7 +96,7 @@ wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln/read-post" );
 $post_id = (int) get_option( "kiln_mcp_fixture_published_id" );
 $result  = null === $ability ? null : $ability->execute( array( "post_id" => $post_id ) );
-$expected_keys = array( "id", "title", "status", "modified_at", "permalink", "content_text", "content_truncated", "untrusted_data_notice" );
+$expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink", "content_text", "content_truncated", "untrusted_data_notice" );
 
 if ( is_wp_error( $result ) || $expected_keys !== array_keys( $result ) || $post_id !== $result["id"] || false !== strpos( $result["content_text"], "<" ) || false !== strpos( $result["content_text"], "[gallery]" ) || true !== str_contains( $result["untrusted_data_notice"], "untrusted data" ) ) {
     fwrite( STDERR, "Kiln post read did not return the required redacted contract.\n" );
@@ -121,8 +121,87 @@ if ( is_wp_error( $result ) || $own_id !== $result["id"] ) {
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-author '
+$create = wp_get_ability( "kiln/create-post-draft" );
+$update = wp_get_ability( "kiln/update-post-draft" );
+if ( null === $create || null === $update ) {
+    fwrite( STDERR, "Kiln M4 draft authoring abilities were not registered.\\n" );
+    exit( 1 );
+}
+
+$created = $create->execute(
+    array(
+        "title"   => "Kiln author created draft",
+        "content" => "First authoring body",
+    )
+);
+$expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink" );
+if ( is_wp_error( $created ) || $expected_keys !== array_keys( $created ) || "draft" !== $created["status"] || get_current_user_id() !== (int) get_post_field( "post_author", $created["id"] ) ) {
+    fwrite( STDERR, "Author could not create an owned Kiln draft.\\n" );
+    exit( 1 );
+}
+
+$updated = $update->execute(
+    array(
+        "post_id"                 => $created["id"],
+        "expected_modified_token" => $created["modified_token"],
+        "title"                   => "Kiln author updated draft",
+        "content"                 => "Second authoring body",
+    )
+);
+if ( is_wp_error( $updated ) || "draft" !== $updated["status"] || $created["modified_token"] === $updated["modified_token"] ) {
+    fwrite( STDERR, "Author could not update a current draft version.\\n" );
+    exit( 1 );
+}
+
+$stale = $update->execute(
+    array(
+        "post_id"                 => $created["id"],
+        "expected_modified_token" => $created["modified_token"],
+        "title"                   => "This stale write must not apply",
+        "content"                 => "This stale body must not apply",
+    )
+);
+if ( ! is_wp_error( $stale ) || "Kiln author updated draft" !== get_post_field( "post_title", $created["id"] ) ) {
+    fwrite( STDERR, "Kiln draft authoring did not refuse a stale update.\\n" );
+    exit( 1 );
+}
+
+$invalid = $create->execute(
+    array(
+        "title"   => "Unsafe draft",
+        "content" => "<script>alert(1)</script>",
+    )
+);
+if ( ! is_wp_error( $invalid ) ) {
+    fwrite( STDERR, "Kiln draft authoring accepted markup-like content.\\n" );
+    exit( 1 );
+}
+
+update_option( "kiln_mcp_m4_author_draft_id", $created["id"], false );
+'
+
+wp eval --allow-root --path="$wp_path" --user=kiln-editor '
+$read   = wp_get_ability( "kiln/read-post" );
+$update = wp_get_ability( "kiln/update-post-draft" );
+$post_id = (int) get_option( "kiln_mcp_m4_author_draft_id" );
+$current = null === $read ? null : $read->execute( array( "post_id" => $post_id ) );
+$updated = null === $update || is_wp_error( $current ) ? null : $update->execute(
+    array(
+        "post_id"                 => $post_id,
+        "expected_modified_token" => $current["modified_token"],
+        "title"                   => "Kiln editor updated draft",
+        "content"                 => "Editor authoring body",
+    )
+);
+if ( is_wp_error( $current ) || is_wp_error( $updated ) || "draft" !== $updated["status"] || "Kiln editor updated draft" !== get_post_field( "post_title", $post_id ) ) {
+    fwrite( STDERR, "Editor could not update an admitted author draft.\\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
         "kiln/read-post" === $ability_name
@@ -133,7 +212,19 @@ foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post"
                 "limit"  => 1,
                 "page"   => 1,
             )
-            : array() )
+            : ( "kiln/create-post-draft" === $ability_name
+            ? array(
+                "title"   => "Subscriber denied draft",
+                "content" => "Denied body",
+            )
+            : ( "kiln/update-post-draft" === $ability_name
+            ? array(
+                "post_id"                 => 1,
+                "expected_modified_token" => str_repeat( "a", 64 ),
+                "title"                   => "Subscriber denied update",
+                "content"                 => "Denied body",
+            )
+            : array() ) ) )
     );
 
     if ( ! is_wp_error( $result ) ) {
@@ -166,10 +257,10 @@ foreach ( $receipts as $receipt ) {
         fwrite( STDERR, "Kiln audit receipt was not redacted to its contract.\n" );
         exit( 1 );
     }
-    if ( "kiln/list-posts" === $receipt["ability"] && "allowed" === $receipt["outcome"] ) {
+    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] ) && "allowed" === $receipt["outcome"] ) {
         $has_allowed = true;
     }
-    if ( "kiln/list-posts" === $receipt["ability"] && "denied" === $receipt["outcome"] ) {
+    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] ) && "denied" === $receipt["outcome"] ) {
         $has_denied = true;
     }
 }

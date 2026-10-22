@@ -12,7 +12,7 @@ A WordPress developer can retrieve the bounded, plain-text body of one post they
 
 The caller must have WordPress `edit_post` permission for that specific post. The capability admits only standard posts with `publish` or `draft` status. Private, scheduled, trashed, password-protected, and custom-post-type content are excluded even for administrators.
 
-The result contains only post ID, title, status, modification time, permalink, bounded plain-text content, a truncation flag, and a fixed notice that the content is untrusted data. It never returns HTML, shortcodes, author identity, passwords, comments, revisions, custom fields, media metadata, or arbitrary post properties.
+The result contains only post ID, title, status, modification time, opaque modification token, permalink, bounded plain-text content, a truncation flag, and a fixed notice that the content is untrusted data. It never returns HTML, shortcodes, author identity, passwords, comments, revisions, custom fields, media metadata, or arbitrary post properties.
 
 ## Content boundary
 
@@ -27,7 +27,7 @@ Text is not treated as instructions. Tool metadata carries a fixed untrusted-dat
 
 ## Audit boundary
 
-Allowed and denied calls append a bounded local receipt using the existing fixed receipt schema. The receipt identifies only the ability, outcome, caller capability class, count, timestamp, and schema version. It never includes post ID, title, text, URL, request input, identity, credential, or error details.
+Allowed and denied calls append a bounded local receipt using the existing fixed receipt schema. The M4 draft authoring contract uses the opaque modification token returned by this reader; it is a concurrency value, not an identity or content field.\n\nThe receipt identifies only the ability, outcome, caller capability class, count, timestamp, and schema version. It never includes post ID, title, text, URL, request input, identity, credential, or error details.
 
 ## Exit decision
 
