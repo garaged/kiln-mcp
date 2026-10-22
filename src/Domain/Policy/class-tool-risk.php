@@ -16,5 +16,5 @@ enum ToolRisk: string {
 	case READ        = 'read';
 	case DRAFT_WRITE = 'draft_write';
 	case PUBLISH     = 'publish';
-	case DESTRUCTIVE  = 'destructive';
+	case DESTRUCTIVE = 'destructive';
 }
