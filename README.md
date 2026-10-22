@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: Milestone 4 is in development. M0–M3 delivered secure diagnostics, bounded discovery, and redacted single-post reading; M4 adds draft-only authoring with conflict refusal.
+> Status: M0–M4 are delivered. Milestone 5 is in development: administrator-approved lifecycle actions for exact posts.
 
 ## Principles
 
@@ -50,4 +50,4 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M4's acceptance criteria are in [specs/requirements/m4-safe-draft-authoring.md](specs/requirements/m4-safe-draft-authoring.md). It deliberately excludes publishing, deletion, site configuration, generic content/database access, and relays.
+M5's acceptance criteria are in [specs/requirements/m5-content-workflow-controls.md](specs/requirements/m5-content-workflow-controls.md). It adds approval-gated lifecycle actions while deliberately excluding permanent deletion, generic content/database access, site configuration, and relays.

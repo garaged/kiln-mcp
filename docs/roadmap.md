@@ -8,6 +8,7 @@
 | M1 | Administrator-only runtime diagnostics | Merged |
 | M2 | Bounded post discovery and local redacted audit receipts | Merged |
 | M3 | Per-post authorized, bounded plain-text reading | Merged |
+| M4 | Safe draft creation and optimistic-concurrency draft updates | Merged |
 
 ## Remaining capability plan
 
@@ -27,4 +28,4 @@ No milestone expands to generic REST forwarding, arbitrary database/filesystem a
 
 ## Current position
 
-Kiln has completed the read-only discovery phase (M1–M3). M4 begins the controlled authoring phase: draft-only changes, scoped to standard posts, with conflict detection and audit evidence. Publish, deletion, scheduling, and broad site configuration remain deliberately deferred to M5 and M6.
+Kiln has completed secure discovery (M1–M3) and controlled draft authoring (M4). M5 begins guarded workflow effects: a local administrator must issue an action-, target-, and version-bound one-time approval before a lifecycle mutation. Permanent deletion and broad site configuration remain deliberately deferred.

@@ -119,3 +119,35 @@ requirements:
       - testing/scripts/bootstrap-wordpress.sh
       - testing/scripts/container-smoke.sh
       - docs/manual-testing.md
+  - id: REQ-M5-001
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - src/Capability/ContentWorkflow
+      - tests/Unit/WorkflowRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M5-002
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - src/Infrastructure/WordPress/class-workflowapprovalpage.php
+      - tests/Unit/WorkflowApprovalTest.php
+  - id: REQ-M5-003
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - src/Infrastructure/WordPress/class-contentworkflowregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M5-004
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - src/Infrastructure/WordPress/class-workflowapprovalstore.php
+      - tests/Unit/WorkflowApprovalTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M5-005
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - src/Capability/PostDiscovery/class-auditreceipt.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M5-006
+    source: specs/requirements/m5-content-workflow-controls.md
+    validation:
+      - testing/scripts/container-smoke.sh
+      - docs/manual-testing.md
