@@ -9,17 +9,15 @@ fi
 
 wp config create --allow-root --path="$wp_path" --dbname="$WORDPRESS_DB_NAME" --dbuser="$WORDPRESS_DB_USER" --dbpass="$WORDPRESS_DB_PASSWORD" --dbhost="$WORDPRESS_DB_HOST" --skip-check --force
 
-database_attempt=0
-until wp eval --allow-root --path="$wp_path" 'global $wpdb; exit( $wpdb->check_connection() ? 0 : 1 );' >/dev/null 2>&1; do
-  database_attempt=$((database_attempt + 1))
-  if [ "$database_attempt" -ge 30 ]; then
-    echo "WordPress could not connect to the test database after 30 attempts." >&2
+install_attempt=0
+until wp core install --allow-root --path="$wp_path" --url="$WORDPRESS_URL" --title="Kiln MCP Test Site" --admin_user=kiln-admin --admin_password=kiln_test_admin_password --admin_email=kiln@example.test --skip-email; do
+  install_attempt=$((install_attempt + 1))
+  if [ "$install_attempt" -ge 30 ]; then
+    echo "WordPress could not complete core installation after 30 attempts." >&2
     exit 1
   fi
   sleep 1
 done
-
-wp core install --allow-root --path="$wp_path" --url="$WORDPRESS_URL" --title="Kiln MCP Test Site" --admin_user=kiln-admin --admin_password=kiln_test_admin_password --admin_email=kiln@example.test --skip-email
 
 wp plugin install mcp-adapter --version=0.7.1 --activate --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
