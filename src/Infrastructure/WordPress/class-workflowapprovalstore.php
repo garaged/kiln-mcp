@@ -28,6 +28,7 @@ final class WorkflowApprovalStore {
 	 * @param int    $post_id        Exact post identifier.
 	 * @param string $modified_token Current post version token.
 	 * @return string Raw token to show once to the local administrator.
+	 * @throws \RuntimeException When durable local storage refuses the record.
 	 */
 	public function issue( string $action, int $post_id, string $modified_token ): string {
 		$this->prune();

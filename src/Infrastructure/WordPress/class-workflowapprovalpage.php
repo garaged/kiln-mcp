@@ -101,10 +101,10 @@ final class WorkflowApprovalPage {
 
 		check_admin_referer( self::NONCE_ACTION );
 
-		$raw_action = isset( $_POST['kiln_mcp_action'] ) ? wp_unslash( $_POST['kiln_mcp_action'] ) : '';
+		$raw_action = filter_input( INPUT_POST, 'kiln_mcp_action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$action     = is_string( $raw_action ) ? sanitize_key( $raw_action ) : '';
-		$post_id = isset( $_POST['kiln_mcp_post_id'] ) ? absint( wp_unslash( $_POST['kiln_mcp_post_id'] ) ) : 0;
-		$post    = get_post( $post_id );
+		$post_id    = isset( $_POST['kiln_mcp_post_id'] ) ? absint( wp_unslash( $_POST['kiln_mcp_post_id'] ) ) : 0;
+		$post       = get_post( $post_id );
 
 		if ( ! $post instanceof WP_Post || ! WorkflowAction::is_supported( $action ) || ! $this->is_admitted( $post, $action ) ) {
 			return array(
