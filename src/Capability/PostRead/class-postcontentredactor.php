@@ -22,7 +22,8 @@ final class PostContentRedactor {
 	 * @return array{content_text: string, content_truncated: bool} Safe text result.
 	 */
 	public static function redact( string $content ): array {
-		$text = wp_strip_all_tags( $content, true );
+		$text = preg_replace( '/<[^>]*>/u', '', $content );
+		$text = is_string( $text ) ? $text : '';
 		$text = preg_replace( '/\s+/u', ' ', trim( $text ) );
 		$text = is_string( $text ) ? $text : '';
 
