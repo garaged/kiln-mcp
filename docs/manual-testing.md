@@ -1,8 +1,8 @@
 # Manual testing
 
-## Milestone 0
+## Milestone 1
 
-### Automated real-WordPress smoke
+### Automated real-WordPress contract
 
 Run:
 
@@ -10,7 +10,7 @@ Run:
     make container-test
     make container-down
 
-Expected result: the container runner installs WordPress, activates Kiln MCP, reaches the REST index, and proves that M0 exposes no Kiln MCP namespace. The environment is disposable; cleanup removes its database and WordPress volumes.
+Expected result: the runner installs a pinned MCP Adapter plugin, activates Kiln MCP, confirms the `kiln/site-health-summary` ability is registered, confirms its exact output contract for an administrator, and proves that a subscriber is denied.
 
 ### Local quality
 

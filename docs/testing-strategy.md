@@ -14,8 +14,12 @@
 
 A unit-test count is not a coverage target. Every requirement has a behavior-focused test at the lowest credible layer; boundary and security properties receive integration or contract coverage.
 
+## M1 test boundary
+
+M1 combines unit tests for the exact data/schema allow-list with a real WordPress contract test. The container runs the official MCP Adapter plus Kiln, obtains the registered ability, verifies administrator execution and expected keys, then proves a subscriber receives a WordPress permission error. Protocol-stream interoperability is deliberately deferred until the first content capability adds a fixture-driven MCP client contract.
+
 ## Container baseline
 
-The real-WordPress baseline is the container-test Make target. It builds the production plugin artifact, waits for a healthy database and WordPress instance, activates Kiln MCP in a fresh site, then executes an isolated smoke runner. The same target runs in Linux CI; manual Rancher Desktop Apple Silicon evidence is required before support is claimed.
+The real-WordPress baseline is the container-test Make target. It builds the production plugin artifact, waits for a healthy database and WordPress instance, installs the pinned MCP Adapter, activates Kiln MCP in a fresh site, then executes an isolated smoke runner. The same target runs in Linux CI; manual Rancher Desktop Apple Silicon evidence is required before support is claimed.
 
 Every confirmed AI- or reviewer-found defect adds a focused regression test before its fix is accepted.
