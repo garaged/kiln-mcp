@@ -33,9 +33,13 @@ wp user create kiln-author kiln-author@example.test --role=author --user_pass=ki
 
 author_id="$(wp user get kiln-author --field=ID --allow-root --path="$wp_path")"
 
-wp post create --post_type=post --post_status=publish --post_title="Kiln published fixture" --post_content="This body must never be returned by discovery." --post_author=1 --allow-root --path="$wp_path"
-wp post create --post_type=post --post_status=draft --post_title="Kiln author draft fixture" --post_content="This body must never be returned by discovery." --post_author="$author_id" --allow-root --path="$wp_path"
+published_id="$(wp post create --post_type=post --post_status=publish --post_title="Kiln published fixture" --post_content="<p>Visible <strong>plain</strong> text [gallery]</p>" --post_author=1 --allow-root --path="$wp_path" --porcelain)"
+author_draft_id="$(wp post create --post_type=post --post_status=draft --post_title="Kiln author draft fixture" --post_content="Author draft body" --post_author="$author_id" --allow-root --path="$wp_path" --porcelain)"
 wp post create --post_type=post --post_status=draft --post_title="Kiln admin draft fixture" --post_content="This body must never be returned by discovery." --post_author=1 --allow-root --path="$wp_path"
-wp post create --post_type=post --post_status=private --post_title="Kiln private fixture" --post_content="This post must never be listed." --post_author=1 --allow-root --path="$wp_path"
+private_id="$(wp post create --post_type=post --post_status=private --post_title="Kiln private fixture" --post_content="This post must never be read." --post_author=1 --allow-root --path="$wp_path" --porcelain)"
+
+wp option update kiln_mcp_fixture_published_id "$published_id" --allow-root --path="$wp_path"
+wp option update kiln_mcp_fixture_author_draft_id "$author_draft_id" --allow-root --path="$wp_path"
+wp option update kiln_mcp_fixture_private_id "$private_id" --allow-root --path="$wp_path"
 
 echo "WordPress bootstrap completed."
