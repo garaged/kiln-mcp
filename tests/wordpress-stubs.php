@@ -53,6 +53,13 @@ function wp_register_ability( string $name, array $args ): void {
 }
 
 /**
+ * @param callable $callback Page renderer.
+ * @return void
+ */
+function add_management_page( string $page_title, string $menu_title, string $capability, string $menu_slug, callable $callback ): void {
+}
+
+/**
  * @return bool
  */
 function current_user_can( string $capability, mixed ...$args ): bool {
@@ -95,6 +102,30 @@ function __( string $text, string $domain = 'default' ): string {
 }
 
 /**
+ * @return string
+ */
+function esc_html__( string $text, string $domain = 'default' ): string {
+	return $text;
+}
+
+function esc_html_e( string $text, string $domain = 'default' ): void {
+}
+
+/**
+ * @return string
+ */
+function esc_html( string $text ): string {
+	return $text;
+}
+
+/**
+ * @return string
+ */
+function esc_attr( string $text ): string {
+	return $text;
+}
+
+/**
  * @param array<string, int|string> $args Query arguments.
  * @return array<int, WP_Post>
  */
@@ -131,6 +162,21 @@ function get_option( string $option, mixed $default = false ): mixed {
  * @return bool
  */
 function update_option( string $option, mixed $value, bool $autoload = false ): bool {
+	return true;
+}
+
+/**
+ * @param mixed $value Option value.
+ * @return bool
+ */
+function add_option( string $option, mixed $value, string $deprecated = '', bool $autoload = true ): bool {
+	return true;
+}
+
+/**
+ * @return bool
+ */
+function delete_option( string $option ): bool {
 	return true;
 }
 
@@ -177,6 +223,39 @@ function wp_update_post( array $postarr, bool $wp_error = false ): int|WP_Error 
 }
 
 /**
+ * @return WP_Post|false|null
+ */
+function wp_trash_post( int $post_id = 0 ): WP_Post|false|null {
+	if ( 0 === $post_id ) {
+		return null;
+	}
+	if ( 1 === $post_id ) {
+		return false;
+	}
+	return new WP_Post();
+}
+
+/**
+ * @return WP_Post|false|null
+ */
+function wp_untrash_post( int $post_id = 0 ): WP_Post|false|null {
+	if ( 0 === $post_id ) {
+		return null;
+	}
+	if ( 1 === $post_id ) {
+		return false;
+	}
+	return new WP_Post();
+}
+
+/**
+ * @return string
+ */
+function get_date_from_gmt( string $string ): string {
+	return $string;
+}
+
+/**
  * @param array<string, mixed> $value Data to slash.
  * @return array<string, mixed>
  */
@@ -200,4 +279,29 @@ function update_post_meta( int $post_id, string $meta_key, string $meta_value ):
 
 function get_post_meta( int $post_id, string $meta_key, bool $single = false ): string {
 	return '';
+}
+
+function wp_nonce_field( string $action ): void {
+}
+
+function check_admin_referer( string $action ): void {
+}
+
+function wp_die( string $message ): never {
+	throw new RuntimeException( $message );
+}
+
+function submit_button( string $text, string $type = 'primary', string $name = 'submit' ): void {
+}
+
+function sanitize_key( string $key ): string {
+	return $key;
+}
+
+function wp_unslash( mixed $value ): mixed {
+	return $value;
+}
+
+function absint( mixed $maybeint ): int {
+	return 0;
 }

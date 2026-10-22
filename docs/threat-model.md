@@ -22,6 +22,8 @@
 | Unauthorized or overbroad authoring | fixed draft-only status, active-user ownership, exact-ID update, `edit_posts`/`edit_post` gates, closed schemas, no meta/taxonomy/options fields |
 | Lost updates | opaque modification token, token recheck immediately before write, conflict refusal, durable refreshed token after every write |
 | Stored active content | bounded plain-text title/body contract, markup/PHP-like input rejection, no media or arbitrary HTML |
+| Unauthorized lifecycle effect or self-confirmation | local `manage_options` issuer only; no MCP approval tool; hash-only action/target/version-bound approval; ten-minute expiry; atomic one-time claim before effect; exact state and `edit_post` rechecks |
+| Unintended permanent deletion | exact trash operation only; refuse when WordPress Trash is disabled; no delete ability or generic status interface |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 
