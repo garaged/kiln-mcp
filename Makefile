@@ -41,10 +41,16 @@ container-build: container-preflight
 	$(COMPOSE) build --pull
 
 container-up: container-preflight
-	$(COMPOSE) up --build --wait wordpress
+	@if ! $(COMPOSE) up --build --wait wordpress; then \
+		$(COMPOSE) logs --no-color || true; \
+		exit 1; \
+	fi
 
 container-test: container-preflight
-	$(COMPOSE) up --build --wait wordpress
+	@if ! $(COMPOSE) up --build --wait wordpress; then \
+		$(COMPOSE) logs --no-color || true; \
+		exit 1; \
+	fi
 	$(COMPOSE) run --rm --no-deps test-runner
 
 container-logs:

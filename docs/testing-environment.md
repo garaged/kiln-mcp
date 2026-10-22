@@ -56,14 +56,21 @@ Install Docker Engine plus the Compose v2 plugin, ensure your user can access th
 |---|---|
 | `make container-preflight` | fail fast on missing daemon, Compose v2, or insecure TCP configuration |
 | `make container-build` | build the plugin-aware WordPress image |
-| `make container-up` | start an inspectable test stack |
-| `make container-test` | build, bootstrap WordPress, activate Kiln MCP, and run smoke checks |
-| `make container-logs` | show combined diagnostics |
+| `make container-up` | start an inspectable test stack; print service logs automatically if startup fails |
+| `make container-test` | build, bootstrap WordPress, activate Kiln MCP, and run smoke checks; print service logs automatically if startup fails |
+| `make container-logs` | show combined diagnostics for a still-running stack |
 | `make container-down` | stop services and delete test volumes |
 
 ## Current assertions
 
-The smoke runner proves WordPress is installed, Kiln MCP activates without an error, the REST index responds, and Milestone 0 exposes no Kiln MCP namespace. Future feature slices add focused integration, MCP contract, authorization, and adversarial tests here; they must not replace this baseline.
+The M2 smoke runner proves:
+
+- WordPress, MCP Adapter, and Kiln MCP activate correctly;
+- an administrator can execute the bounded site-health capability;
+- an author can list no more than 20 published or self-authored draft metadata records;
+- private posts and another user's drafts are excluded;
+- subscribers are denied both capabilities; and
+- locally retained audit receipts use the exact redacted contract for allowed and denied discovery attempts.
 
 ## Image maintenance
 
