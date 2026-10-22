@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="Kiln MCP">
+  <description>Baseline WordPress and PHP coding standards.</description>
+  <file>kiln-mcp.php</file>
+  <file>src</file>
+  <file>tests</file>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <arg name="basepath" value="."/>
+  <arg name="colors"/>
+  <rule ref="WordPress"/>
+  <rule ref="WordPress-Extra"/>
+  <rule ref="WordPress-Docs"/>
+  <rule ref="PSR12"/>
+</ruleset>

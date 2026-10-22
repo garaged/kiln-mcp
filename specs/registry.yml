@@ -1,0 +1,17 @@
+version: 1
+requirements:
+  - id: REQ-M0-001
+    source: specs/requirements/m0-foundation.md
+    validation:
+      - scripts/spec-check.php
+      - tests/Unit/ToolPolicyTest.php
+  - id: REQ-M0-002
+    source: specs/requirements/m0-foundation.md
+    validation:
+      - scripts/architecture-check.php
+      - docs/architecture.md
+  - id: REQ-M0-003
+    source: specs/requirements/m0-foundation.md
+    validation:
+      - docs/threat-model.md
+      - docs/manual-testing.md
