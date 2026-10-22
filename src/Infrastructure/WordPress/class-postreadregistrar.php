@@ -75,7 +75,7 @@ final class PostReadRegistrar {
 		}
 
 		$post = get_post( $request->post_id );
-		if ( ! $this->is_admitted_post( $post ) ) {
+		if ( ! $post instanceof WP_Post || ! $this->is_admitted_post( $post ) ) {
 			$this->append_denied( 'post_not_admitted' );
 			return new WP_Error( 'kiln_post_not_admitted', __( 'The requested post is not available.', 'kiln-mcp' ) );
 		}
@@ -102,7 +102,7 @@ final class PostReadRegistrar {
 		}
 
 		$post = get_post( $request->post_id );
-		if ( ! $this->is_admitted_post( $post ) || ! current_user_can( 'edit_post', $request->post_id ) ) {
+		if ( ! $post instanceof WP_Post || ! $this->is_admitted_post( $post ) || ! current_user_can( 'edit_post', $request->post_id ) ) {
 			$this->append_denied( 'post_read_recheck_failed' );
 			return new WP_Error( 'kiln_post_read_denied', __( 'The requested post is not available.', 'kiln-mcp' ) );
 		}

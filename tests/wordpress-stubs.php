@@ -12,6 +12,12 @@ class WP_Post {
 }
 
 class WP_Error {
+	/**
+	 * @param string $code Error code.
+	 * @param string $message Error message.
+	 */
+	public function __construct( string $code = '', string $message = '' ) {
+	}
 }
 
 /**
@@ -126,7 +132,11 @@ function update_option( string $option, mixed $value, bool $autoload = false ): 
  * @return WP_Post|null
  */
 function get_post( int $post_id ): ?WP_Post {
-	return null;
+	if ( 0 === $post_id ) {
+		return null;
+	}
+
+	return new WP_Post();
 }
 
 /**
