@@ -51,7 +51,7 @@ final class WorkflowRequest {
 			? array( 'post_id', 'expected_modified_token', 'approval_token', 'publish_at' )
 			: array( 'post_id', 'expected_modified_token', 'approval_token' );
 
-		if ( $expected_keys !== array_keys( $input )
+		if ( array_keys( $input ) !== $expected_keys
 			|| ! is_int( $input['post_id'] )
 			|| 1 > $input['post_id']
 			|| ! is_string( $input['expected_modified_token'] )
