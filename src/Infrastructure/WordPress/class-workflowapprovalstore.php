@@ -37,7 +37,9 @@ final class WorkflowApprovalStore {
 		$records[]      = WorkflowApproval::create( $action, $post_id, $modified_token, $approval_token, time() );
 		$records        = array_slice( $records, -self::MAX_APPROVALS );
 
-		update_option( self::OPTION_NAME, $records, false );
+		if ( ! update_option( self::OPTION_NAME, $records, false ) ) {
+			throw new \RuntimeException( 'The workflow approval could not be stored.' );
+		}
 
 		return $approval_token;
 	}
@@ -65,7 +67,7 @@ final class WorkflowApprovalStore {
 
 		$records = $this->records();
 		foreach ( $records as $index => $record ) {
-			if ( ! is_array( $record ) || ! WorkflowApproval::matches( $record, $action, $post_id, $modified_token, $approval_token, time() ) ) {
+			if ( ! WorkflowApproval::matches( $record, $action, $post_id, $modified_token, $approval_token, time() ) ) {
 				continue;
 			}
 
@@ -74,7 +76,9 @@ final class WorkflowApprovalStore {
 			return update_option( self::OPTION_NAME, $records, false );
 		}
 
-		delete_option( $lock_name );
+		if ( ! delete_option( $lock_name ) ) {
+			return false;
+		}
 
 		return false;
 	}
@@ -89,13 +93,12 @@ final class WorkflowApprovalStore {
 		$records = array();
 
 		foreach ( $this->records() as $record ) {
-			if ( ! is_array( $record )
-				|| ! isset( $record['token_hash'], $record['expires_at'] )
+			if ( ! isset( $record['token_hash'], $record['expires_at'] )
 				|| ! is_string( $record['token_hash'] )
 				|| ! is_int( $record['expires_at'] )
 				|| $now >= $record['expires_at'] ) {
-				if ( is_array( $record ) && isset( $record['token_hash'] ) && is_string( $record['token_hash'] ) ) {
-					delete_option( self::LOCK_PREFIX . $record['token_hash'] );
+				if ( isset( $record['token_hash'] ) && is_string( $record['token_hash'] ) && ! delete_option( self::LOCK_PREFIX . $record['token_hash'] ) ) {
+					continue;
 				}
 				continue;
 			}
@@ -103,7 +106,9 @@ final class WorkflowApprovalStore {
 			$records[] = $record;
 		}
 
-		update_option( self::OPTION_NAME, array_slice( $records, -self::MAX_APPROVALS ), false );
+		if ( ! update_option( self::OPTION_NAME, array_slice( $records, -self::MAX_APPROVALS ), false ) ) {
+			return;
+		}
 	}
 
 	/**
@@ -118,6 +123,13 @@ final class WorkflowApprovalStore {
 			return array();
 		}
 
-		return $records;
+		$valid_records = array();
+		foreach ( $records as $record ) {
+			if ( is_array( $record ) ) {
+				$valid_records[] = $record;
+			}
+		}
+
+		return $valid_records;
 	}
 }

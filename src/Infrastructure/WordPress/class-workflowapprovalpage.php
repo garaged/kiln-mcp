@@ -101,11 +101,12 @@ final class WorkflowApprovalPage {
 
 		check_admin_referer( self::NONCE_ACTION );
 
-		$action  = isset( $_POST['kiln_mcp_action'] ) ? sanitize_key( (string) wp_unslash( $_POST['kiln_mcp_action'] ) ) : '';
+		$raw_action = isset( $_POST['kiln_mcp_action'] ) ? wp_unslash( $_POST['kiln_mcp_action'] ) : '';
+		$action     = is_string( $raw_action ) ? sanitize_key( $raw_action ) : '';
 		$post_id = isset( $_POST['kiln_mcp_post_id'] ) ? absint( wp_unslash( $_POST['kiln_mcp_post_id'] ) ) : 0;
 		$post    = get_post( $post_id );
 
-		if ( ! WorkflowAction::is_supported( $action ) || ! $this->is_admitted( $post, $action ) ) {
+		if ( ! $post instanceof WP_Post || ! WorkflowAction::is_supported( $action ) || ! $this->is_admitted( $post, $action ) ) {
 			return array(
 				'type'    => 'error',
 				'message' => __( 'That action is not available for the requested post.', 'kiln-mcp' ),

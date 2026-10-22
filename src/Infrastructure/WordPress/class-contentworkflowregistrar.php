@@ -202,7 +202,7 @@ final class ContentWorkflowRegistrar {
 		}
 
 		$post = get_post( $request->post_id );
-		if ( ! $this->is_admitted( $post, $action ) ) {
+		if ( ! $post instanceof WP_Post || ! $this->is_admitted( $post, $action ) ) {
 			return $this->deny( $action, 'post_not_admitted', 'kiln_workflow_not_admitted', __( 'The requested post is not available for that workflow action.', 'kiln-mcp' ) );
 		}
 
@@ -218,7 +218,7 @@ final class ContentWorkflowRegistrar {
 			return $this->deny( $action, 'schedule_not_future', 'kiln_workflow_schedule_time', __( 'The publication time must be in the future.', 'kiln-mcp' ) );
 		}
 
-		if ( WorkflowAction::TRASH === $action && ( ! defined( 'EMPTY_TRASH_DAYS' ) || 0 >= (int) EMPTY_TRASH_DAYS ) ) {
+		if ( WorkflowAction::TRASH === $action && ! $this->is_trash_enabled() ) {
 			return $this->deny( $action, 'trash_disabled', 'kiln_workflow_trash_disabled', __( 'WordPress Trash is disabled, so this action is unavailable.', 'kiln-mcp' ) );
 		}
 
@@ -241,11 +241,12 @@ final class ContentWorkflowRegistrar {
 		$request = WorkflowRequest::from_input( $action, $input );
 		$post    = get_post( $request->post_id );
 
-		if ( ! $this->is_admitted( $post, $action )
+		if ( ! $post instanceof WP_Post
+			|| ! $this->is_admitted( $post, $action )
 			|| ! current_user_can( 'edit_post', $post->ID )
 			|| ! hash_equals( $this->token_for( $post ), $request->expected_modified_token )
 			|| ( WorkflowAction::SCHEDULE === $action && ! $this->is_future_schedule( $request ) )
-			|| ( WorkflowAction::TRASH === $action && ( ! defined( 'EMPTY_TRASH_DAYS' ) || 0 >= (int) EMPTY_TRASH_DAYS ) ) ) {
+			|| ( WorkflowAction::TRASH === $action && ! $this->is_trash_enabled() ) ) {
 			return $this->deny( $action, 'pre_effect_recheck_failed', 'kiln_workflow_recheck_failed', __( 'The requested workflow action is no longer available.', 'kiln-mcp' ) );
 		}
 
@@ -259,7 +260,7 @@ final class ContentWorkflowRegistrar {
 		}
 
 		$updated_post = get_post( $post->ID );
-		if ( ! $this->has_expected_result( $updated_post, $action ) ) {
+		if ( ! $updated_post instanceof WP_Post || ! $this->has_expected_result( $updated_post, $action ) ) {
 			return $this->deny( $action, 'effect_recheck_failed', 'kiln_workflow_effect_failed', __( 'The requested workflow action could not be completed.', 'kiln-mcp' ) );
 		}
 
@@ -370,6 +371,17 @@ final class ContentWorkflowRegistrar {
 		}
 
 		return WorkflowAction::RESTORE === $action && 'draft' === $post->post_status;
+	}
+
+	/**
+	 * Refuses trashing when WordPress would permanently delete instead.
+	 *
+	 * @return bool Whether WordPress Trash is positively enabled.
+	 */
+	private function is_trash_enabled(): bool {
+		$trash_days = defined( 'EMPTY_TRASH_DAYS' ) ? constant( 'EMPTY_TRASH_DAYS' ) : null;
+
+		return is_int( $trash_days ) && 0 < $trash_days;
 	}
 
 	/**

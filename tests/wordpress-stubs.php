@@ -226,14 +226,26 @@ function wp_update_post( array $postarr, bool $wp_error = false ): int|WP_Error 
  * @return WP_Post|false|null
  */
 function wp_trash_post( int $post_id = 0 ): WP_Post|false|null {
-	return null;
+	if ( 0 === $post_id ) {
+		return null;
+	}
+	if ( 1 === $post_id ) {
+		return false;
+	}
+	return new WP_Post();
 }
 
 /**
  * @return WP_Post|false|null
  */
 function wp_untrash_post( int $post_id = 0 ): WP_Post|false|null {
-	return null;
+	if ( 0 === $post_id ) {
+		return null;
+	}
+	if ( 1 === $post_id ) {
+		return false;
+	}
+	return new WP_Post();
 }
 
 /**
