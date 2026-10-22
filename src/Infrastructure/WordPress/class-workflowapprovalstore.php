@@ -127,7 +127,11 @@ final class WorkflowApprovalStore {
 		$valid_records = array();
 		foreach ( $records as $record ) {
 			if ( is_array( $record ) ) {
-				/** @var array<string, mixed> $record */
+				/**
+				 * Narrows untrusted option storage to a string-keyed record.
+				 *
+				 * @var array<string, mixed> $record
+				 */
 				$valid_records[] = $record;
 			}
 		}
