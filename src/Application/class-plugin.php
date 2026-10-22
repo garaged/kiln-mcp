@@ -47,10 +47,12 @@ final class Plugin {
 	public function bootstrap(): void {
 		ToolPolicy::deny_by_default();
 
+		$adapter_version = defined( 'WP_MCP_VERSION' ) && is_string( WP_MCP_VERSION ) ? WP_MCP_VERSION : null;
+
 		if ( ! AdapterDependency::is_available(
 			class_exists( 'WP\\MCP\\Core\\McpAdapter' ),
 			function_exists( 'wp_register_ability' ),
-			defined( 'WP_MCP_VERSION' ) ? WP_MCP_VERSION : null,
+			$adapter_version,
 		) ) {
 			return;
 		}
