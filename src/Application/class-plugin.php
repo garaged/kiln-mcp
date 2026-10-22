@@ -14,6 +14,7 @@ use KilnMcp\Domain\Policy\ToolPolicy;
 use KilnMcp\Infrastructure\WordPress\AdapterDependency;
 use KilnMcp\Infrastructure\WordPress\AuditReceiptStore;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
+use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
 
 /**
@@ -59,12 +60,15 @@ final class Plugin {
 			return;
 		}
 
-		$health_registrar = new SiteHealthSummaryRegistrar( new SiteHealthSummary( $this->version ) );
-		$post_registrar   = new PostDiscoveryRegistrar( new AuditReceiptStore() );
+		$health_registrar    = new SiteHealthSummaryRegistrar( new SiteHealthSummary( $this->version ) );
+		$audit_store         = new AuditReceiptStore();
+		$post_registrar      = new PostDiscoveryRegistrar( $audit_store );
+		$post_read_registrar = new PostReadRegistrar( $audit_store );
 
 		add_action( 'wp_abilities_api_categories_init', array( $health_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $health_registrar, 'register_ability' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $post_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $post_registrar, 'register_ability' ) );
+		add_action( 'wp_abilities_api_init', array( $post_read_registrar, 'register_ability' ) );
 	}
 }

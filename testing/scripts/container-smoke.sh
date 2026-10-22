@@ -92,17 +92,48 @@ if ( ! in_array( "Kiln author draft fixture", $draft_titles, true ) || in_array(
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$ability = wp_get_ability( "kiln/read-post" );
+$post_id = (int) get_option( "kiln_mcp_fixture_published_id" );
+$result  = null === $ability ? null : $ability->execute( array( "post_id" => $post_id ) );
+$expected_keys = array( "id", "title", "status", "modified_at", "permalink", "content_text", "content_truncated", "untrusted_data_notice" );
+
+if ( is_wp_error( $result ) || $expected_keys !== array_keys( $result ) || $post_id !== $result["id"] || false !== strpos( $result["content_text"], "<" ) || false !== strpos( $result["content_text"], "[gallery]" ) || true !== str_contains( $result["untrusted_data_notice"], "untrusted data" ) ) {
+    fwrite( STDERR, "Kiln post read did not return the required redacted contract.\n" );
+    exit( 1 );
+}
+
+$private_id = (int) get_option( "kiln_mcp_fixture_private_id" );
+$private_result = $ability->execute( array( "post_id" => $private_id ) );
+if ( ! is_wp_error( $private_result ) ) {
+    fwrite( STDERR, "Kiln post read exposed a private post.\n" );
+    exit( 1 );
+}
+'
+
+wp eval --allow-root --path="$wp_path" --user=kiln-author '
+$ability = wp_get_ability( "kiln/read-post" );
+$own_id  = (int) get_option( "kiln_mcp_fixture_author_draft_id" );
+$result  = null === $ability ? null : $ability->execute( array( "post_id" => $own_id ) );
+if ( is_wp_error( $result ) || $own_id !== $result["id"] ) {
+    fwrite( STDERR, "Author could not read an owned draft.\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
-        "kiln/list-posts" === $ability_name
+        "kiln/read-post" === $ability_name
+            ? array( "post_id" => 1 )
+            : ( "kiln/list-posts" === $ability_name
             ? array(
                 "status" => "publish",
                 "limit"  => 1,
                 "page"   => 1,
             )
-            : array()
+            : array() )
     );
 
     if ( ! is_wp_error( $result ) ) {

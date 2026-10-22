@@ -54,7 +54,6 @@ requirements:
   - id: REQ-M2-002
     source: specs/requirements/m2-content-discovery-audit.md
     validation:
-      - tests/Integration/PostDiscoveryIntegrationTest.php
       - testing/scripts/container-smoke.sh
   - id: REQ-M2-003
     source: specs/requirements/m2-content-discovery-audit.md
@@ -64,4 +63,29 @@ requirements:
   - id: REQ-M2-004
     source: specs/requirements/m2-content-discovery-audit.md
     validation:
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M3-001
+    source: specs/requirements/m3-single-post-read.md
+    validation:
+      - src/Capability/PostRead
+      - tests/Unit/PostReadRequestTest.php
+  - id: REQ-M3-002
+    source: specs/requirements/m3-single-post-read.md
+    validation:
+      - src/Infrastructure/WordPress
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M3-003
+    source: specs/requirements/m3-single-post-read.md
+    validation:
+      - src/Capability/PostRead
+      - tests/Unit/PostContentRedactorTest.php
+  - id: REQ-M3-004
+    source: specs/requirements/m3-single-post-read.md
+    validation:
+      - tests/Unit/AuditReceiptTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M3-005
+    source: specs/requirements/m3-single-post-read.md
+    validation:
+      - testing/scripts/bootstrap-wordpress.sh
       - testing/scripts/container-smoke.sh
