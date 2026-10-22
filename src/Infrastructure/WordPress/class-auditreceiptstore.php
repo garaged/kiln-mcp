@@ -31,6 +31,8 @@ final class AuditReceiptStore {
 		$receipts[] = $receipt;
 		$receipts   = array_slice( $receipts, -self::MAX_RECEIPTS );
 
-		update_option( self::OPTION_NAME, $receipts, false );
+		if ( ! update_option( self::OPTION_NAME, $receipts, false ) ) {
+			return;
+		}
 	}
 }

@@ -105,7 +105,7 @@ final class PostDiscoveryRegistrar {
 				'id'          => $post->ID,
 				'title'       => $post->post_title,
 				'status'      => $post->post_status,
-				'modified_at' => get_post_modified_time( 'c', true, $post ),
+				'modified_at' => (string) get_post_modified_time( 'c', true, $post ),
 				'permalink'   => get_permalink( $post ),
 			);
 		}
