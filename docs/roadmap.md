@@ -9,6 +9,7 @@
 | M2 | Bounded post discovery and local redacted audit receipts | Merged |
 | M3 | Per-post authorized, bounded plain-text reading | Merged |
 | M4 | Safe draft creation and optimistic-concurrency draft updates | Merged |
+| M5 | Approval-gated publish, schedule, trash, and restore for exact posts | Merged |
 
 ## Remaining capability plan
 
@@ -28,4 +29,4 @@ No milestone expands to generic REST forwarding, arbitrary database/filesystem a
 
 ## Current position
 
-Kiln has completed secure discovery (M1–M3) and controlled draft authoring (M4). M5 begins guarded workflow effects: a local administrator must issue an action-, target-, and version-bound one-time approval before a lifecycle mutation. Permanent deletion and broad site configuration remain deliberately deferred.
+Kiln has completed secure discovery (M1–M3), controlled draft authoring (M4), and approval-gated lifecycle effects (M5). M6 now adds bounded structural discovery and safe taxonomy seeding; broad site configuration, navigation mutation, and permanent deletion remain deliberately deferred.

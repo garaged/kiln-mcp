@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: M0–M4 are delivered. Milestone 5 is in development: administrator-approved lifecycle actions for exact posts.
+> Status: M0–M5 are delivered. Milestone 6 is in development: bounded site-structure discovery and taxonomy seeding.
 
 ## Principles
 
@@ -56,4 +56,4 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M5's acceptance criteria are in [specs/requirements/m5-content-workflow-controls.md](specs/requirements/m5-content-workflow-controls.md). It adds approval-gated lifecycle actions while deliberately excluding permanent deletion, generic content/database access, site configuration, and relays.
+M6's acceptance criteria are in [specs/requirements/m6-site-structure-development.md](specs/requirements/m6-site-structure-development.md). It adds bounded structural discovery and category/tag seeding while deliberately excluding generic administration, navigation mutation, permanent deletion, and relays.
