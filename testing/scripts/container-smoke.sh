@@ -16,19 +16,20 @@ fi
 php -r '
 $response = @file_get_contents("http://wordpress/wp-json/");
 if (false === $response) {
-    fwrite(STDERR, "Unable to retrieve the WordPress REST index.\\n");
+    fwrite(STDERR, "Unable to retrieve the WordPress REST index.\n");
     exit(1);
 }
 
 $index = json_decode($response, true);
 if (! is_array($index) || ! isset($index["routes"]) || ! is_array($index["routes"])) {
-    fwrite(STDERR, "WordPress REST index was not valid route data.\\n");
+    fwrite(STDERR, "WordPress REST index was not valid route data: " . json_last_error_msg() . "\n");
+    fwrite(STDERR, "Response preview: " . substr($response, 0, 300) . "\n");
     exit(1);
 }
 
 foreach (array_keys($index["routes"]) as $route) {
     if (false !== strpos($route, "kiln-mcp")) {
-        fwrite(STDERR, "Kiln MCP must not expose an MCP route in Milestone 0.\\n");
+        fwrite(STDERR, "Kiln MCP must not expose an MCP route in Milestone 0.\n");
         exit(1);
     }
 }
