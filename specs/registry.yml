@@ -89,3 +89,33 @@ requirements:
     validation:
       - testing/scripts/bootstrap-wordpress.sh
       - testing/scripts/container-smoke.sh
+  - id: REQ-M4-001
+    source: specs/requirements/m4-safe-draft-authoring.md
+    validation:
+      - src/Capability/DraftAuthoring
+      - src/Infrastructure/WordPress/class-draftauthoringregistrar.php
+      - tests/Unit/DraftAuthoringRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M4-002
+    source: specs/requirements/m4-safe-draft-authoring.md
+    validation:
+      - src/Capability/DraftAuthoring
+      - tests/Unit/DraftPostVersionTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M4-003
+    source: specs/requirements/m4-safe-draft-authoring.md
+    validation:
+      - src/Infrastructure/WordPress/class-draftauthoringregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M4-004
+    source: specs/requirements/m4-safe-draft-authoring.md
+    validation:
+      - src/Capability/PostDiscovery/class-auditreceipt.php
+      - tests/Unit/AuditReceiptTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M4-005
+    source: specs/requirements/m4-safe-draft-authoring.md
+    validation:
+      - testing/scripts/bootstrap-wordpress.sh
+      - testing/scripts/container-smoke.sh
+      - docs/manual-testing.md

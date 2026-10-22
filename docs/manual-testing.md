@@ -1,6 +1,6 @@
 # Manual testing
 
-## Milestone 3
+## Milestone 4
 
 ### Automated real-WordPress contract
 
@@ -12,13 +12,13 @@ Run:
 
 Expected result: the runner installs a pinned MCP Adapter plugin, activates Kiln MCP, and proves all of the following in a real WordPress instance:
 
-- an author can retrieve at most 20 public or self-authored draft metadata records;
-- a permitted caller can read one exact-ID published post using only the M3 output contract;
-- markup and registered shortcode output are removed from returned post text;
-- a private post is denied even to an administrator;
-- an author can read an owned draft;
-- a subscriber is denied all three Kiln abilities; and
-- successful and denied discovery/read attempts create only redacted local audit receipts.
+- an author can create one owned standard-post draft using only bounded plain-text input;
+- an author can update that exact draft using its current modification token;
+- a stale token is refused without overwriting the newer draft;
+- a draft update cannot publish or alter the target's fixed draft status;
+- an editor can update an admitted draft, while a subscriber is denied all Kiln abilities;
+- private/custom/non-draft targets, markup-like input, and unknown fields are refused; and
+- successful and denied authoring attempts create only redacted local audit receipts.
 
 ### Local quality
 

@@ -19,6 +19,9 @@
 | Diagnostic fingerprinting | authenticated adapter transport, `manage_options` gate, bounded allow-listed diagnostic output, no URLs/users/options/paths/database or plugin inventory |
 | Content overexposure | `edit_posts` and per-post `edit_post` gates, metadata-only discovery, exact-ID read, private/status exclusion, output bounds, local redacted receipts |
 | Active content and prompt injection | shortcodes and markup removed; output is plain text with a fixed untrusted-data notice; content cannot influence capability authorization or tool selection |
+| Unauthorized or overbroad authoring | fixed draft-only status, active-user ownership, exact-ID update, `edit_posts`/`edit_post` gates, closed schemas, no meta/taxonomy/options fields |
+| Lost updates | opaque modification token, token recheck immediately before write, conflict refusal, durable refreshed token after every write |
+| Stored active content | bounded plain-text title/body contract, markup/PHP-like input rejection, no media or arbitrary HTML |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 
