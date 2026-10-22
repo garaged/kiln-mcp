@@ -35,7 +35,7 @@ manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
 
 container-preflight:
-	./scripts/container-preflight.sh
+	sh ./scripts/container-preflight.sh
 
 container-build: container-preflight
 	$(COMPOSE) build --pull
@@ -48,7 +48,7 @@ container-test: container-preflight
 	$(COMPOSE) run --rm --no-deps test-runner
 
 container-logs:
-	$(COMPOSE) logs --no-color
+	$(COMPOSE) logs --no-color || true
 
 container-down:
-	$(COMPOSE) down --volumes --remove-orphans
+	$(COMPOSE) down --volumes --remove-orphans || true
