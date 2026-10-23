@@ -23,3 +23,9 @@ The dependency graph is acyclic. Only the WordPress infrastructure adapter uses 
 Kiln consumes the official WordPress Abilities API and the MCP Adapter plugin for MCP transport/discovery. Kiln remains responsible for its own capability registration, authorization, policy enforcement, audit receipts, redaction, and compatibility contracts.
 
 M1 publishes one adapter-discoverable ability, `kiln/site-health-summary`. It is marked read-only and idempotent, checks `manage_options` at execution, and returns a fixed allow-listed schema. The adapter's discovery metadata is not authorization; WordPress capability checks remain mandatory.
+
+## M7 extension boundary
+
+M7 adds a governed extension adapter, not a plugin-execution sandbox. Installed extensions use a dedicated WordPress hook to populate a private staging registry with typed manifests. A provider's manifests are committed only as one valid, non-colliding batch; an exception or conflict discards that provider and dispatch continues. Core derives the logical identity `kiln-ext/{extension-id}/{ability-id}` and encodes the registered WordPress ability as `kiln-ext/{extension-id}--{ability-id}` because the Abilities API requires exactly one namespace slash. IDs refuse double hyphens, so the encoding is collision-free.
+
+The WordPress adapter owns `manage_options`, MCP discovery, REST exclusion, readonly/idempotent metadata, callback wrapping, and generic redacted receipts. Extensions supply only label, description, closed schemas, and a local executor. This keeps the MCP-facing surface explicit while preserving the administrator trust boundary of installed WordPress code.

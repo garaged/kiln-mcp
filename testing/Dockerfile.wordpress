@@ -16,4 +16,5 @@ COPY --from=plugin-vendor /plugin/vendor /opt/kiln/plugin/vendor
 COPY kiln-mcp.php /opt/kiln/plugin/kiln-mcp.php
 COPY src /opt/kiln/plugin/src
 COPY testing/scripts /opt/kiln/scripts
+COPY testing/fixtures /opt/kiln/fixtures
 RUN chmod 0555 /opt/kiln/scripts/*.sh

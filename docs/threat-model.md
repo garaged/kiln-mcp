@@ -26,6 +26,10 @@
 | Unintended permanent deletion | exact trash operation only; refuse when WordPress Trash is disabled; no delete ability or generic status interface |
 | Unauthorized taxonomy or structural changes | seven fixed M6 abilities only; closed schemas; standard category/tag taxonomy allow-list; admitted category parents; idempotent seed only; no update/delete/assign/merge/bulk/custom taxonomy/meta/slugs/descriptions |
 | Navigation phishing or sitewide workflow disruption | menu metadata discovery only; no menu, menu-item, or location mutation capability; any future navigation write requires a separately approved design |
+| Extension namespace or manifest abuse | typed versioned manifests; closed schemas; ten-ability bound; collision refusal; double-hyphen-free IDs and a core-owned WordPress-compatible name encoding; no extension-selected transport or capability policy |
+| Partial or failed extension registration | provider-local staging registry; atomic batch admission; exceptions and collisions discard that provider's complete batch while later valid providers and Kiln core continue |
+| Extension capability privilege escalation | fixed core-owned `manage_options` gate; read-only/idempotent metadata; core-owned MCP discovery; REST disabled; executor rechecks authorization; no extension-supplied permission callback or write effect |
+| Extension audit leakage | generic `kiln/extension` receipt class; bounded local receipts omit extension identity, input/output, callback, paths, and exception detail |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 

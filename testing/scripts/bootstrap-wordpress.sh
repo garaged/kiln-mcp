@@ -28,6 +28,10 @@ cp -a /opt/kiln/plugin/. "$wp_path/wp-content/plugins/kiln-mcp/"
 wp plugin activate kiln-mcp --allow-root --path="$wp_path"
 wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
+cp -a /opt/kiln/fixtures/kiln-mcp-extension-fixture "$wp_path/wp-content/plugins/"
+wp plugin activate kiln-mcp-extension-fixture --allow-root --path="$wp_path"
+wp plugin is-active kiln-mcp-extension-fixture --allow-root --path="$wp_path"
+
 wp user create kiln-subscriber kiln-subscriber@example.test --role=subscriber --user_pass=kiln_test_subscriber_password --allow-root --path="$wp_path"
 wp user create kiln-author kiln-author@example.test --role=author --user_pass=kiln_test_author_password --allow-root --path="$wp_path"
 wp user create kiln-editor kiln-editor@example.test --role=editor --user_pass=kiln_test_editor_password --allow-root --path="$wp_path"
