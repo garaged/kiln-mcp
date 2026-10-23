@@ -33,11 +33,15 @@ fi
 rm -f "$stdio_diagnostics"
 
 http_password="$( wp user application-password create kiln-author "Kiln M8 disposable HTTP test" --porcelain --allow-root --path="$wp_path" | tr -d ' ' )"
-if ! KILN_MCP_HTTP_PASSWORD="$http_password" php <<'PHP'
+subscriber_http_password="$( wp user application-password create kiln-subscriber "Kiln M8 disposable HTTP test" --porcelain --allow-root --path="$wp_path" | tr -d ' ' )"
+if ! KILN_MCP_HTTP_PASSWORD="$http_password" KILN_MCP_SUBSCRIBER_HTTP_PASSWORD="$subscriber_http_password" php <<'PHP'
 <?php
 declare(strict_types=1);
 
-function kiln_mcp_http_request( ?string $authorization ): array {
+const KILN_MCP_HTTP_ENDPOINT = 'http://wordpress/?rest_route=/kiln-mcp/mcp';
+const KILN_MCP_PROTOCOL_VERSION = '2025-11-25';
+
+function kiln_mcp_http_request( ?string $authorization, array $message, ?string $session_id = null ): array {
     $headers = array(
         'Content-Type: application/json',
         'Accept: application/json, text/event-stream',
@@ -45,72 +49,117 @@ function kiln_mcp_http_request( ?string $authorization ): array {
     if ( null !== $authorization ) {
         $headers[] = 'Authorization: ' . $authorization;
     }
+    if ( null !== $session_id ) {
+        $headers[] = 'Mcp-Session-Id: ' . $session_id;
+        $headers[] = 'MCP-Protocol-Version: ' . KILN_MCP_PROTOCOL_VERSION;
+    }
 
     $context = stream_context_create(
         array(
             'http' => array(
                 'method'        => 'POST',
                 'header'        => implode( "\r\n", $headers ),
-                'content'       => json_encode(
-                    array(
-                        'jsonrpc' => '2.0',
-                        'id'      => 9,
-                        'method'  => 'initialize',
-                        'params'  => array(
-                            'protocolVersion' => '2025-11-25',
-                            'capabilities'    => new stdClass(),
-                            'clientInfo'      => array(
-                                'name'    => 'kiln-mcp-test',
-                                'version' => '1.0.0',
-                            ),
-                        ),
-                    )
-                ),
+                'content'       => json_encode( $message, JSON_THROW_ON_ERROR ),
                 'ignore_errors' => true,
                 'timeout'       => 10,
             ),
         )
     );
 
-    $body    = file_get_contents( 'http://wordpress/?rest_route=/kiln-mcp/mcp', false, $context );
-    $headers = $http_response_header ?? array();
-
-    return array( $body, $headers );
+    $body = file_get_contents( KILN_MCP_HTTP_ENDPOINT, false, $context );
+    return array( $body, $http_response_header ?? array() );
 }
 
-list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null );
+function kiln_mcp_is_success( mixed $status ): bool {
+    return is_string( $status ) && str_starts_with( $status, 'HTTP/1.1 2' );
+}
+
+function kiln_mcp_session_id( array $headers ): ?string {
+    foreach ( $headers as $header ) {
+        if ( str_starts_with( strtolower( $header ), 'mcp-session-id:' ) ) {
+            $session_id = trim( substr( $header, strlen( 'mcp-session-id:' ) ) );
+            return '' === $session_id ? null : $session_id;
+        }
+    }
+
+    return null;
+}
+
+function kiln_mcp_initialize_message( int $id ): array {
+    return array(
+        'jsonrpc' => '2.0',
+        'id'      => $id,
+        'method'  => 'initialize',
+        'params'  => array(
+            'protocolVersion' => KILN_MCP_PROTOCOL_VERSION,
+            'capabilities'    => new stdClass(),
+            'clientInfo'      => array( 'name' => 'kiln-mcp-test', 'version' => '1.0.0' ),
+        ),
+    );
+}
+
+list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null, kiln_mcp_initialize_message( 9 ) );
 $unauthenticated_status = $unauthenticated_headers[0] ?? '';
-$unauthenticated_response = is_string( $unauthenticated_body ) ? json_decode( $unauthenticated_body, true ) : null;
-$unauthenticated_denied = is_string( $unauthenticated_status )
-    && str_starts_with( $unauthenticated_status, 'HTTP/1.1 4' );
-if ( ! $unauthenticated_denied && ( ! is_array( $unauthenticated_response ) || ! isset( $unauthenticated_response['error'] ) ) ) {
-    $response_shape = is_array( $unauthenticated_response )
-        ? implode( ',', array_keys( $unauthenticated_response ) )
-        : gettype( $unauthenticated_response );
-    file_put_contents( "php://stderr", 'Kiln M8 unauthenticated request was not refused; HTTP status=' . $unauthenticated_status . '; response-shape=' . $response_shape . PHP_EOL );
+if ( ! is_string( $unauthenticated_status ) || ! str_starts_with( $unauthenticated_status, 'HTTP/1.1 4' ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 unauthenticated HTTP initialization was not refused.' . PHP_EOL );
     exit( 1 );
 }
 foreach ( $unauthenticated_headers as $header ) {
     if ( 'access-control-allow-origin: *' === strtolower( $header ) ) {
-        file_put_contents( "php://stderr", 'Kiln M8 refused wildcard CORS response header.' . PHP_EOL );
+        file_put_contents( "php://stderr", 'Kiln M8 emitted a wildcard CORS response header.' . PHP_EOL );
         exit( 1 );
     }
 }
 
 $password = getenv( 'KILN_MCP_HTTP_PASSWORD' );
-if ( ! is_string( $password ) || '' === $password ) {
+$subscriber_password = getenv( 'KILN_MCP_SUBSCRIBER_HTTP_PASSWORD' );
+if ( ! is_string( $password ) || '' === $password || ! is_string( $subscriber_password ) || '' === $subscriber_password ) {
     exit( 1 );
 }
 $authorization = 'Basic ' . base64_encode( 'kiln-author:' . $password );
-list( $authenticated_body, $authenticated_headers ) = kiln_mcp_http_request( $authorization );
-$authenticated_status = $authenticated_headers[0] ?? '';
-$response = is_string( $authenticated_body ) ? json_decode( $authenticated_body, true ) : null;
-if ( ! is_string( $authenticated_status ) || ! str_starts_with( $authenticated_status, 'HTTP/1.1 2' ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
-    $response_code = is_array( $response ) && isset( $response['error']['code'] ) && is_int( $response['error']['code'] ) ? (string) $response['error']['code'] : 'unavailable';
-    $response_shape = is_array( $response ) ? implode( ',', array_keys( $response ) ) : gettype( $response );
-    $response_id = is_array( $response ) && isset( $response['id'] ) ? (string) $response['id'] : 'unavailable';
-    $response_message = is_array( $response ) && isset( $response['error']['message'] ) && is_string( $response['error']['message'] ) ? $response['error']['message'] : 'unavailable';
-    file_put_contents( "php://stderr", 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . '; response-code=' . $response_code . '; response-shape=' . $response_shape . '; response-id=' . $response_id . '; response-message=' . $response_message . PHP_EOL );
+list( $initialize_body, $initialize_headers ) = kiln_mcp_http_request( $authorization, kiln_mcp_initialize_message( 10 ) );
+$initialize_status = $initialize_headers[0] ?? '';
+$initialize_response = is_string( $initialize_body ) ? json_decode( $initialize_body, true ) : null;
+$session_id = kiln_mcp_session_id( $initialize_headers );
+if ( ! kiln_mcp_is_success( $initialize_status ) || ! is_array( $initialize_response ) || 10 !== ( $initialize_response['id'] ?? null ) || ! isset( $initialize_response['result'] ) || null === $session_id ) {
+    file_put_contents( "php://stderr", 'Kiln M8 authenticated HTTP initialization did not return a session.' . PHP_EOL );
+    exit( 1 );
+}
+
+list( $notification_body, $notification_headers ) = kiln_mcp_http_request(
+    $authorization,
+    array( 'jsonrpc' => '2.0', 'method' => 'notifications/initialized', 'params' => new stdClass() ),
+    $session_id
+);
+if ( ! kiln_mcp_is_success( $notification_headers[0] ?? '' ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 authenticated HTTP initialized notification was refused.' . PHP_EOL );
+    exit( 1 );
+}
+
+list( $tools_body, $tools_headers ) = kiln_mcp_http_request(
+    $authorization,
+    array( 'jsonrpc' => '2.0', 'id' => 11, 'method' => 'tools/list', 'params' => new stdClass() ),
+    $session_id
+);
+$tools_response = is_string( $tools_body ) ? json_decode( $tools_body, true ) : null;
+$tool_names = array();
+if ( is_array( $tools_response['result']['tools'] ?? null ) ) {
+    foreach ( $tools_response['result']['tools'] as $tool ) {
+        if ( is_array( $tool ) && isset( $tool['name'] ) && is_string( $tool['name'] ) ) {
+            $tool_names[] = $tool['name'];
+        }
+    }
+}
+if ( ! kiln_mcp_is_success( $tools_headers[0] ?? '' ) || ! is_array( $tools_response ) || 11 !== ( $tools_response['id'] ?? null ) || ! in_array( 'kiln-site-health-summary', $tool_names, true ) || in_array( 'mcp-adapter-discover-abilities', $tool_names, true ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 HTTP tool discovery did not preserve the dedicated allow-list.' . PHP_EOL );
+    exit( 1 );
+}
+
+$subscriber_authorization = 'Basic ' . base64_encode( 'kiln-subscriber:' . $subscriber_password );
+list( $subscriber_body, $subscriber_headers ) = kiln_mcp_http_request( $subscriber_authorization, kiln_mcp_initialize_message( 12 ) );
+$subscriber_status = $subscriber_headers[0] ?? '';
+if ( ! is_string( $subscriber_status ) || ! str_starts_with( $subscriber_status, 'HTTP/1.1 4' ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 subscriber HTTP initialization was not refused.' . PHP_EOL );
     exit( 1 );
 }
 PHP
