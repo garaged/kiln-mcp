@@ -20,6 +20,8 @@ final readonly class ExtensionManifest {
 	public const MAX_ABILITIES = 10;
 
 	/**
+	 * Creates and validates one complete extension manifest.
+	 *
 	 * @param string                       $id        Normalized extension ID.
 	 * @param string                       $version   Semantic version.
 	 * @param array<int, ExtensionAbility> $abilities Declared abilities.
