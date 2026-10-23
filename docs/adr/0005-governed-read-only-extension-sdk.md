@@ -12,7 +12,7 @@ WordPress developers need extensibility, but accepting a callback or generic con
 
 M7 defines a typed, versioned manifest SDK. An installed extension explicitly registers a manifest during a dedicated WordPress hook. Core validates the full manifest atomically before registering any ability.
 
-Version one permits only read-only abilities, names them under the kiln-ext namespace, requires closed object input/output schemas, uses a fixed manage_options permission policy, and records redacted outcome receipts. Extensions may not provide custom permission callbacks or public/tool-transport flags.
+Version one permits only read-only abilities, keeps their logical identities under kiln-ext/{extension-id}/{ability-id}, and encodes their WordPress ability names as kiln-ext/{extension-id}--{ability-id}; the platform accepts exactly one namespace slash. IDs forbid double hyphens so this encoding is collision-free. Core, not extensions, sets public MCP discovery, requires closed object input/output schemas, uses a fixed manage_options permission policy, and records redacted outcome receipts. Extensions may not provide custom permission callbacks or public/tool-transport flags.
 
 ## Consequences
 
