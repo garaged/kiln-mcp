@@ -1,5 +1,25 @@
 # Manual testing
 
+## Milestone 7
+
+### Automated real-WordPress contract
+
+Run:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: M1–M6 regression coverage remains green. M7 additionally activates a disposable valid local extension and a provider that throws after staging a manifest. The valid kiln-ext/fixture--facts ability is registered and administrator-executable; the partial throwing ability is absent; subscribers are denied; and redacted receipts retain no extension ID, input, output, callback, path, or exception detail.
+
+### Rancher Desktop acceptance
+
+1. Use a non-production WordPress environment and ensure Rancher Desktop is running.
+2. Run the automated command sequence above from this repository.
+3. Confirm container-preflight reports the intended Rancher Desktop context and native architecture.
+4. Confirm container-test reports Container smoke checks passed.
+5. Record the Docker context, daemon architecture, Compose version, and successful output.
+6. Confirm no container port other than the loopback-bound disposable WordPress test port is published. Do not use production credentials, a public Docker listener, or a real extension with unreviewed PHP.
 ## Milestone 6
 
 ### Automated real-WordPress contract
