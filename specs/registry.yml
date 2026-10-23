@@ -224,3 +224,37 @@ requirements:
       - testing/scripts/container-smoke.sh
       - docs/manual-testing.md
       - docs/acceptance/m7-rancher-desktop-arm64.md
+
+  - id: REQ-M8-001
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - src/Infrastructure/WordPress/class-kilnmcpserverregistrar.php
+      - tests/Unit/KilnMcpServerRegistrarTest.php
+      - testing/scripts/mcp-protocol-smoke.php
+  - id: REQ-M8-002
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - testing/scripts/mcp-protocol-smoke.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M8-003
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - testing/scripts/mcp-protocol-smoke.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M8-004
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - testing/scripts/mcp-protocol-smoke.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M8-005
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - Makefile
+      - testing/compose.yaml
+      - testing/scripts/mcp-protocol-smoke.php
+  - id: REQ-M8-006
+    source: specs/requirements/m8-client-interoperability-hardening.md
+    validation:
+      - .github/workflows/quality.yml
+      - docs/manual-testing.md
+      - docs/acceptance/m8-rancher-desktop-arm64.md
