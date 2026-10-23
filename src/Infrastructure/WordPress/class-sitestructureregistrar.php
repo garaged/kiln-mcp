@@ -93,7 +93,7 @@ final class SiteStructureRegistrar {
 	 * Lists a bounded allow-list of public registered post-type metadata.
 	 *
 	 * @param array<string, mixed> $input Closed empty input.
-	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed discovery output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed discovery output or refusal.
 	 */
 	public function list_post_types( array $input ): array|WP_Error {
 		if ( ! $this->is_empty_input( $input ) ) {
@@ -116,7 +116,7 @@ final class SiteStructureRegistrar {
 	 * Lists a bounded allow-list of public registered taxonomy metadata.
 	 *
 	 * @param array<string, mixed> $input Closed empty input.
-	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed discovery output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed discovery output or refusal.
 	 */
 	public function list_taxonomies( array $input ): array|WP_Error {
 		if ( ! $this->is_empty_input( $input ) ) {
@@ -139,7 +139,7 @@ final class SiteStructureRegistrar {
 	 * Lists bounded navigation menu term metadata without items or URLs.
 	 *
 	 * @param array<string, mixed> $input Closed empty input.
-	 * @return array<string, array<int, array<string, int|string>>>|WP_Error Fixed discovery output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed discovery output or refusal.
 	 */
 	public function list_menus( array $input ): array|WP_Error {
 		if ( ! $this->is_empty_input( $input ) ) {
@@ -162,7 +162,7 @@ final class SiteStructureRegistrar {
 	 * Lists one bounded category page.
 	 *
 	 * @param array<string, mixed> $input Closed page input.
-	 * @return array<string, array<int, array<string, int|string>>>|WP_Error Fixed discovery output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed discovery output or refusal.
 	 */
 	public function list_categories( array $input ): array|WP_Error {
 		return $this->list_terms( 'category', AuditReceipt::LIST_CATEGORIES_ABILITY_NAME, $input );
@@ -172,7 +172,7 @@ final class SiteStructureRegistrar {
 	 * Lists one bounded tag page.
 	 *
 	 * @param array<string, mixed> $input Closed page input.
-	 * @return array<string, array<int, array<string, int|string>>>|WP_Error Fixed discovery output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed discovery output or refusal.
 	 */
 	public function list_tags( array $input ): array|WP_Error {
 		return $this->list_terms( 'post_tag', AuditReceipt::LIST_TAGS_ABILITY_NAME, $input );
@@ -254,7 +254,7 @@ final class SiteStructureRegistrar {
 	 * @param string               $taxonomy Standard taxonomy.
 	 * @param string               $ability  Ability identifier.
 	 * @param array<string, mixed> $input    Closed page input.
-	 * @return array<string, array<int, array<string, int|string>>>|WP_Error Fixed output or refusal.
+	 * @return array<string, array<int, array<string, bool|int|string>>>|WP_Error Fixed output or refusal.
 	 */
 	private function list_terms( string $taxonomy, string $ability, array $input ): array|WP_Error {
 		try {

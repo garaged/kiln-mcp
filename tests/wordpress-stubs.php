@@ -327,37 +327,73 @@ function absint( mixed $maybeint ): int {
 }
 
 
-/** @return array<string, WP_Post_Type> */
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<string, WP_Post_Type>
+ */
 function get_post_types( array $args = array(), string $output = 'names' ): array {
 	return array();
 }
 
-/** @return array<string, WP_Taxonomy> */
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<string, WP_Taxonomy>
+ */
 function get_taxonomies( array $args = array(), string $output = 'names' ): array {
 	return array();
 }
 
-/** @return array<int, WP_Term> */
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<int, WP_Term>
+ */
 function wp_get_nav_menus( array $args = array() ): array {
 	return array();
 }
 
-/** @return array<int, WP_Term>|WP_Error */
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<int, WP_Term>|WP_Error
+ */
 function get_terms( array $args = array() ): array|WP_Error {
+	if ( array() === $args ) {
+		return new WP_Error();
+	}
 	return array();
 }
 
 /** @return WP_Term|WP_Error|null */
 function get_term( int $term, string $taxonomy = '' ): WP_Term|WP_Error|null {
+	if ( 1 === $term ) {
+		return new WP_Error();
+	}
+	if ( 2 === $term ) {
+		return new WP_Term();
+	}
 	return null;
 }
 
 /** @return array<string, int|string>|int|string|null */
 function term_exists( string $term, string $taxonomy = '', int $parent_term = 0 ): array|int|string|null {
+	if ( 'array' === $term ) {
+		return array( 'term_id' => 1 );
+	}
+	if ( 'int' === $term ) {
+		return 1;
+	}
+	if ( 'string' === $term ) {
+		return '1';
+	}
 	return null;
 }
 
-/** @return array<string, int|string>|WP_Error */
+/**
+ * @param array<string, mixed> $args Insert arguments.
+ * @return array<string, int|string>|WP_Error
+ */
 function wp_insert_term( string $term, string $taxonomy, array $args = array() ): array|WP_Error {
-	return new WP_Error();
+	if ( '' === $term ) {
+		return new WP_Error();
+	}
+	return array( 'term_id' => 1 );
 }
