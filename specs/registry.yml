@@ -151,3 +151,38 @@ requirements:
     validation:
       - testing/scripts/container-smoke.sh
       - docs/manual-testing.md
+
+  - id: REQ-M6-001
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - src/Capability/SiteStructure
+      - tests/Unit/SiteStructureRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M6-002
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - src/Infrastructure/WordPress/class-sitestructureregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M6-003
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - src/Capability/SiteStructure
+      - tests/Unit/SiteStructureRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M6-004
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - src/Capability/SiteStructure
+      - src/Infrastructure/WordPress/class-sitestructureregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M6-005
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - tests/Unit/TermSeedRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M6-006
+    source: specs/requirements/m6-site-structure-development.md
+    validation:
+      - src/Capability/PostDiscovery/class-auditreceipt.php
+      - docs/manual-testing.md
+      - testing/scripts/container-smoke.sh

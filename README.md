@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: M0–M4 are delivered. Milestone 5 is in development: administrator-approved lifecycle actions for exact posts.
+> Status: M0–M5 are delivered. Milestone 6 is in development: bounded site-structure discovery and taxonomy seeding.
 
 ## Principles
 
@@ -26,12 +26,17 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 | `kiln/schedule-post-publication` | `edit_post` plus local administrator approval | one current unprotected draft → future UTC publication |
 | `kiln/trash-post` | `edit_post` plus local administrator approval | one current unprotected draft/published post → WordPress Trash |
 | `kiln/restore-post` | `edit_post` plus local administrator approval | one current unprotected trashed post → draft |
+| `kiln/list-supported-post-types` | `manage_options` | at most 20 public post-type names, labels, and hierarchy flags |
+| `kiln/list-supported-taxonomies` | `manage_options` | at most 20 public taxonomy names, labels, and hierarchy flags |
+| `kiln/list-navigation-menus` | `edit_theme_options` | at most 20 menu IDs, names, and item counts; never items, URLs, or locations |
+| `kiln/list-categories` / `kiln/list-tags` | `manage_categories` | one closed page of at most 20 fixed term records |
+| `kiln/create-category` / `kiln/create-tag` | `manage_categories` | idempotent creation of one plain-text standard term; categories require an admitted parent |
 
 The post reader excludes private, scheduled, trashed, password-protected, and custom-post-type content. It removes shortcodes and markup, reports truncation, and labels returned content as untrusted data. It does not expose user identity, comments, revisions, custom fields, media metadata, raw HTML, or generic post properties.
 
 Lifecycle approvals are issued only from **Tools → Kiln MCP approvals** by a `manage_options` administrator. Kiln stores only an approval hash, exact action/target/version binding, expiry, and consumed state; tokens expire in ten minutes, are one-time, and are never issued or returned through MCP.
 
-All discovery, authoring, and lifecycle outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
+All discovery, authoring, lifecycle, and site-structure outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
 
 Install and activate [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) before activating Kiln. For local clients, use the adapter's documented WP-CLI/STDIO server. For remote access, use its authenticated HTTP transport over HTTPS; Kiln does not add a relay.
 
@@ -56,4 +61,4 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M5's acceptance criteria are in [specs/requirements/m5-content-workflow-controls.md](specs/requirements/m5-content-workflow-controls.md). It adds approval-gated lifecycle actions while deliberately excluding permanent deletion, generic content/database access, site configuration, and relays.
+M6's acceptance criteria are in [specs/requirements/m6-site-structure-development.md](specs/requirements/m6-site-structure-development.md). It adds bounded structural discovery and category/tag seeding while deliberately excluding generic administration, navigation mutation, permanent deletion, and relays.

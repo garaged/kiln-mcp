@@ -24,10 +24,12 @@ M3 adds unit coverage for exact-ID read input and content redaction. Its real-Wo
 
 M4 adds pure tests for closed draft-create/update requests and deterministic modification-token construction. Its real-WordPress contract proves creation under active-user ownership, exact draft update, stale-token conflict refusal, status preservation, author/editor/subscriber policy, markup/unknown-input refusal, output shape, and receipt redaction.
 
-M5 adds pure approval-record tests and a real-WordPress lifecycle contract. It proves hash-only local approval storage, exact action/target/version binding, expiry semantics, single-use replay refusal, administrator-only local issuance wiring, current-token rechecks, publish/schedule/trash/restore result states, recovery from Trash, fixed metadata, redacted receipts, and subscriber denial. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
+M5 adds pure approval-record tests and a real-WordPress lifecycle contract. It proves hash-only local approval storage, exact action/target/version binding, expiry semantics, single-use replay refusal, administrator-only local issuance wiring, current-token rechecks, publish/schedule/trash/restore result states, recovery from Trash, fixed metadata, redacted receipts, and subscriber denial.
+
+M6 adds pure tests for closed page and taxonomy-seed inputs. Its real-WordPress contract proves fixed-field discovery bounds, category/tag idempotency, admitted category parents, markup/unknown-input/oversized-page refusal, subscriber denial, receipt attribution to the exact ability, and the deliberate absence of navigation mutation.
 
 ## Container baseline
 
-The real-WordPress baseline is the container-test Make target. It builds the production plugin artifact, waits for a healthy database and WordPress instance, installs the pinned MCP Adapter, activates Kiln MCP in a fresh site, then executes an isolated smoke runner. The same target runs in Linux CI; manual Rancher Desktop Apple Silicon evidence is required before support is claimed.
+The real-WordPress baseline is the container-test Make target. It builds the production plugin artifact, waits for a healthy database and WordPress instance, installs the pinned MCP Adapter, activates Kiln MCP in a fresh site, then executes an isolated smoke runner. The same target runs in Linux CI; manual Rancher Desktop Apple Silicon evidence is required before support is claimed. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
 
 Every confirmed AI- or reviewer-found defect adds a focused regression test before its fix is accepted.

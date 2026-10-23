@@ -24,6 +24,8 @@
 | Stored active content | bounded plain-text title/body contract, markup/PHP-like input rejection, no media or arbitrary HTML |
 | Unauthorized lifecycle effect or self-confirmation | local `manage_options` issuer only; no MCP approval tool; hash-only action/target/version-bound approval; ten-minute expiry; atomic one-time claim before effect; exact state and `edit_post` rechecks |
 | Unintended permanent deletion | exact trash operation only; refuse when WordPress Trash is disabled; no delete ability or generic status interface |
+| Unauthorized taxonomy or structural changes | seven fixed M6 abilities only; closed schemas; standard category/tag taxonomy allow-list; admitted category parents; idempotent seed only; no update/delete/assign/merge/bulk/custom taxonomy/meta/slugs/descriptions |
+| Navigation phishing or sitewide workflow disruption | menu metadata discovery only; no menu, menu-item, or location mutation capability; any future navigation write requires a separately approved design |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 

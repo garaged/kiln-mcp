@@ -18,6 +18,7 @@ use KilnMcp\Infrastructure\WordPress\DraftAuthoringRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
+use KilnMcp\Infrastructure\WordPress\SiteStructureRegistrar;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
@@ -72,6 +73,7 @@ final class Plugin {
 		$draft_authoring_registrar = new DraftAuthoringRegistrar( $audit_store );
 		$workflow_registrar        = new ContentWorkflowRegistrar( $audit_store, $approval_store );
 		$approval_page             = new WorkflowApprovalPage( $approval_store );
+		$structure_registrar       = new SiteStructureRegistrar( $audit_store );
 
 		add_action( 'wp_abilities_api_categories_init', array( $health_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $health_registrar, 'register_ability' ) );
@@ -81,7 +83,9 @@ final class Plugin {
 		add_action( 'wp_abilities_api_categories_init', array( $draft_authoring_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $draft_authoring_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $workflow_registrar, 'register_category' ) );
+		add_action( 'wp_abilities_api_categories_init', array( $structure_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $workflow_registrar, 'register_abilities' ) );
+		add_action( 'wp_abilities_api_init', array( $structure_registrar, 'register_abilities' ) );
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
 		add_action( 'admin_menu', array( $approval_page, 'register_page' ) );
 	}

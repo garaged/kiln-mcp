@@ -304,8 +304,100 @@ if ( ! is_array( $records ) || false !== strpos( serialize( $records ), $publish
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$abilities = array(
+    "kiln/list-supported-post-types",
+    "kiln/list-supported-taxonomies",
+    "kiln/list-navigation-menus",
+    "kiln/list-categories",
+    "kiln/list-tags",
+    "kiln/create-category",
+    "kiln/create-tag",
+);
+foreach ( $abilities as $ability_name ) {
+    if ( null === wp_get_ability( $ability_name ) ) {
+        fwrite( STDERR, "Kiln M6 ability was not registered: " . $ability_name . "\n" );
+        exit( 1 );
+    }
+}
+
+$post_types = wp_get_ability( "kiln/list-supported-post-types" )->execute( array() );
+$taxonomies = wp_get_ability( "kiln/list-supported-taxonomies" )->execute( array() );
+$menus = wp_get_ability( "kiln/list-navigation-menus" )->execute( array() );
+$categories = wp_get_ability( "kiln/list-categories" )->execute( array( "limit" => 20, "page" => 1 ) );
+$tags = wp_get_ability( "kiln/list-tags" )->execute( array( "limit" => 20, "page" => 1 ) );
+
+foreach ( array( $post_types, $taxonomies, $menus, $categories, $tags ) as $result ) {
+    if ( is_wp_error( $result ) || array( "items" ) !== array_keys( $result ) || count( $result["items"] ) > 20 ) {
+        fwrite( STDERR, "Kiln M6 discovery did not return its bounded list contract.\n" );
+        exit( 1 );
+    }
+}
+foreach ( $post_types["items"] as $item ) {
+    if ( array( "name", "label", "hierarchical" ) !== array_keys( $item ) ) {
+        fwrite( STDERR, "Kiln M6 post-type discovery leaked an unexpected field.\n" );
+        exit( 1 );
+    }
+}
+foreach ( $taxonomies["items"] as $item ) {
+    if ( array( "name", "label", "hierarchical" ) !== array_keys( $item ) ) {
+        fwrite( STDERR, "Kiln M6 taxonomy discovery leaked an unexpected field.\n" );
+        exit( 1 );
+    }
+}
+foreach ( $menus["items"] as $item ) {
+    if ( array( "id", "name", "item_count" ) !== array_keys( $item ) ) {
+        fwrite( STDERR, "Kiln M6 menu discovery leaked items, URLs, or locations.\n" );
+        exit( 1 );
+    }
+}
+foreach ( array_merge( $categories["items"], $tags["items"] ) as $item ) {
+    if ( array( "id", "name", "taxonomy", "parent_id", "count" ) !== array_keys( $item ) ) {
+        fwrite( STDERR, "Kiln M6 term discovery leaked an unexpected field.\n" );
+        exit( 1 );
+    }
+}
+
+$create_category = wp_get_ability( "kiln/create-category" );
+$create_tag      = wp_get_ability( "kiln/create-tag" );
+$root = $create_category->execute( array( "name" => "Kiln M6 root", "parent_id" => 0 ) );
+if ( is_wp_error( $root ) || "category" !== $root["taxonomy"] || 0 !== $root["parent_id"] ) {
+    fwrite( STDERR, "Kiln M6 could not seed one root category.\n" );
+    exit( 1 );
+}
+$root_replay = $create_category->execute( array( "name" => "Kiln M6 root", "parent_id" => 0 ) );
+if ( is_wp_error( $root_replay ) || $root["id"] !== $root_replay["id"] ) {
+    fwrite( STDERR, "Kiln M6 category seeding was not idempotent.\n" );
+    exit( 1 );
+}
+$child = $create_category->execute( array( "name" => "Kiln M6 child", "parent_id" => $root["id"] ) );
+if ( is_wp_error( $child ) || $root["id"] !== $child["parent_id"] ) {
+    fwrite( STDERR, "Kiln M6 could not seed one admitted child category.\n" );
+    exit( 1 );
+}
+$tag = $create_tag->execute( array( "name" => "Kiln M6 tag" ) );
+$tag_replay = $create_tag->execute( array( "name" => "Kiln M6 tag" ) );
+if ( is_wp_error( $tag ) || is_wp_error( $tag_replay ) || "post_tag" !== $tag["taxonomy"] || $tag["id"] !== $tag_replay["id"] ) {
+    fwrite( STDERR, "Kiln M6 tag seeding was not idempotent.\n" );
+    exit( 1 );
+}
+
+foreach ( array(
+    $create_category->execute( array( "name" => "<script>", "parent_id" => 0 ) ),
+    $create_category->execute( array( "name" => "Kiln invalid parent", "parent_id" => 999999 ) ),
+    $create_tag->execute( array( "name" => "Kiln invalid", "description" => "not allowed" ) ),
+    wp_get_ability( "kiln/list-categories" )->execute( array( "limit" => 21, "page" => 1 ) ),
+    wp_get_ability( "kiln/list-navigation-menus" )->execute( array( "unexpected" => true ) ),
+) as $rejected ) {
+    if ( ! is_wp_error( $rejected ) ) {
+        fwrite( STDERR, "Kiln M6 accepted an out-of-scope structure request.\n" );
+        exit( 1 );
+    }
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
         "kiln/read-post" === $ability_name
@@ -361,10 +453,10 @@ foreach ( $receipts as $receipt ) {
         fwrite( STDERR, "Kiln audit receipt was not redacted to its contract.\n" );
         exit( 1 );
     }
-    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] ) && "allowed" === $receipt["outcome"] ) {
+    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] || "kiln/list-categories" === $receipt["ability"] || "kiln/create-category" === $receipt["ability"] ) && "allowed" === $receipt["outcome"] ) {
         $has_allowed = true;
     }
-    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] ) && "denied" === $receipt["outcome"] ) {
+    if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] || "kiln/list-categories" === $receipt["ability"] || "kiln/create-category" === $receipt["ability"] ) && "denied" === $receipt["outcome"] ) {
         $has_denied = true;
     }
 }

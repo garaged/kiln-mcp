@@ -13,6 +13,26 @@ class WP_Post {
 	public string $post_modified_gmt;
 }
 
+class WP_Term {
+	public int $term_id;
+	public string $name;
+	public string $taxonomy;
+	public int $parent;
+	public int $count;
+}
+
+class WP_Post_Type {
+	public string $name;
+	public string $label;
+	public bool $hierarchical;
+}
+
+class WP_Taxonomy {
+	public string $name;
+	public string $label;
+	public bool $hierarchical;
+}
+
 class WP_Error {
 	public string $code;
 	public string $message;
@@ -304,4 +324,76 @@ function wp_unslash( mixed $value ): mixed {
 
 function absint( mixed $maybeint ): int {
 	return 0;
+}
+
+
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<string, WP_Post_Type>
+ */
+function get_post_types( array $args = array(), string $output = 'names' ): array {
+	return array();
+}
+
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<string, WP_Taxonomy>
+ */
+function get_taxonomies( array $args = array(), string $output = 'names' ): array {
+	return array();
+}
+
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<int, WP_Term>
+ */
+function wp_get_nav_menus( array $args = array() ): array {
+	return array();
+}
+
+/**
+ * @param array<string, mixed> $args Query arguments.
+ * @return array<int, WP_Term>|WP_Error
+ */
+function get_terms( array $args = array() ): array|WP_Error {
+	if ( array() === $args ) {
+		return new WP_Error();
+	}
+	return array();
+}
+
+/** @return WP_Term|WP_Error|null */
+function get_term( int $term, string $taxonomy = '' ): WP_Term|WP_Error|null {
+	if ( 1 === $term ) {
+		return new WP_Error();
+	}
+	if ( 2 === $term ) {
+		return new WP_Term();
+	}
+	return null;
+}
+
+/** @return array<string, int|string>|int|string|null */
+function term_exists( string $term, string $taxonomy = '', int $parent_term = 0 ): array|int|string|null {
+	if ( 'array' === $term ) {
+		return array( 'term_id' => 1 );
+	}
+	if ( 'int' === $term ) {
+		return 1;
+	}
+	if ( 'string' === $term ) {
+		return '1';
+	}
+	return null;
+}
+
+/**
+ * @param array<string, mixed> $args Insert arguments.
+ * @return array<string, int|string>|WP_Error
+ */
+function wp_insert_term( string $term, string $taxonomy, array $args = array() ): array|WP_Error {
+	if ( '' === $term ) {
+		return new WP_Error();
+	}
+	return array( 'term_id' => 1 );
 }
