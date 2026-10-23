@@ -19,7 +19,7 @@ until wp core install --allow-root --path="$wp_path" --url="$WORDPRESS_URL" --ti
   sleep 1
 done
 
-wp plugin install mcp-adapter --version=0.7.1 --activate --allow-root --path="$wp_path"
+wp plugin install mcp-adapter --version="$MCP_ADAPTER_VERSION" --activate --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 
 mkdir -p "$wp_path/wp-content/mu-plugins"
