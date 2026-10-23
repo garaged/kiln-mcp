@@ -78,7 +78,9 @@ function kiln_mcp_http_request( ?string $authorization ): array {
 list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null );
 $unauthenticated_status = $unauthenticated_headers[0] ?? '';
 $unauthenticated_response = is_string( $unauthenticated_body ) ? json_decode( $unauthenticated_body, true ) : null;
-if ( ! is_array( $unauthenticated_response ) || ! isset( $unauthenticated_response['error'] ) ) {
+$unauthenticated_denied = is_string( $unauthenticated_status )
+    && preg_match( '/ HTTP\\/1\\.1 4[0-9][0-9] /', $unauthenticated_status );
+if ( ! $unauthenticated_denied && ( ! is_array( $unauthenticated_response ) || ! isset( $unauthenticated_response['error'] ) ) ) {
     $response_shape = is_array( $unauthenticated_response )
         ? implode( ',', array_keys( $unauthenticated_response ) )
         : gettype( $unauthenticated_response );
