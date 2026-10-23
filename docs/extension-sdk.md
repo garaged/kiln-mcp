@@ -51,12 +51,12 @@ Register one provider during normal WordPress plugin load. The callback receives
 - Versions use semantic-version syntax.
 - Each manifest declares at most ten abilities.
 - Input and output schemas are closed JSON object schemas: `type: object`, `additionalProperties: false`, plus `properties` and `required`.
-- Kiln derives every public name as `kiln-ext/{extension-id}/{ability-id}`. Duplicate extension IDs and public names are refused.
+- Kiln retains the logical identity `kiln-ext/{extension-id}/{ability-id}` and registers the WordPress-compatible public name `kiln-ext/{extension-id}--{ability-id}`. The Abilities API permits exactly one slash; double hyphens are forbidden in IDs, keeping the encoding collision-free. Duplicate extension IDs and public names are refused.
 - A provider's manifests commit as one batch only after the provider returns successfully.
 
 ## Non-negotiable policy
 
-Kiln owns all MCP-facing policy. Every admitted ability is administrator-gated with `manage_options`, marked read-only and idempotent, and hidden from REST. An extension cannot set a permission callback, transport, public flag, effect type, or category.
+Kiln owns all MCP-facing policy. Every admitted ability is administrator-gated with `manage_options`, marked read-only and idempotent, made available to the MCP adapter, and hidden from REST. An extension cannot set a permission callback, transport, public flag, effect type, or category.
 
 Executors receive the schema-validated input array and must return an array matching their declared output schema. Exceptions and non-array results become a fixed failure without exposing implementation details.
 
