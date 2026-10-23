@@ -375,8 +375,8 @@ final class SiteStructureRegistrar {
 	 * @return int|null Exact term ID, if supplied.
 	 */
 	private function term_id( array|int|string|null $value ): ?int {
-		if ( is_array( $value ) && isset( $value['term_id'] ) && is_int( $value['term_id'] ) && 0 < $value['term_id'] ) {
-			return $value['term_id'];
+		if ( is_array( $value ) && isset( $value['term_id'] ) && ( is_int( $value['term_id'] ) || ( is_string( $value['term_id'] ) && ctype_digit( $value['term_id'] ) ) ) && 0 < (int) $value['term_id'] ) {
+			return (int) $value['term_id'];
 		}
 		if ( is_int( $value ) && 0 < $value ) {
 			return $value;
