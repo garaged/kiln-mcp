@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace KilnMcpExtension;
+namespace KilnMcp\\Extension;
 
 use InvalidArgumentException;
 
@@ -45,6 +45,8 @@ final readonly class ExtensionManifest {
 	}
 
 	/**
+	 * Validates all manifest fields before registration.
+	 *
 	 * @param string                       $id        Candidate extension ID.
 	 * @param string                       $version   Candidate semantic version.
 	 * @param array<int, ExtensionAbility> $abilities Candidate abilities.
