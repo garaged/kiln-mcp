@@ -105,7 +105,7 @@ $authorization = 'Basic ' . base64_encode( 'kiln-author:' . $password );
 list( $authenticated_body, $authenticated_headers ) = kiln_mcp_http_request( $authorization );
 $authenticated_status = $authenticated_headers[0] ?? '';
 $response = is_string( $authenticated_body ) ? json_decode( $authenticated_body, true ) : null;
-if ( ! is_string( $authenticated_status ) || ! preg_match( '/ HTTP\/1\.1 2[0-9][0-9] /', $authenticated_status ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
+if ( ! is_string( $authenticated_status ) || ! str_starts_with( $authenticated_status, 'HTTP/1.1 2' ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
     $response_code = is_array( $response ) && isset( $response['error']['code'] ) && is_int( $response['error']['code'] ) ? (string) $response['error']['code'] : 'unavailable';
     $response_shape = is_array( $response ) ? implode( ',', array_keys( $response ) ) : gettype( $response );
     $response_id = is_array( $response ) && isset( $response['id'] ) ? (string) $response['id'] : 'unavailable';
