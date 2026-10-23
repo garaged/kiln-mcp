@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace KilnMcpExtension;
+namespace KilnMcp\\Extension;
 
 use Closure;
 
@@ -18,6 +18,8 @@ use Closure;
  */
 final readonly class ExtensionAbility {
 	/**
+	 * Creates one declared read-only extension ability.
+	 *
 	 * @param string               $id            Normalized extension-local ID.
 	 * @param string               $label         Human-readable label.
 	 * @param string               $description   Fixed capability description.
