@@ -127,8 +127,6 @@ final class KilnMcpServerRegistrar {
 			return array();
 		}
 
-		$abilities = wp_get_abilities();
-
-		return is_array( $abilities ) ? $abilities : array();
+		return wp_get_abilities();
 	}
 }
