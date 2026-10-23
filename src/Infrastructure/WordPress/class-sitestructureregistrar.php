@@ -378,7 +378,7 @@ final class SiteStructureRegistrar {
 		if (
 			is_array( $value )
 			&& isset( $value['term_id'] )
-			&& ( is_int( $value['term_id'] ) || ( is_string( $value['term_id'] ) && ctype_digit( $value['term_id'] ) ) )
+			&& ( is_int( $value['term_id'] ) || ctype_digit( $value['term_id'] ) )
 			&& 0 < (int) $value['term_id']
 		) {
 			return (int) $value['term_id'];
