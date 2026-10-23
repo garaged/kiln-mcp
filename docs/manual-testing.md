@@ -1,5 +1,29 @@
 # Manual testing
 
+## Milestone 8
+
+### Automated protocol contract
+
+Run:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: M1–M7 regression coverage remains green. M8 additionally proves the dedicated `kiln-mcp` official-adapter server over STDIO and authenticated HTTP: initialization, tool discovery, Kiln ability discovery/schema inspection, authorized execution, unauthenticated and subscriber refusal, malformed request refusal, non-wildcard cross-origin headers, fixed response-size and elapsed-time budgets.
+
+### Upgrade and rollback rehearsal
+
+1. Use only the disposable environment and its generated test credentials.
+2. Run the documented candidate adapter-version target, then the pinned-version rollback target.
+3. Confirm both runs report the full protocol matrix as passed.
+4. Confirm no raw application password appears in terminal output, Git history, option values, audit receipts, or support artifacts.
+5. Record the pinned and candidate adapter versions, protocol revision, Docker context, daemon architecture, Compose version, and successful output.
+
+### Local connection boundary
+
+Use the adapter's documented WP-CLI STDIO server for a local site. For HTTP, use HTTPS and a dedicated least-privileged WordPress user with an Application Password. Target Kiln's dedicated server endpoint, never a generic WordPress REST forwarder. Do not expose a development test endpoint publicly, use production credentials, or add browser CORS exceptions.
+
 ## Milestone 7
 
 ### Automated real-WordPress contract
@@ -10,7 +34,7 @@ Run:
     make container-test
     make container-down
 
-Expected result: M1–M6 regression coverage remains green. M7 additionally activates a disposable valid local extension and a provider that throws after staging a manifest. The valid kiln-ext/fixture--facts ability is registered and administrator-executable; the partial throwing ability is absent; subscribers are denied; and redacted receipts retain no extension ID, input, output, callback, path, or exception detail.
+Expected result: M1–M6 regression coverage remains green. M7 additionally activates a disposable valid local extension and a provider that throws after staging a manifest. The valid `kiln-ext/fixture--facts` ability is registered and administrator-executable; the partial throwing ability is absent; subscribers are denied; and redacted receipts retain no extension ID, input, output, callback, path, or exception detail.
 
 ### Rancher Desktop acceptance
 
