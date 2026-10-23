@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace KilnMcp\Extension;
 
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Retains only non-colliding complete extension manifests.
@@ -56,11 +57,17 @@ final class ExtensionRegistry {
 		$names = array();
 		foreach ( $this->manifests as $manifest ) {
 			foreach ( $manifest->abilities as $ability ) {
+				if ( ! $ability instanceof ExtensionAbility ) {
+					throw new LogicException( 'An admitted manifest violated its ability invariant.' );
+				}
 				$names[ $manifest->ability_name( $ability ) ] = true;
 			}
 		}
 
 		foreach ( $candidate->abilities as $ability ) {
+			if ( ! $ability instanceof ExtensionAbility ) {
+				throw new LogicException( 'An admitted manifest violated its ability invariant.' );
+			}
 			if ( isset( $names[ $candidate->ability_name( $ability ) ] ) ) {
 				return true;
 			}
