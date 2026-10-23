@@ -26,12 +26,17 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 | `kiln/schedule-post-publication` | `edit_post` plus local administrator approval | one current unprotected draft → future UTC publication |
 | `kiln/trash-post` | `edit_post` plus local administrator approval | one current unprotected draft/published post → WordPress Trash |
 | `kiln/restore-post` | `edit_post` plus local administrator approval | one current unprotected trashed post → draft |
+| `kiln/list-supported-post-types` | `manage_options` | at most 20 public post-type names, labels, and hierarchy flags |
+| `kiln/list-supported-taxonomies` | `manage_options` | at most 20 public taxonomy names, labels, and hierarchy flags |
+| `kiln/list-navigation-menus` | `edit_theme_options` | at most 20 menu IDs, names, and item counts; never items, URLs, or locations |
+| `kiln/list-categories` / `kiln/list-tags` | `manage_categories` | one closed page of at most 20 fixed term records |
+| `kiln/create-category` / `kiln/create-tag` | `manage_categories` | idempotent creation of one plain-text standard term; categories require an admitted parent |
 
 The post reader excludes private, scheduled, trashed, password-protected, and custom-post-type content. It removes shortcodes and markup, reports truncation, and labels returned content as untrusted data. It does not expose user identity, comments, revisions, custom fields, media metadata, raw HTML, or generic post properties.
 
 Lifecycle approvals are issued only from **Tools → Kiln MCP approvals** by a `manage_options` administrator. Kiln stores only an approval hash, exact action/target/version binding, expiry, and consumed state; tokens expire in ten minutes, are one-time, and are never issued or returned through MCP.
 
-All discovery, authoring, and lifecycle outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
+All discovery, authoring, lifecycle, and site-structure outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
 
 Install and activate [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) before activating Kiln. For local clients, use the adapter's documented WP-CLI/STDIO server. For remote access, use its authenticated HTTP transport over HTTPS; Kiln does not add a relay.
 
