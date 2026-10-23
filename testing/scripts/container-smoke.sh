@@ -83,6 +83,7 @@ if ( ! is_string( $unauthenticated_status ) || ! preg_match( '/ HTTP\/1\.1 [45][
 }
 foreach ( $unauthenticated_headers as $header ) {
     if ( 'access-control-allow-origin: *' === strtolower( $header ) ) {
+        fwrite( STDERR, 'Kiln M8 refused wildcard CORS response header.' . PHP_EOL );
         exit( 1 );
     }
 }
