@@ -141,7 +141,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Checks the fixed, core-owned administrator policy.
 	 *
-		 * @return bool Whether the active user is an administrator.
+	 * @return bool Whether the active user is an administrator.
 	 */
 	private function can_execute(): bool {
 		if ( current_user_can( 'manage_options' ) ) {
@@ -156,7 +156,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Rechecks authorization, executes one local callback, and redacts failures.
 	 *
-		 * @param ExtensionAbility     $ability Declared extension ability.
+	 * @param ExtensionAbility     $ability Declared extension ability.
 	 * @param array<string, mixed> $input   Schema-validated ability input.
 	 * @return array<string, mixed>|WP_Error Extension result or fixed failure.
 	 */
