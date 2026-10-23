@@ -13,6 +13,8 @@ use Closure;
 
 /**
  * Holds one explicitly declared read-only extension ability.
+ *
+ * This record has no registration side effects.
  */
 final readonly class ExtensionAbility {
 	/**
