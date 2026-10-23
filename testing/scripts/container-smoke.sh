@@ -58,7 +58,7 @@ function kiln_mcp_http_request( ?string $authorization ): array {
                         'method'  => 'initialize',
                         'params'  => array(
                             'protocolVersion' => '2025-11-25',
-                            'capabilities'    => array(),
+                            'capabilities'    => new stdClass(),
                             'clientInfo'      => array(
                                 'name'    => 'kiln-mcp-test',
                                 'version' => '1.0.0',
