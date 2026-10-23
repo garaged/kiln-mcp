@@ -33,6 +33,11 @@ class WP_Taxonomy {
 	public bool $hierarchical;
 }
 
+class WP_Hook {
+	/** @var array<int, array<string, array{function: callable}>> */
+	public array $callbacks = array();
+}
+
 class WP_Error {
 	public string $code;
 	public string $message;
