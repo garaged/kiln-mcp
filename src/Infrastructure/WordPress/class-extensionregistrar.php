@@ -129,7 +129,7 @@ final class ExtensionRegistrar {
 					/**
 					 * Executes the extension callback with a closed input object.
 					 *
-					 * @param array<mixed> $input Ability input.
+					 * @param array<mixed>    $input Ability input.
 					 */
 					function ( array $input ) use ( $ability ): array|WP_Error {
 						return $this->execute( $ability, $input );
@@ -167,7 +167,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Rechecks authorization, executes one local callback, and redacts failures.
 	 *
-	 * @param ExtensionAbility     $ability Declared extension ability.
+	 * @param ExtensionAbility $ability Declared extension ability.
 	 * @param array<mixed> $input   Schema-validated ability input.
 	 * @return array<string, mixed>|WP_Error Extension result or fixed failure.
 	 */
