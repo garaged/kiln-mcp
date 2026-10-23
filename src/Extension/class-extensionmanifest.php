@@ -35,15 +35,15 @@ final readonly class ExtensionManifest {
 	}
 
 	/**
-	 * Returns the canonical core-owned ability name.
+	 * Returns the WordPress-compatible core-owned ability name.
 	 *
 	 * The core, rather than the extension, owns this public name.
 	 *
 	 * @param ExtensionAbility $ability Extension ability.
-	 * @return string Canonical ability name.
+	 * @return string WordPress-compatible ability name.
 	 */
 	public function ability_name( ExtensionAbility $ability ): string {
-		return 'kiln-ext/' . $this->id . '/' . $ability->id;
+		return 'kiln-ext/' . $this->id . '--' . $ability->id;
 	}
 
 	/**
@@ -56,13 +56,13 @@ final readonly class ExtensionManifest {
 	 * @throws InvalidArgumentException When the declaration is not admitted.
 	 */
 	private static function assert_valid( string $id, string $version, array $abilities ): void {
-		if ( 1 !== preg_match( '/^[a-z][a-z0-9-]{2,31}$/', $id ) || 1 !== preg_match( '/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$/', $version ) || count( $abilities ) > self::MAX_ABILITIES ) {
+		if ( 1 !== preg_match( '/^(?!.*--)[a-z][a-z0-9-]{2,31}$/', $id ) || 1 !== preg_match( '/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$/', $version ) || count( $abilities ) > self::MAX_ABILITIES ) {
 			throw new InvalidArgumentException( 'Extension identity, version, or size is invalid.' );
 		}
 
 		$ids = array();
 		foreach ( $abilities as $ability ) {
-			if ( ! $ability instanceof ExtensionAbility || 1 !== preg_match( '/^[a-z][a-z0-9-]{2,31}$/', $ability->id ) || isset( $ids[ $ability->id ] ) || ! self::is_closed_object_schema( $ability->input_schema ) || ! self::is_closed_object_schema( $ability->output_schema ) ) {
+			if ( ! $ability instanceof ExtensionAbility || 1 !== preg_match( '/^(?!.*--)[a-z][a-z0-9-]{2,31}$/', $ability->id ) || isset( $ids[ $ability->id ] ) || ! self::is_closed_object_schema( $ability->input_schema ) || ! self::is_closed_object_schema( $ability->output_schema ) ) {
 				throw new InvalidArgumentException( 'Extension ability declaration is invalid.' );
 			}
 			$ids[ $ability->id ] = true;
