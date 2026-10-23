@@ -24,7 +24,7 @@ final readonly class ExtensionManifest {
 	 *
 	 * @param string                       $id        Normalized extension ID.
 	 * @param string                       $version   Semantic version.
-	 * @param array<int, mixed> $abilities Declared abilities.
+	 * @param array<int, mixed>            $abilities Declared abilities.
 	 */
 	public function __construct(
 		public string $id,
@@ -51,7 +51,7 @@ final readonly class ExtensionManifest {
 	 *
 	 * @param string                       $id        Candidate extension ID.
 	 * @param string                       $version   Candidate semantic version.
-	 * @param array<int, mixed> $abilities Candidate abilities.
+	 * @param array<int, mixed>            $abilities Candidate abilities.
 	 * @return void
 	 * @throws InvalidArgumentException When the declaration is not admitted.
 	 */
