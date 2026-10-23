@@ -1,5 +1,28 @@
 # Manual testing
 
+## Milestone 6
+
+### Automated real-WordPress contract
+
+Run:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: M1–M5 regression coverage remains green, and M6 additionally proves fixed-field bounded discovery of public post types, public taxonomies, navigation-menu metadata, categories, and tags; idempotent root/child category and tag seeding; rejection of markup, unknown fields, invalid parents, and oversized pages; subscriber denial; and redacted allowed and denied receipts.
+
+### Security boundary confirmation
+
+1. Sign in as an administrator on a disposable local site.
+2. Invoke the seven M6 abilities using their documented closed inputs.
+3. Confirm list outputs contain only their specified fields, at most 20 records, and that menu output contains no items, URLs, or locations.
+4. Create the same category or tag twice and confirm the same term ID is returned.
+5. Confirm there is no Kiln ability to create, update, delete, assign, reorder, or relocate navigation menus or menu items.
+6. Record the Docker context, architecture, Compose version, and successful test output. Do not use a production site or credentials.
+
+# Manual testing
+
 ## Milestone 5
 
 ### Automated real-WordPress contract
