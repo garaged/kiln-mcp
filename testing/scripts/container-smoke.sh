@@ -99,11 +99,9 @@ if ( ! is_string( $authenticated_status ) || ! preg_match( '/ HTTP\/1\.1 2[0-9][
 }
 PHP
 then
-    wp user application-password delete-all kiln-author --yes --allow-root --path="$wp_path" >/dev/null
     echo "Kiln M8 HTTP transport did not satisfy its authenticated contract." >&2
     exit 1
 fi
-wp user application-password delete-all kiln-author --yes --allow-root --path="$wp_path" >/dev/null
 
 wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln/site-health-summary" );
