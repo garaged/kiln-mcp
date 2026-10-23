@@ -168,7 +168,7 @@ final class ExtensionRegistrar {
 	 * Rechecks authorization, executes one local callback, and redacts failures.
 	 *
 	 * @param ExtensionAbility $ability Declared extension ability.
-	 * @param array<mixed> $input   Schema-validated ability input.
+	 * @param array<mixed>     $input Schema-validated ability input.
 	 * @return array<string, mixed>|WP_Error Extension result or fixed failure.
 	 */
 	private function execute( ExtensionAbility $ability, array $input ): array|WP_Error {
