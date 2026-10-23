@@ -186,3 +186,39 @@ requirements:
       - src/Capability/PostDiscovery/class-auditreceipt.php
       - docs/manual-testing.md
       - testing/scripts/container-smoke.sh
+
+
+  - id: REQ-M7-001
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - src/Extension
+      - tests/Unit/ExtensionManifestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M7-002
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - src/Extension
+      - tests/Unit/ExtensionManifestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M7-003
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - src/Infrastructure/WordPress/class-extensionregistrar.php
+      - tests/Unit/ExtensionPolicyTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M7-004
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - src/Extension
+      - tests/Unit/ExtensionRegistryTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M7-005
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - src/Capability/PostDiscovery/class-auditreceipt.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M7-006
+    source: specs/requirements/m7-extensibility-sdk-policy-manifests.md
+    validation:
+      - testing/scripts/container-smoke.sh
+      - docs/manual-testing.md
