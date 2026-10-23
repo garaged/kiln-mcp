@@ -34,7 +34,7 @@ class WP_Taxonomy {
 }
 
 class WP_Hook {
-	/** @var array<int, array<string, array{function: callable}>> */
+	/** @var array<int, array<string, array<string, mixed>>> */
 	public array $callbacks = array();
 }
 
