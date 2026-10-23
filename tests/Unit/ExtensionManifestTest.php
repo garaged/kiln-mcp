@@ -15,7 +15,7 @@ final class ExtensionManifestTest extends TestCase {
 		$ability = $this->ability( 'site-facts' );
 		$manifest = new ExtensionManifest( 'example', '1.0.0', array( $ability ) );
 
-		self::assertSame( 'kiln-ext/example/site-facts', $manifest->ability_name( $ability ) );
+		self::assertSame( 'kiln-ext/example--site-facts', $manifest->ability_name( $ability ) );
 	}
 
 	/**
@@ -40,6 +40,7 @@ final class ExtensionManifestTest extends TestCase {
 		return array(
 			'invalid ID' => array( 'A', '1.0.0', array() ),
 			'invalid version' => array( 'example', 'v1', array() ),
+			'ambiguous separator' => array( 'example--other', '1.0.0', array() ),
 			'open schema' => array( 'example', '1.0.0', array( $open ) ),
 		);
 	}
