@@ -601,5 +601,4 @@ final class SiteStructureRegistrar {
 			'required'             => array( 'items' ),
 		);
 	}
-
 }
