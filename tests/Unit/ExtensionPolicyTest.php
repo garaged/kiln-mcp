@@ -48,11 +48,15 @@ final class ExtensionPolicyTest extends TestCase {
 		self::assertSame( 'Kiln extension facts', $registered['label'] );
 		self::assertSame( self::schema(), $registered['input_schema'] );
 		self::assertSame( self::schema(), $registered['output_schema'] );
-		self::assertTrue( $registered['meta']['annotations']['readonly'] );
-		self::assertTrue( $registered['meta']['annotations']['idempotent'] );
-		self::assertTrue( $registered['meta']['public'] );
-		self::assertFalse( $registered['meta']['show_in_rest'] );
-		self::assertFalse( ( $registered['permission_callback'] )() );
+		/** @var array{annotations: array{readonly: bool, idempotent: bool}, public: bool, show_in_rest: bool} $meta */
+		$meta = $registered['meta'];
+		/** @var callable(): bool $permission */
+		$permission = $registered['permission_callback'];
+		self::assertTrue( $meta['annotations']['readonly'] );
+		self::assertTrue( $meta['annotations']['idempotent'] );
+		self::assertTrue( $meta['public'] );
+		self::assertFalse( $meta['show_in_rest'] );
+		self::assertFalse( $permission() );
 	}
 
 	public function test_it_discards_a_throwing_provider_and_continues_to_a_valid_provider(): void {
@@ -71,6 +75,7 @@ final class ExtensionPolicyTest extends TestCase {
 
 		( new ExtensionRegistrar( new AuditReceiptStore() ) )->register_abilities();
 
+		/** @var array<string, array<string, mixed>> $registered */
 		$registered = $GLOBALS['kiln_mcp_test_registered_abilities'];
 		self::assertArrayNotHasKey( 'kiln-ext/broken--partial', $registered );
 		self::assertArrayHasKey( 'kiln-ext/valid--facts', $registered );
@@ -124,11 +129,10 @@ final class ExtensionPolicyTest extends TestCase {
 	 * @return array<string, mixed> Registered ability configuration.
 	 */
 	private static function registered_ability( string $name ): array {
+		/** @var array<string, array<string, mixed>> $registered */
 		$registered = $GLOBALS['kiln_mcp_test_registered_abilities'];
 
-		self::assertIsArray( $registered );
 		self::assertArrayHasKey( $name, $registered );
-		self::assertIsArray( $registered[ $name ] );
 
 		return $registered[ $name ];
 	}
