@@ -54,7 +54,7 @@ final class KilnMcpServerRegistrar {
 	 * @return bool Whether the active WordPress user may reach the server.
 	 */
 	public function can_connect(): bool {
-		return self::is_transport_admitted( is_user_logged_in(), current_user_can( 'edit_posts' ) );
+		return current_user_can( 'edit_posts' );
 	}
 
 	/**
