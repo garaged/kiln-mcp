@@ -15,10 +15,11 @@ Expected result: M1–M7 regression coverage remains green. M8 additionally prov
 ### Upgrade and rollback rehearsal
 
 1. Use only the disposable environment and its generated test credentials.
-2. Run the documented candidate adapter-version target, then the pinned-version rollback target.
-3. Confirm both runs report the full protocol matrix as passed.
-4. Confirm no raw application password appears in terminal output, Git history, option values, audit receipts, or support artifacts.
-5. Record the pinned and candidate adapter versions, protocol revision, Docker context, daemon architecture, Compose version, and successful output.
+2. Run `MCP_ADAPTER_VERSION=<candidate> make container-test`, followed by `make container-down`.
+3. Roll back by running `make container-test` with no version override, followed by `make container-down`; the pinned baseline is `0.7.1`.
+4. Confirm both runs report the full protocol matrix as passed.
+5. Confirm no raw application password appears in terminal output, Git history, option values, audit receipts, or support artifacts.
+6. Record the pinned and candidate adapter versions, protocol revision, Docker context, daemon architecture, Compose version, and successful output.
 
 ### Local connection boundary
 
