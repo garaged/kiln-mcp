@@ -77,8 +77,9 @@ function kiln_mcp_http_request( ?string $authorization ): array {
 
 list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null );
 $unauthenticated_status = $unauthenticated_headers[0] ?? '';
-if ( ! is_string( $unauthenticated_status ) || ! preg_match( '/ HTTP\/1\.1 [45][0-9][0-9] /', $unauthenticated_status ) ) {
-    file_put_contents( 'php://stderr', 'Kiln M8 unauthenticated HTTP status=' . $unauthenticated_status . PHP_EOL );
+$unauthenticated_response = is_string( $unauthenticated_body ) ? json_decode( $unauthenticated_body, true ) : null;
+if ( ! is_array( $unauthenticated_response ) || ! isset( $unauthenticated_response['error'] ) ) {
+    file_put_contents( 'php://stderr', 'Kiln M8 unauthenticated request was not refused; HTTP status=' . $unauthenticated_status . PHP_EOL );
     exit( 1 );
 }
 foreach ( $unauthenticated_headers as $header ) {
