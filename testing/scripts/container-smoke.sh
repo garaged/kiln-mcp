@@ -7,6 +7,17 @@ wp core is-installed --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
+stdio_response="$( printf '%s\n' '{"jsonrpc":"2.0","id":8,"method":"tools/list","params":{}}' | wp mcp-adapter serve --allow-root --path="$wp_path" --server=kiln-mcp --user=kiln-admin 2>/dev/null )"
+if ! printf '%s' "$stdio_response" | php -r '
+$response = json_decode( stream_get_contents( STDIN ), true );
+if ( ! is_array( $response ) || 8 !== ( $response["id"] ?? null ) || ! isset( $response["result"]["tools"] ) || ! is_array( $response["result"]["tools"] ) ) {
+    exit( 1 );
+}
+'; then
+    echo "Kiln M8 STDIO transport did not return a JSON-RPC tools response." >&2
+    exit 1
+fi
+
 wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln/site-health-summary" );
 if ( null === $ability ) {
