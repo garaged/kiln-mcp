@@ -70,6 +70,29 @@ function kiln_mcp_http_request( ?string $authorization, array $message, ?string 
     return array( $body, $http_response_header ?? array() );
 }
 
+function kiln_mcp_http_raw_request( string $authorization, string $payload, string $session_id ): array {
+    $context = stream_context_create(
+        array(
+            'http' => array(
+                'method'        => 'POST',
+                'header'        => implode( "\r\n", array(
+                    'Content-Type: application/json',
+                    'Accept: application/json, text/event-stream',
+                    'Authorization: ' . $authorization,
+                    'Mcp-Session-Id: ' . $session_id,
+                    'MCP-Protocol-Version: ' . KILN_MCP_PROTOCOL_VERSION,
+                ) ),
+                'content'       => $payload,
+                'ignore_errors' => true,
+                'timeout'       => 10,
+            ),
+        )
+    );
+
+    $body = file_get_contents( KILN_MCP_HTTP_ENDPOINT, false, $context );
+    return array( $body, $http_response_header ?? array() );
+}
+
 function kiln_mcp_is_success( mixed $status ): bool {
     return is_string( $status ) && str_starts_with( $status, 'HTTP/1.1 2' );
 }
@@ -97,6 +120,8 @@ function kiln_mcp_initialize_message( int $id ): array {
         ),
     );
 }
+
+$protocol_started_at = microtime( true );
 
 list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null, kiln_mcp_initialize_message( 9 ) );
 $unauthenticated_status = $unauthenticated_headers[0] ?? '';
@@ -185,11 +210,26 @@ if ( strlen( $tools_body ) > 131072 || strlen( $call_body ) > 32768 ) {
     exit( 1 );
 }
 
+list( $malformed_body, $malformed_headers ) = kiln_mcp_http_raw_request(
+    $authorization,
+    '{"jsonrpc":"2.0","id":14,"method":',
+    $session_id
+);
+$malformed_status = $malformed_headers[0] ?? '';
+if ( ! is_string( $malformed_status ) || ! str_starts_with( $malformed_status, 'HTTP/1.1 4' ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 malformed HTTP JSON-RPC request was not refused.' . PHP_EOL );
+    exit( 1 );
+}
+
 $subscriber_authorization = 'Basic ' . base64_encode( 'kiln-subscriber:' . $subscriber_password );
 list( $subscriber_body, $subscriber_headers ) = kiln_mcp_http_request( $subscriber_authorization, kiln_mcp_initialize_message( 12 ) );
 $subscriber_status = $subscriber_headers[0] ?? '';
 if ( ! is_string( $subscriber_status ) || ! str_starts_with( $subscriber_status, 'HTTP/1.1 4' ) ) {
     file_put_contents( "php://stderr", 'Kiln M8 subscriber HTTP initialization was not refused.' . PHP_EOL );
+    exit( 1 );
+}
+if ( microtime( true ) - $protocol_started_at > 15.0 ) {
+    file_put_contents( "php://stderr", 'Kiln M8 HTTP protocol fixture exceeded its elapsed-time budget.' . PHP_EOL );
     exit( 1 );
 }
 PHP
