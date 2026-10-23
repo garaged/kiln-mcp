@@ -87,12 +87,12 @@ if ( ! $unauthenticated_denied && ( ! is_array( $unauthenticated_response ) || !
     $response_shape = is_array( $unauthenticated_response )
         ? implode( ',', array_keys( $unauthenticated_response ) )
         : gettype( $unauthenticated_response );
-    file_put_contents( 'php://stderr', 'Kiln M8 unauthenticated request was not refused; HTTP status=' . $unauthenticated_status . '; response-shape=' . $response_shape . PHP_EOL );
+    file_put_contents( "php://stderr", 'Kiln M8 unauthenticated request was not refused; HTTP status=' . $unauthenticated_status . '; response-shape=' . $response_shape . PHP_EOL );
     exit( 1 );
 }
 foreach ( $unauthenticated_headers as $header ) {
     if ( 'access-control-allow-origin: *' === strtolower( $header ) ) {
-        file_put_contents( 'php://stderr', 'Kiln M8 refused wildcard CORS response header.' . PHP_EOL );
+        file_put_contents( "php://stderr", 'Kiln M8 refused wildcard CORS response header.' . PHP_EOL );
         exit( 1 );
     }
 }
@@ -110,7 +110,7 @@ if ( ! is_string( $authenticated_status ) || ! str_starts_with( $authenticated_s
     $response_shape = is_array( $response ) ? implode( ',', array_keys( $response ) ) : gettype( $response );
     $response_id = is_array( $response ) && isset( $response['id'] ) ? (string) $response['id'] : 'unavailable';
     $response_message = is_array( $response ) && isset( $response['error']['message'] ) && is_string( $response['error']['message'] ) ? $response['error']['message'] : 'unavailable';
-    file_put_contents( 'php://stderr', 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . '; response-code=' . $response_code . '; response-shape=' . $response_shape . '; response-id=' . $response_id . '; response-message=' . $response_message . PHP_EOL );
+    file_put_contents( "php://stderr", 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . '; response-code=' . $response_code . '; response-shape=' . $response_shape . '; response-id=' . $response_id . '; response-message=' . $response_message . PHP_EOL );
     exit( 1 );
 }
 PHP
@@ -122,13 +122,13 @@ fi
 wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln/site-health-summary" );
 if ( null === $ability ) {
-    file_put_contents( 'php://stderr', "Kiln site health summary was not registered.\n" );
+    file_put_contents( "php://stderr", "Kiln site health summary was not registered.\n" );
     exit( 1 );
 }
 
 $result = $ability->execute( array() );
 if ( is_wp_error( $result ) ) {
-    file_put_contents( 'php://stderr', "Administrator could not execute Kiln site health summary.\n" );
+    file_put_contents( "php://stderr", "Administrator could not execute Kiln site health summary.\n" );
     exit( 1 );
 }
 
@@ -141,7 +141,7 @@ $expected_keys = array(
     "status",
 );
 if ( $expected_keys !== array_keys( $result ) || "available" !== $result["status"] ) {
-    file_put_contents( 'php://stderr', "Kiln site health summary returned an unexpected contract.\n" );
+    file_put_contents( "php://stderr", "Kiln site health summary returned an unexpected contract.\n" );
     exit( 1 );
 }
 '
@@ -151,12 +151,12 @@ wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln-ext/fixture--facts" );
 $result = null === $ability ? null : $ability->execute( array() );
 if ( is_wp_error( $result ) || array( "status" ) !== array_keys( $result ) || "available" !== $result["status"] ) {
-    file_put_contents( 'php://stderr', "Administrator could not execute the admitted M7 extension.\\n" );
+    file_put_contents( "php://stderr", "Administrator could not execute the admitted M7 extension.\\n" );
     exit( 1 );
 }
 
 if ( null !== wp_get_ability( "kiln-ext/failed-fixture--partial" ) ) {
-    file_put_contents( 'php://stderr', "A throwing M7 extension admitted a partial ability.\\n" );
+    file_put_contents( "php://stderr", "A throwing M7 extension admitted a partial ability.\\n" );
     exit( 1 );
 }
 '
@@ -164,7 +164,7 @@ if ( null !== wp_get_ability( "kiln-ext/failed-fixture--partial" ) ) {
 wp eval --allow-root --path="$wp_path" --user=kiln-author '
 $ability = wp_get_ability( "kiln/list-posts" );
 if ( null === $ability ) {
-    file_put_contents( 'php://stderr', "Kiln post discovery was not registered.\n" );
+    file_put_contents( "php://stderr", "Kiln post discovery was not registered.\n" );
     exit( 1 );
 }
 
@@ -184,29 +184,29 @@ $drafts = $ability->execute(
 );
 
 if ( is_wp_error( $published ) ) {
-    file_put_contents( 'php://stderr', "Author could not list published posts: " . $published->get_error_code() . ": " . $published->get_error_message() . "\n" );
+    file_put_contents( "php://stderr", "Author could not list published posts: " . $published->get_error_code() . ": " . $published->get_error_message() . "\n" );
     exit( 1 );
 }
 if ( is_wp_error( $drafts ) ) {
-    file_put_contents( 'php://stderr', "Author could not list drafts: " . $drafts->get_error_code() . ": " . $drafts->get_error_message() . "\n" );
+    file_put_contents( "php://stderr", "Author could not list drafts: " . $drafts->get_error_code() . ": " . $drafts->get_error_message() . "\n" );
     exit( 1 );
 }
 
 $expected_item_keys = array( "id", "title", "status", "modified_at", "permalink" );
 if ( count( $published["items"] ) > 20 || count( $drafts["items"] ) > 20 ) {
-    file_put_contents( 'php://stderr', "Kiln post discovery exceeded its result bound.\n" );
+    file_put_contents( "php://stderr", "Kiln post discovery exceeded its result bound.\n" );
     exit( 1 );
 }
 
 $draft_titles = array();
 foreach ( array_merge( $published["items"], $drafts["items"] ) as $item ) {
     if ( $expected_item_keys !== array_keys( $item ) ) {
-        file_put_contents( 'php://stderr', "Kiln post discovery returned an unexpected item contract.\n" );
+        file_put_contents( "php://stderr", "Kiln post discovery returned an unexpected item contract.\n" );
         exit( 1 );
     }
 
     if ( "private" === $item["status"] || false !== strpos( $item["title"], "Kiln private fixture" ) ) {
-        file_put_contents( 'php://stderr', "Kiln post discovery exposed a private post.\n" );
+        file_put_contents( "php://stderr", "Kiln post discovery exposed a private post.\n" );
         exit( 1 );
     }
 }
@@ -214,7 +214,7 @@ foreach ( $drafts["items"] as $item ) {
     $draft_titles[] = $item["title"];
 }
 if ( ! in_array( "Kiln author draft fixture", $draft_titles, true ) || in_array( "Kiln admin draft fixture", $draft_titles, true ) ) {
-    file_put_contents( 'php://stderr', "Author draft discovery did not enforce ownership.\n" );
+    file_put_contents( "php://stderr", "Author draft discovery did not enforce ownership.\n" );
     exit( 1 );
 }
 '
@@ -226,14 +226,14 @@ $result  = null === $ability ? null : $ability->execute( array( "post_id" => $po
 $expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink", "content_text", "content_truncated", "untrusted_data_notice" );
 
 if ( is_wp_error( $result ) || $expected_keys !== array_keys( $result ) || $post_id !== $result["id"] || false !== strpos( $result["content_text"], "<" ) || false !== strpos( $result["content_text"], "[gallery]" ) || true !== str_contains( $result["untrusted_data_notice"], "untrusted data" ) ) {
-    file_put_contents( 'php://stderr', "Kiln post read did not return the required redacted contract.\n" );
+    file_put_contents( "php://stderr", "Kiln post read did not return the required redacted contract.\n" );
     exit( 1 );
 }
 
 $private_id = (int) get_option( "kiln_mcp_fixture_private_id" );
 $private_result = $ability->execute( array( "post_id" => $private_id ) );
 if ( ! is_wp_error( $private_result ) ) {
-    file_put_contents( 'php://stderr', "Kiln post read exposed a private post.\n" );
+    file_put_contents( "php://stderr", "Kiln post read exposed a private post.\n" );
     exit( 1 );
 }
 '
@@ -243,7 +243,7 @@ $ability = wp_get_ability( "kiln/read-post" );
 $own_id  = (int) get_option( "kiln_mcp_fixture_author_draft_id" );
 $result  = null === $ability ? null : $ability->execute( array( "post_id" => $own_id ) );
 if ( is_wp_error( $result ) || $own_id !== $result["id"] ) {
-    file_put_contents( 'php://stderr', "Author could not read an owned draft.\n" );
+    file_put_contents( "php://stderr", "Author could not read an owned draft.\n" );
     exit( 1 );
 }
 '
@@ -252,7 +252,7 @@ wp eval --allow-root --path="$wp_path" --user=kiln-author '
 $create = wp_get_ability( "kiln/create-post-draft" );
 $update = wp_get_ability( "kiln/update-post-draft" );
 if ( null === $create || null === $update ) {
-    file_put_contents( 'php://stderr', "Kiln M4 draft authoring abilities were not registered.\\n" );
+    file_put_contents( "php://stderr", "Kiln M4 draft authoring abilities were not registered.\\n" );
     exit( 1 );
 }
 
@@ -264,7 +264,7 @@ $created = $create->execute(
 );
 $expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink" );
 if ( is_wp_error( $created ) || $expected_keys !== array_keys( $created ) || "draft" !== $created["status"] || get_current_user_id() !== (int) get_post_field( "post_author", $created["id"] ) ) {
-    file_put_contents( 'php://stderr', "Author could not create an owned Kiln draft.\\n" );
+    file_put_contents( "php://stderr", "Author could not create an owned Kiln draft.\\n" );
     exit( 1 );
 }
 
@@ -277,7 +277,7 @@ $updated = $update->execute(
     )
 );
 if ( is_wp_error( $updated ) || "draft" !== $updated["status"] || $created["modified_token"] === $updated["modified_token"] ) {
-    file_put_contents( 'php://stderr', "Author could not update a current draft version.\\n" );
+    file_put_contents( "php://stderr", "Author could not update a current draft version.\\n" );
     exit( 1 );
 }
 
@@ -290,7 +290,7 @@ $stale = $update->execute(
     )
 );
 if ( ! is_wp_error( $stale ) || "Kiln author updated draft" !== get_post_field( "post_title", $created["id"] ) ) {
-    file_put_contents( 'php://stderr', "Kiln draft authoring did not refuse a stale update.\\n" );
+    file_put_contents( "php://stderr", "Kiln draft authoring did not refuse a stale update.\\n" );
     exit( 1 );
 }
 
@@ -301,7 +301,7 @@ $invalid = $create->execute(
     )
 );
 if ( ! is_wp_error( $invalid ) ) {
-    file_put_contents( 'php://stderr', "Kiln draft authoring accepted markup-like content.\\n" );
+    file_put_contents( "php://stderr", "Kiln draft authoring accepted markup-like content.\\n" );
     exit( 1 );
 }
 
@@ -322,7 +322,7 @@ $updated = null === $update || is_wp_error( $current ) ? null : $update->execute
     )
 );
 if ( is_wp_error( $current ) || is_wp_error( $updated ) || "draft" !== $updated["status"] || "Kiln editor updated draft" !== get_post_field( "post_title", $post_id ) ) {
-    file_put_contents( 'php://stderr', "Editor could not update an admitted author draft.\\n" );
+    file_put_contents( "php://stderr", "Editor could not update an admitted author draft.\\n" );
     exit( 1 );
 }
 '
@@ -336,7 +336,7 @@ $restore  = wp_get_ability( "kiln/restore-post" );
 $store    = new \KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore();
 
 if ( null === $create || null === $publish || null === $schedule || null === $trash || null === $restore ) {
-    file_put_contents( 'php://stderr', "Kiln M5 workflow abilities were not registered.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 workflow abilities were not registered.\n" );
     exit( 1 );
 }
 
@@ -347,7 +347,7 @@ $published_draft = $create->execute(
     )
 );
 if ( is_wp_error( $published_draft ) ) {
-    file_put_contents( 'php://stderr', "Could not create the M5 publish fixture.\n" );
+    file_put_contents( "php://stderr", "Could not create the M5 publish fixture.\n" );
     exit( 1 );
 }
 
@@ -361,7 +361,7 @@ $published = $publish->execute(
 );
 $expected_keys = array( "id", "title", "status", "modified_at", "modified_token", "permalink" );
 if ( is_wp_error( $published ) || $expected_keys !== array_keys( $published ) || "publish" !== $published["status"] || $published_draft["modified_token"] === $published["modified_token"] ) {
-    file_put_contents( 'php://stderr', "Kiln M5 did not publish one approved current draft.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 did not publish one approved current draft.\n" );
     exit( 1 );
 }
 
@@ -373,7 +373,7 @@ $publish_replay = $publish->execute(
     )
 );
 if ( ! is_wp_error( $publish_replay ) || "publish" !== get_post_status( $published_draft["id"] ) ) {
-    file_put_contents( 'php://stderr', "Kiln M5 did not refuse approval replay.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 did not refuse approval replay.\n" );
     exit( 1 );
 }
 
@@ -386,7 +386,7 @@ $trashed = $trash->execute(
     )
 );
 if ( is_wp_error( $trashed ) || "trash" !== $trashed["status"] ) {
-    file_put_contents( 'php://stderr', "Kiln M5 did not trash an approved published post.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 did not trash an approved published post.\n" );
     exit( 1 );
 }
 
@@ -399,7 +399,7 @@ $restored = $restore->execute(
     )
 );
 if ( is_wp_error( $restored ) || "draft" !== $restored["status"] ) {
-    file_put_contents( 'php://stderr', "Kiln M5 did not restore an approved trashed post as a draft.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 did not restore an approved trashed post as a draft.\n" );
     exit( 1 );
 }
 
@@ -420,13 +420,13 @@ $scheduled = $schedule->execute(
     )
 );
 if ( is_wp_error( $scheduled ) || "future" !== $scheduled["status"] || get_post_time( "c", true, $scheduled["id"] ) !== $publish_at ) {
-    file_put_contents( 'php://stderr', "Kiln M5 did not schedule one approved draft at the requested UTC time.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 did not schedule one approved draft at the requested UTC time.\n" );
     exit( 1 );
 }
 
 $records = get_option( "kiln_mcp_workflow_approvals", array() );
 if ( ! is_array( $records ) || false !== strpos( serialize( $records ), $publish_approval ) ) {
-    file_put_contents( 'php://stderr', "Kiln M5 approval storage retained a raw approval token.\n" );
+    file_put_contents( "php://stderr", "Kiln M5 approval storage retained a raw approval token.\n" );
     exit( 1 );
 }
 '
@@ -443,7 +443,7 @@ $abilities = array(
 );
 foreach ( $abilities as $ability_name ) {
     if ( null === wp_get_ability( $ability_name ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 ability was not registered: " . $ability_name . "\n" );
+        file_put_contents( "php://stderr", "Kiln M6 ability was not registered: " . $ability_name . "\n" );
         exit( 1 );
     }
 }
@@ -456,31 +456,31 @@ $tags = wp_get_ability( "kiln/list-tags" )->execute( array( "limit" => 20, "page
 
 foreach ( array( $post_types, $taxonomies, $menus, $categories, $tags ) as $result ) {
     if ( is_wp_error( $result ) || array( "items" ) !== array_keys( $result ) || count( $result["items"] ) > 20 ) {
-        file_put_contents( 'php://stderr', "Kiln M6 discovery did not return its bounded list contract.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 discovery did not return its bounded list contract.\n" );
         exit( 1 );
     }
 }
 foreach ( $post_types["items"] as $item ) {
     if ( array( "name", "label", "hierarchical" ) !== array_keys( $item ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 post-type discovery leaked an unexpected field.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 post-type discovery leaked an unexpected field.\n" );
         exit( 1 );
     }
 }
 foreach ( $taxonomies["items"] as $item ) {
     if ( array( "name", "label", "hierarchical" ) !== array_keys( $item ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 taxonomy discovery leaked an unexpected field.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 taxonomy discovery leaked an unexpected field.\n" );
         exit( 1 );
     }
 }
 foreach ( $menus["items"] as $item ) {
     if ( array( "id", "name", "item_count" ) !== array_keys( $item ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 menu discovery leaked items, URLs, or locations.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 menu discovery leaked items, URLs, or locations.\n" );
         exit( 1 );
     }
 }
 foreach ( array_merge( $categories["items"], $tags["items"] ) as $item ) {
     if ( array( "id", "name", "taxonomy", "parent_id", "count" ) !== array_keys( $item ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 term discovery leaked an unexpected field.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 term discovery leaked an unexpected field.\n" );
         exit( 1 );
     }
 }
@@ -489,23 +489,23 @@ $create_category = wp_get_ability( "kiln/create-category" );
 $create_tag      = wp_get_ability( "kiln/create-tag" );
 $root = $create_category->execute( array( "name" => "Kiln M6 root", "parent_id" => 0 ) );
 if ( is_wp_error( $root ) || "category" !== $root["taxonomy"] || 0 !== $root["parent_id"] ) {
-    file_put_contents( 'php://stderr', "Kiln M6 could not seed one root category.\n" );
+    file_put_contents( "php://stderr", "Kiln M6 could not seed one root category.\n" );
     exit( 1 );
 }
 $root_replay = $create_category->execute( array( "name" => "Kiln M6 root", "parent_id" => 0 ) );
 if ( is_wp_error( $root_replay ) || $root["id"] !== $root_replay["id"] ) {
-    file_put_contents( 'php://stderr', "Kiln M6 category seeding was not idempotent.\n" );
+    file_put_contents( "php://stderr", "Kiln M6 category seeding was not idempotent.\n" );
     exit( 1 );
 }
 $child = $create_category->execute( array( "name" => "Kiln M6 child", "parent_id" => $root["id"] ) );
 if ( is_wp_error( $child ) || $root["id"] !== $child["parent_id"] ) {
-    file_put_contents( 'php://stderr', "Kiln M6 could not seed one admitted child category.\n" );
+    file_put_contents( "php://stderr", "Kiln M6 could not seed one admitted child category.\n" );
     exit( 1 );
 }
 $tag = $create_tag->execute( array( "name" => "Kiln M6 tag" ) );
 $tag_replay = $create_tag->execute( array( "name" => "Kiln M6 tag" ) );
 if ( is_wp_error( $tag ) || is_wp_error( $tag_replay ) || "post_tag" !== $tag["taxonomy"] || $tag["id"] !== $tag_replay["id"] ) {
-    file_put_contents( 'php://stderr', "Kiln M6 tag seeding was not idempotent.\n" );
+    file_put_contents( "php://stderr", "Kiln M6 tag seeding was not idempotent.\n" );
     exit( 1 );
 }
 
@@ -517,7 +517,7 @@ foreach ( array(
     wp_get_ability( "kiln/list-navigation-menus" )->execute( array( "unexpected" => true ) ),
 ) as $rejected ) {
     if ( ! is_wp_error( $rejected ) ) {
-        file_put_contents( 'php://stderr', "Kiln M6 accepted an out-of-scope structure request.\n" );
+        file_put_contents( "php://stderr", "Kiln M6 accepted an out-of-scope structure request.\n" );
         exit( 1 );
     }
 }
@@ -551,7 +551,7 @@ foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post"
     );
 
     if ( ! is_wp_error( $result ) ) {
-        file_put_contents( 'php://stderr', "Subscriber unexpectedly executed " . $ability_name . ".\n" );
+        file_put_contents( "php://stderr", "Subscriber unexpectedly executed " . $ability_name . ".\n" );
         exit( 1 );
     }
 }
@@ -571,13 +571,13 @@ $has_allowed = false;
 $has_denied  = false;
 
 if ( ! is_array( $receipts ) ) {
-    file_put_contents( 'php://stderr', "Kiln audit receipts are not stored as an array.\n" );
+    file_put_contents( "php://stderr", "Kiln audit receipts are not stored as an array.\n" );
     exit( 1 );
 }
 
 foreach ( $receipts as $receipt ) {
     if ( $expected_keys !== array_keys( $receipt ) ) {
-        file_put_contents( 'php://stderr', "Kiln audit receipt was not redacted to its contract.\n" );
+        file_put_contents( "php://stderr", "Kiln audit receipt was not redacted to its contract.\n" );
         exit( 1 );
     }
     if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] || "kiln/list-categories" === $receipt["ability"] || "kiln/create-category" === $receipt["ability"] ) && "allowed" === $receipt["outcome"] ) {
@@ -589,12 +589,12 @@ foreach ( $receipts as $receipt ) {
 }
 
 if ( false !== strpos( serialize( $receipts ), "fixture" ) || false !== strpos( serialize( $receipts ), "failed-fixture" ) ) {
-    file_put_contents( 'php://stderr', "Kiln M7 audit receipts retained extension identity.\n" );
+    file_put_contents( "php://stderr", "Kiln M7 audit receipts retained extension identity.\n" );
     exit( 1 );
 }
 
 if ( ! $has_allowed || ! $has_denied ) {
-    file_put_contents( 'php://stderr', "Kiln audit receipts did not record discovery outcomes.\n" );
+    file_put_contents( "php://stderr", "Kiln audit receipts did not record discovery outcomes.\n" );
     exit( 1 );
 }
 '
