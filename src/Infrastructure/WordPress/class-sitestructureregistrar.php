@@ -329,7 +329,7 @@ final class SiteStructureRegistrar {
 			return $this->deny( $ability, 'term_recheck_failed', 'kiln_structure_seed_failed', __( 'The term could not be created.', 'kiln-mcp' ) );
 		}
 
-		$this->audit_store->append( AuditReceipt::create( $ability, 'allowed', 'manage_categories', 1, gmdate( 'c' ) );
+		$this->audit_store->append( AuditReceipt::create( $ability, 'allowed', 'manage_categories', 1, gmdate( 'c' ) ) );
 
 		return $this->term_record( $term );
 	}
@@ -373,8 +373,8 @@ final class SiteStructureRegistrar {
 	/**
 	 * Wraps a fixed discovery result and records an allowed receipt.
 	 *
-	 * @param string                                  $ability     Ability identifier.
-	 * @param string                                  $capability  Redacted capability class.
+	 * @param string                                     $ability     Ability identifier.
+	 * @param string                                     $capability  Redacted capability class.
 	 * @param array<int, array<string, bool|int|string>> $items    Fixed records.
 	 * @return array<string, array<int, array<string, bool|int|string>>> Fixed list result.
 	 */
@@ -415,7 +415,12 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function empty_input_schema(): array {
-		return array( 'type' => 'object', 'additionalProperties' => false, 'properties' => array(), 'required' => array() );
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(),
+			'required'             => array(),
+		);
 	}
 
 	/**
@@ -428,8 +433,15 @@ final class SiteStructureRegistrar {
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(
-				'limit' => array( 'type' => 'integer', 'minimum' => 1, 'maximum' => PagedStructureRequest::MAX_ITEMS ),
-				'page'  => array( 'type' => 'integer', 'minimum' => 1 ),
+				'limit' => array(
+					'type'    => 'integer',
+					'minimum' => 1,
+					'maximum' => PagedStructureRequest::MAX_ITEMS,
+				),
+				'page'  => array(
+					'type'    => 'integer',
+					'minimum' => 1,
+				),
 			),
 			'required'             => array( 'limit', 'page' ),
 		);
@@ -445,8 +457,11 @@ final class SiteStructureRegistrar {
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(
-				'name'      => array( 'type' => 'string', 'minLength' => 1, 'maxLength' => TermSeedRequest::MAX_NAME_CHARACTERS ),
-				'parent_id' => array( 'type' => 'integer', 'minimum' => 0 ),
+				'name'      => self::name_schema(),
+				'parent_id' => array(
+					'type'    => 'integer',
+					'minimum' => 0,
+				),
 			),
 			'required'             => array( 'name', 'parent_id' ),
 		);
@@ -462,9 +477,22 @@ final class SiteStructureRegistrar {
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(
-				'name' => array( 'type' => 'string', 'minLength' => 1, 'maxLength' => TermSeedRequest::MAX_NAME_CHARACTERS ),
+				'name' => self::name_schema(),
 			),
 			'required'             => array( 'name' ),
+		);
+	}
+
+	/**
+	 * Returns bounded plain-text name schema.
+	 *
+	 * @return array<string, int|string> JSON Schema.
+	 */
+	private static function name_schema(): array {
+		return array(
+			'type'      => 'string',
+			'minLength' => 1,
+			'maxLength' => TermSeedRequest::MAX_NAME_CHARACTERS,
 		);
 	}
 
@@ -474,7 +502,14 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function post_type_output_schema(): array {
-		return self::list_schema( array( 'name' => array( 'type' => 'string' ), 'label' => array( 'type' => 'string' ), 'hierarchical' => array( 'type' => 'boolean' ) ), array( 'name', 'label', 'hierarchical' ) );
+		return self::list_schema(
+			array(
+				'name'         => array( 'type' => 'string' ),
+				'label'        => array( 'type' => 'string' ),
+				'hierarchical' => array( 'type' => 'boolean' ),
+			),
+			array( 'name', 'label', 'hierarchical' )
+		);
 	}
 
 	/**
@@ -492,7 +527,14 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function menu_output_schema(): array {
-		return self::list_schema( array( 'id' => array( 'type' => 'integer' ), 'name' => array( 'type' => 'string' ), 'item_count' => array( 'type' => 'integer' ) ), array( 'id', 'name', 'item_count' ) );
+		return self::list_schema(
+			array(
+				'id'         => array( 'type' => 'integer' ),
+				'name'       => array( 'type' => 'string' ),
+				'item_count' => array( 'type' => 'integer' ),
+			),
+			array( 'id', 'name', 'item_count' )
+		);
 	}
 
 	/**
@@ -510,7 +552,12 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function term_record_schema(): array {
-		return array( 'type' => 'object', 'additionalProperties' => false, 'properties' => self::term_properties(), 'required' => array( 'id', 'name', 'taxonomy', 'parent_id', 'count' ) );
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => self::term_properties(),
+			'required'             => array( 'id', 'name', 'taxonomy', 'parent_id', 'count' ),
+		);
 	}
 
 	/**
@@ -519,7 +566,13 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema properties.
 	 */
 	private static function term_properties(): array {
-		return array( 'id' => array( 'type' => 'integer' ), 'name' => array( 'type' => 'string' ), 'taxonomy' => array( 'type' => 'string' ), 'parent_id' => array( 'type' => 'integer' ), 'count' => array( 'type' => 'integer' ) );
+		return array(
+			'id'        => array( 'type' => 'integer' ),
+			'name'      => array( 'type' => 'string' ),
+			'taxonomy'  => array( 'type' => 'string' ),
+			'parent_id' => array( 'type' => 'integer' ),
+			'count'     => array( 'type' => 'integer' ),
+		);
 	}
 
 	/**
@@ -530,6 +583,23 @@ final class SiteStructureRegistrar {
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function list_schema( array $properties, array $required ): array {
-		return array( 'type' => 'object', 'additionalProperties' => false, 'properties' => array( 'items' => array( 'type' => 'array', 'maxItems' => PagedStructureRequest::MAX_ITEMS, 'items' => array( 'type' => 'object', 'additionalProperties' => false, 'properties' => $properties, 'required' => $required ) ) ), 'required' => array( 'items' ) );
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(
+				'items' => array(
+					'type'     => 'array',
+					'maxItems' => PagedStructureRequest::MAX_ITEMS,
+					'items'    => array(
+						'type'                 => 'object',
+						'additionalProperties' => false,
+						'properties'           => $properties,
+						'required'             => $required,
+					),
+				),
+			),
+			'required'             => array( 'items' ),
+		);
 	}
+
 }
