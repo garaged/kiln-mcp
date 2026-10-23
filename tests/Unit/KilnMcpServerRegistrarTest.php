@@ -18,8 +18,14 @@ final class KilnMcpServerRegistrarTest extends TestCase {
 		self::assertSame( 'kiln-mcp', $adapter->arguments[1] );
 		self::assertSame( 'mcp', $adapter->arguments[2] );
 		self::assertSame( array( '\\WP\\MCP\\Transport\\HttpTransport' ), $adapter->arguments[6] );
-		self::assertContains( 'kiln/site-health-summary', $adapter->arguments[9] );
-		self::assertNotContains( 'unrelated/plugin-ability', $adapter->arguments[9] );
+		$configured_abilities = $adapter->arguments[9];
+		if ( ! is_array( $configured_abilities ) ) {
+			self::fail( 'The adapter server must receive an ability list.' );
+		}
+		/** @var array<int, string> $ability_names */
+		$ability_names = $configured_abilities;
+		self::assertContains( 'kiln/site-health-summary', $ability_names );
+		self::assertNotContains( 'unrelated/plugin-ability', $ability_names );
 	}
 
 	public function test_it_includes_admitted_extensions_but_refuses_unrelated_ability_names(): void {
