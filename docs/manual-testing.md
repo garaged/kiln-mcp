@@ -20,6 +20,7 @@ Expected result: M1–M6 regression coverage remains green. M7 additionally acti
 4. Confirm container-test reports Container smoke checks passed.
 5. Record the Docker context, daemon architecture, Compose version, and successful output.
 6. Confirm no container port other than the loopback-bound disposable WordPress test port is published. Do not use production credentials, a public Docker listener, or a real extension with unreviewed PHP.
+
 ## Milestone 6
 
 ### Automated real-WordPress contract
