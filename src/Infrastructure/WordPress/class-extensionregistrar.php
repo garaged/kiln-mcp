@@ -126,7 +126,11 @@ final class ExtensionRegistrar {
 				'input_schema'        => $ability->input_schema,
 				'output_schema'       => $ability->output_schema,
 				'execute_callback'    =>
-					/** @param array<string, mixed> $input */
+					/**
+					 * Executes the extension callback with a closed input object.
+					 *
+					 * @param array<string, mixed> $input Ability input.
+					 */
 					function ( array $input ) use ( $ability ): array|WP_Error {
 						return $this->execute( $ability, $input );
 					},
