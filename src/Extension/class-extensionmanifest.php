@@ -22,9 +22,9 @@ final readonly class ExtensionManifest {
 	/**
 	 * Creates and validates one complete extension manifest.
 	 *
-	 * @param string                       $id        Normalized extension ID.
-	 * @param string                       $version   Semantic version.
-	 * @param array<int, mixed>            $abilities Declared abilities.
+	 * @param string            $id        Normalized extension ID.
+	 * @param string            $version   Semantic version.
+	 * @param array<int, mixed> $abilities Declared abilities.
 	 */
 	public function __construct(
 		public string $id,
@@ -49,9 +49,9 @@ final readonly class ExtensionManifest {
 	/**
 	 * Validates all manifest fields before registration.
 	 *
-	 * @param string                       $id        Candidate extension ID.
-	 * @param string                       $version   Candidate semantic version.
-	 * @param array<int, mixed>            $abilities Candidate abilities.
+	 * @param string            $id        Candidate extension ID.
+	 * @param string            $version   Candidate semantic version.
+	 * @param array<int, mixed> $abilities Candidate abilities.
 	 * @return void
 	 * @throws InvalidArgumentException When the declaration is not admitted.
 	 */
