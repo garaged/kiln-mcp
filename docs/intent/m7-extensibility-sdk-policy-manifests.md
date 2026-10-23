@@ -6,9 +6,9 @@ A WordPress developer can ship an independently versioned, locally installed Kil
 
 ## Version-one boundary
 
-M7 supports only administrator-gated read-only extension abilities. Every admitted ability has a canonical kiln-ext/{extension-id}/{ability-id} name, a closed input object schema, a closed output object schema, and one local execute callback supplied by the installed extension.
+M7 supports only administrator-gated read-only extension abilities. Every manifest has the logical identity kiln-ext/{extension-id}/{ability-id}; its registered WordPress ability name is kiln-ext/{extension-id}--{ability-id}, because the Abilities API permits exactly one namespace slash. IDs cannot contain a double hyphen, making the encoding collision-free. Every admitted ability has a closed input object schema, a closed output object schema, and one local execute callback supplied by the installed extension.
 
-The core policy for every M7 extension ability is fixed to manage_options. Extensions cannot supply their own permission callback, bypass Kiln's policy decision, select a more permissive capability, or make an ability public. A future write-capable SDK requires a separately reviewed approval and effect-policy design.
+The core policy for every M7 extension ability is fixed to manage_options. Extensions cannot supply their own permission callback, bypass Kiln's policy decision, select a more permissive capability, or select a public or REST exposure policy. A future write-capable SDK requires a separately reviewed approval and effect-policy design.
 
 ## Trust and isolation
 
