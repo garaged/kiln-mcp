@@ -104,7 +104,9 @@ $authenticated_status = $authenticated_headers[0] ?? '';
 $response = is_string( $authenticated_body ) ? json_decode( $authenticated_body, true ) : null;
 if ( ! is_string( $authenticated_status ) || ! preg_match( '/ HTTP\/1\.1 2[0-9][0-9] /', $authenticated_status ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
     $response_code = is_array( $response ) && isset( $response['code'] ) && is_string( $response['code'] ) ? $response['code'] : 'unavailable';
-    file_put_contents( 'php://stderr', 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . '; response-code=' . $response_code . PHP_EOL );
+    $response_shape = is_array( $response ) ? implode( ',', array_keys( $response ) ) : gettype( $response );
+    $response_id = is_array( $response ) && isset( $response['id'] ) ? (string) $response['id'] : 'unavailable';
+    file_put_contents( 'php://stderr', 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . '; response-code=' . $response_code . '; response-shape=' . $response_shape . '; response-id=' . $response_id . PHP_EOL );
     exit( 1 );
 }
 PHP
