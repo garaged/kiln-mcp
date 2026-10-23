@@ -8,12 +8,22 @@ wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
 stdio_diagnostics="$( mktemp )"
-stdio_response="$( printf '%s\n' '{"jsonrpc":"2.0","id":8,"method":"tools/list","params":{}}' | wp mcp-adapter serve --allow-root --path="$wp_path" --server=kiln-mcp --user=kiln-admin 2>"$stdio_diagnostics" )"
+stdio_response="$(
+    printf '%s\n' \
+        '{"jsonrpc":"2.0","id":7,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"kiln-mcp-test","version":"1.0.0"}}}' \
+        '{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}' \
+        '{"jsonrpc":"2.0","id":8,"method":"tools/list","params":{}}' | \
+        wp mcp-adapter serve --allow-root --path="$wp_path" --server=kiln-mcp --user=kiln-admin 2>"$stdio_diagnostics"
+)"
 if ! printf '%s' "$stdio_response" | php -r '
-$response = json_decode( stream_get_contents( STDIN ), true );
-if ( ! is_array( $response ) || 8 !== ( $response["id"] ?? null ) || ! isset( $response["result"]["tools"] ) || ! is_array( $response["result"]["tools"] ) ) {
-    exit( 1 );
+$lines = preg_split( "/\\R/", trim( stream_get_contents( STDIN ) ) );
+foreach ( $lines as $line ) {
+    $response = json_decode( $line, true );
+    if ( is_array( $response ) && 8 === ( $response["id"] ?? null ) && isset( $response["result"]["tools"] ) && is_array( $response["result"]["tools"] ) ) {
+        exit( 0 );
+    }
 }
+exit( 1 );
 '; then
     cat "$stdio_diagnostics" >&2
     rm -f "$stdio_diagnostics"
