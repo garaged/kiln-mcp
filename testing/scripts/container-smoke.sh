@@ -69,7 +69,7 @@ function kiln_mcp_http_request( ?string $authorization ): array {
         )
     );
 
-    $body    = file_get_contents( 'http://wordpress/wp-json/kiln-mcp/mcp', false, $context );
+    $body    = file_get_contents( 'http://wordpress/?rest_route=/kiln-mcp/mcp', false, $context );
     $headers = $http_response_header ?? array();
 
     return array( $body, $headers );
