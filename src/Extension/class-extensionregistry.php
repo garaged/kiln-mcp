@@ -16,6 +16,8 @@ use InvalidArgumentException;
  */
 final class ExtensionRegistry {
 	/**
+	 * Maps canonical extension IDs to admitted manifests.
+	 *
 	 * @var array<string, ExtensionManifest>
 	 */
 	private array $manifests = array();
@@ -45,6 +47,8 @@ final class ExtensionRegistry {
 	}
 
 	/**
+	 * Checks whether one candidate reuses an admitted ability.
+	 *
 	 * @param ExtensionManifest $candidate Candidate manifest.
 	 * @return bool Whether an ability name already exists.
 	 */
