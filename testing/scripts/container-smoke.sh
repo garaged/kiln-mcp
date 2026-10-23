@@ -155,6 +155,36 @@ if ( ! kiln_mcp_is_success( $tools_headers[0] ?? '' ) || ! is_array( $tools_resp
     exit( 1 );
 }
 
+list( $missing_session_body, $missing_session_headers ) = kiln_mcp_http_request(
+    $authorization,
+    array( 'jsonrpc' => '2.0', 'id' => 12, 'method' => 'tools/list', 'params' => new stdClass() )
+);
+$missing_session_status = $missing_session_headers[0] ?? '';
+if ( ! is_string( $missing_session_status ) || ! str_starts_with( $missing_session_status, 'HTTP/1.1 4' ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 accepted an HTTP tool request without a session.' . PHP_EOL );
+    exit( 1 );
+}
+
+list( $call_body, $call_headers ) = kiln_mcp_http_request(
+    $authorization,
+    array(
+        'jsonrpc' => '2.0',
+        'id'      => 13,
+        'method'  => 'tools/call',
+        'params'  => array( 'name' => 'kiln-site-health-summary', 'arguments' => new stdClass() ),
+    ),
+    $session_id
+);
+$call_response = is_string( $call_body ) ? json_decode( $call_body, true ) : null;
+if ( ! kiln_mcp_is_success( $call_headers[0] ?? '' ) || ! is_array( $call_response ) || 13 !== ( $call_response['id'] ?? null ) || ! isset( $call_response['result'] ) ) {
+    file_put_contents( "php://stderr", 'Kiln M8 authenticated HTTP tool execution did not return a result.' . PHP_EOL );
+    exit( 1 );
+}
+if ( strlen( $tools_body ) > 131072 || strlen( $call_body ) > 32768 ) {
+    file_put_contents( "php://stderr", 'Kiln M8 HTTP protocol response exceeded its disposable fixture budget.' . PHP_EOL );
+    exit( 1 );
+}
+
 $subscriber_authorization = 'Basic ' . base64_encode( 'kiln-subscriber:' . $subscriber_password );
 list( $subscriber_body, $subscriber_headers ) = kiln_mcp_http_request( $subscriber_authorization, kiln_mcp_initialize_message( 12 ) );
 $subscriber_status = $subscriber_headers[0] ?? '';
