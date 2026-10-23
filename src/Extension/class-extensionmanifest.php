@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace KilnMcp\\Extension;
+namespace KilnMcp\Extension;
 
 use InvalidArgumentException;
 
