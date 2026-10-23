@@ -38,7 +38,10 @@ if ! KILN_MCP_HTTP_PASSWORD="$http_password" php <<'PHP'
 declare(strict_types=1);
 
 function kiln_mcp_http_request( ?string $authorization ): array {
-    $headers = array( 'Content-Type: application/json' );
+    $headers = array(
+        'Content-Type: application/json',
+        'Accept: application/json, text/event-stream',
+    );
     if ( null !== $authorization ) {
         $headers[] = 'Authorization: ' . $authorization;
     }
