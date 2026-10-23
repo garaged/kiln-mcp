@@ -76,6 +76,7 @@ final class Plugin {
 		$approval_page             = new WorkflowApprovalPage( $approval_store );
 		$structure_registrar       = new SiteStructureRegistrar( $audit_store );
 		$extension_registrar       = new ExtensionRegistrar( $audit_store );
+		$server_registrar          = new KilnMcpServerRegistrar();
 
 		add_action( 'wp_abilities_api_categories_init', array( $health_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $health_registrar, 'register_ability' ) );
@@ -91,6 +92,7 @@ final class Plugin {
 		add_action( 'wp_abilities_api_init', array( $structure_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_init', array( $extension_registrar, 'register_abilities' ) );
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
+		add_action( 'mcp_adapter_init', array( $server_registrar, 'register_server' ), 100 );
 		add_action( 'admin_menu', array( $approval_page, 'register_page' ) );
 	}
 }
