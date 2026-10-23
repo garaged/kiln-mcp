@@ -32,6 +32,79 @@ exit( 1 );
 fi
 rm -f "$stdio_diagnostics"
 
+http_password="$( wp user application-password create kiln-author "Kiln M8 disposable HTTP test" --porcelain --allow-root --path="$wp_path" | tr -d ' ' )"
+if ! KILN_MCP_HTTP_PASSWORD="$http_password" php <<'PHP'
+<?php
+declare(strict_types=1);
+
+function kiln_mcp_http_request( ?string $authorization ): array {
+    $headers = array( 'Content-Type: application/json' );
+    if ( null !== $authorization ) {
+        $headers[] = 'Authorization: ' . $authorization;
+    }
+
+    $context = stream_context_create(
+        array(
+            'http' => array(
+                'method'        => 'POST',
+                'header'        => implode( "\r\n", $headers ),
+                'content'       => json_encode(
+                    array(
+                        'jsonrpc' => '2.0',
+                        'id'      => 9,
+                        'method'  => 'initialize',
+                        'params'  => array(
+                            'protocolVersion' => '2025-11-25',
+                            'capabilities'    => array(),
+                            'clientInfo'      => array(
+                                'name'    => 'kiln-mcp-test',
+                                'version' => '1.0.0',
+                            ),
+                        ),
+                    )
+                ),
+                'ignore_errors' => true,
+                'timeout'       => 10,
+            ),
+        )
+    );
+
+    $body    = file_get_contents( 'http://wordpress/wp-json/mcp/kiln-mcp', false, $context );
+    $headers = $http_response_header ?? array();
+
+    return array( $body, $headers );
+}
+
+list( $unauthenticated_body, $unauthenticated_headers ) = kiln_mcp_http_request( null );
+$unauthenticated_status = $unauthenticated_headers[0] ?? '';
+if ( ! is_string( $unauthenticated_status ) || ! preg_match( '/ HTTP\/1\.1 [45][0-9][0-9] /', $unauthenticated_status ) ) {
+    exit( 1 );
+}
+foreach ( $unauthenticated_headers as $header ) {
+    if ( 'access-control-allow-origin: *' === strtolower( $header ) ) {
+        exit( 1 );
+    }
+}
+
+$password = getenv( 'KILN_MCP_HTTP_PASSWORD' );
+if ( ! is_string( $password ) || '' === $password ) {
+    exit( 1 );
+}
+$authorization = 'Basic ' . base64_encode( 'kiln-author:' . $password );
+list( $authenticated_body, $authenticated_headers ) = kiln_mcp_http_request( $authorization );
+$authenticated_status = $authenticated_headers[0] ?? '';
+$response = is_string( $authenticated_body ) ? json_decode( $authenticated_body, true ) : null;
+if ( ! is_string( $authenticated_status ) || ! preg_match( '/ HTTP\/1\.1 2[0-9][0-9] /', $authenticated_status ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
+    exit( 1 );
+}
+PHP
+then
+    wp user application-password delete-all kiln-author --yes --allow-root --path="$wp_path" >/dev/null
+    echo "Kiln M8 HTTP transport did not satisfy its authenticated contract." >&2
+    exit 1
+fi
+wp user application-password delete-all kiln-author --yes --allow-root --path="$wp_path" >/dev/null
+
 wp eval --allow-root --path="$wp_path" --user=kiln-admin '
 $ability = wp_get_ability( "kiln/site-health-summary" );
 if ( null === $ability ) {
