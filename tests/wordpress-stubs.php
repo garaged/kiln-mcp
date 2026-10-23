@@ -75,6 +75,12 @@ function wp_register_ability_category( string $category, array $args ): void {
  * @return void
  */
 function wp_register_ability( string $name, array $args ): void {
+	$registered = $GLOBALS['kiln_mcp_test_registered_abilities'] ?? array();
+	if ( ! is_array( $registered ) ) {
+		$registered = array();
+	}
+	$registered[ $name ] = $args;
+	$GLOBALS['kiln_mcp_test_registered_abilities'] = $registered;
 }
 
 /**
