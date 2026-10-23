@@ -13,6 +13,8 @@ use InvalidArgumentException;
 
 /**
  * Validates one atomic, read-only extension declaration.
+ *
+ * All manifest failures refuse the complete declaration.
  */
 final readonly class ExtensionManifest {
 	public const MAX_ABILITIES = 10;
@@ -33,6 +35,8 @@ final readonly class ExtensionManifest {
 	/**
 	 * Returns the canonical core-owned ability name.
 	 *
+	 * The core, rather than the extension, owns this public name.
+	 *
 	 * @param ExtensionAbility $ability Extension ability.
 	 * @return string Canonical ability name.
 	 */
@@ -45,6 +49,7 @@ final readonly class ExtensionManifest {
 	 * @param string                       $version   Candidate semantic version.
 	 * @param array<int, ExtensionAbility> $abilities Candidate abilities.
 	 * @return void
+	 * @throws InvalidArgumentException When the declaration is not admitted.
 	 */
 	private static function assert_valid( string $id, string $version, array $abilities ): void {
 		if ( 1 !== preg_match( '/^[a-z][a-z0-9-]{2,31}$/', $id ) || 1 !== preg_match( '/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$/', $version ) || count( $abilities ) > self::MAX_ABILITIES ) {
@@ -61,6 +66,8 @@ final readonly class ExtensionManifest {
 	}
 
 	/**
+	 * Checks one schema against the closed-object profile.
+	 *
 	 * @param array<string, mixed> $schema Candidate schema.
 	 * @return bool Whether it is a closed object schema.
 	 */
