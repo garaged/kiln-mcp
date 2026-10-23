@@ -122,10 +122,10 @@ final class ExtensionRegistrar {
 				'input_schema'        => $ability->input_schema,
 				'output_schema'       => $ability->output_schema,
 				'execute_callback'    => function ( array $input ) use ( $name, $ability ): array|WP_Error {
-					return $this->execute( $name, $ability, $input );
+					return $this->execute( $ability, $input );
 				},
-				'permission_callback' => function () use ( $name ): bool {
-					return $this->can_execute( $name );
+				'permission_callback' => function (): bool {
+					return $this->can_execute();
 				},
 				'meta'                => array(
 					'annotations'  => array(
@@ -144,12 +144,12 @@ final class ExtensionRegistrar {
 	 * @param string $ability Registered canonical ability name.
 	 * @return bool Whether the active user is an administrator.
 	 */
-	private function can_execute( string $ability ): bool {
+	private function can_execute(): bool {
 		if ( current_user_can( 'manage_options' ) ) {
 			return true;
 		}
 
-		$this->append_receipt( $ability, 'denied', 'not_manage_options', 0 );
+		$this->append_receipt( 'denied', 'not_manage_options', 0 );
 
 		return false;
 	}
@@ -162,9 +162,9 @@ final class ExtensionRegistrar {
 	 * @param array<string, mixed> $input   Schema-validated ability input.
 	 * @return array<string, mixed>|WP_Error Extension result or fixed failure.
 	 */
-	private function execute( string $name, ExtensionAbility $ability, array $input ): array|WP_Error {
+	private function execute( ExtensionAbility $ability, array $input ): array|WP_Error {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			$this->append_receipt( $name, 'denied', 'not_manage_options', 0 );
+			$this->append_receipt( 'denied', 'not_manage_options', 0 );
 
 			return new WP_Error( 'kiln_extension_denied', __( 'You cannot execute this extension ability.', 'kiln-mcp' ) );
 		}
@@ -172,18 +172,18 @@ final class ExtensionRegistrar {
 		try {
 			$result = ( $ability->executor )( $input );
 		} catch ( Throwable ) {
-			$this->append_receipt( $name, 'denied', 'extension_execution_failed', 0 );
+			$this->append_receipt( 'denied', 'extension_execution_failed', 0 );
 
 			return new WP_Error( 'kiln_extension_failed', __( 'The extension ability could not be completed.', 'kiln-mcp' ) );
 		}
 
 		if ( ! is_array( $result ) ) {
-			$this->append_receipt( $name, 'denied', 'extension_execution_failed', 0 );
+			$this->append_receipt( 'denied', 'extension_execution_failed', 0 );
 
 			return new WP_Error( 'kiln_extension_failed', __( 'The extension ability could not be completed.', 'kiln-mcp' ) );
 		}
 
-		$this->append_receipt( $name, 'allowed', 'manage_options', 1 );
+		$this->append_receipt( 'allowed', 'manage_options', 1 );
 
 		return $result;
 	}
@@ -191,8 +191,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Appends a bounded receipt that excludes extension data and fault details.
 	 *
-	 * @param string $ability          Canonical extension ability name.
-	 * @param string $decision         Allowed or denied.
+		 * @param string $decision         Allowed or denied.
 	 * @param string $capability_class Redacted policy outcome.
 	 * @param int    $result_count     Fixed result count.
 	 * @return void
