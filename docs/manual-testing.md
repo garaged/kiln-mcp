@@ -21,8 +21,6 @@ Expected result: M1–M5 regression coverage remains green, and M6 additionally 
 5. Confirm there is no Kiln ability to create, update, delete, assign, reorder, or relocate navigation menus or menu items.
 6. Record the Docker context, architecture, Compose version, and successful test output. Do not use a production site or credentials.
 
-# Manual testing
-
 ## Milestone 5
 
 ### Automated real-WordPress contract
