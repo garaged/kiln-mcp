@@ -2,7 +2,7 @@
 
 | ID | Requirement | Acceptance evidence |
 |---|---|---|
-| REQ-M7-001 | Core MUST admit extensions only through a typed, versioned manifest with normalized extension and ability IDs, a maximum of ten abilities, and fixed kiln-ext/{extension-id}/{ability-id} names. | manifest unit contracts and real-WordPress registration fixture |
+| REQ-M7-001 | Core MUST admit extensions only through a typed, versioned manifest with normalized extension and ability IDs, a maximum of ten abilities, and the logical identity kiln-ext/{extension-id}/{ability-id}, encoded for WordPress registration as kiln-ext/{extension-id}--{ability-id}. | manifest unit contracts and real-WordPress registration fixture |
 | REQ-M7-002 | Every M7 ability MUST declare closed object input and output schemas and be read-only; manifests with unknown, malformed, open, duplicate, incompatible, or colliding declarations MUST be refused atomically. | validator property/negative tests and collision fixture |
 | REQ-M7-003 | Core MUST apply its own fixed manage_options policy to every M7 extension ability. An extension MUST NOT supply a permission callback, public flag, transport, or write effect. | policy unit tests and administrator/subscriber container matrix |
 | REQ-M7-004 | A malformed, duplicate, incompatible, or throwing extension MUST register no partial ability and MUST NOT stop core abilities or separately valid extension manifests from loading. | isolation unit tests and disposable WordPress fixture |
