@@ -80,6 +80,10 @@ final class ExtensionRegistrar {
 	private function collect_manifests( ExtensionRegistry $registry ): void {
 		global $wp_filter;
 
+		if ( ! is_array( $wp_filter ) ) {
+			return;
+		}
+
 		$hook = $wp_filter[ self::HOOK ] ?? null;
 		if ( ! $hook instanceof WP_Hook ) {
 			return;
@@ -121,9 +125,11 @@ final class ExtensionRegistrar {
 				'category'            => self::CATEGORY,
 				'input_schema'        => $ability->input_schema,
 				'output_schema'       => $ability->output_schema,
-				'execute_callback'    => function ( array $input ) use ( $ability ): array|WP_Error {
-					return $this->execute( $ability, $input );
-				},
+				'execute_callback'    =>
+					/** @param array<string, mixed> $input */
+					function ( array $input ) use ( $ability ): array|WP_Error {
+						return $this->execute( $ability, $input );
+					},
 				'permission_callback' => function (): bool {
 					return $this->can_execute();
 				},
@@ -181,9 +187,19 @@ final class ExtensionRegistrar {
 			return new WP_Error( 'kiln_extension_failed', __( 'The extension ability could not be completed.', 'kiln-mcp' ) );
 		}
 
+		$normalized = array();
+		foreach ( $result as $key => $value ) {
+			if ( ! is_string( $key ) ) {
+				$this->append_receipt( 'denied', 'extension_execution_failed', 0 );
+
+				return new WP_Error( 'kiln_extension_failed', __( 'The extension ability could not be completed.', 'kiln-mcp' ) );
+			}
+			$normalized[ $key ] = $value;
+		}
+
 		$this->append_receipt( 'allowed', 'manage_options', 1 );
 
-		return $result;
+		return $normalized;
 	}
 
 	/**
