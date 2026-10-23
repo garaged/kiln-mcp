@@ -121,7 +121,7 @@ final class ExtensionRegistrar {
 				'category'            => self::CATEGORY,
 				'input_schema'        => $ability->input_schema,
 				'output_schema'       => $ability->output_schema,
-				'execute_callback'    => function ( array $input ) use ( $name, $ability ): array|WP_Error {
+				'execute_callback'    => function ( array $input ) use ( $ability ): array|WP_Error {
 					return $this->execute( $ability, $input );
 				},
 				'permission_callback' => function (): bool {
@@ -141,8 +141,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Checks the fixed, core-owned administrator policy.
 	 *
-	 * @param string $ability Registered canonical ability name.
-	 * @return bool Whether the active user is an administrator.
+		 * @return bool Whether the active user is an administrator.
 	 */
 	private function can_execute(): bool {
 		if ( current_user_can( 'manage_options' ) ) {
@@ -157,8 +156,7 @@ final class ExtensionRegistrar {
 	/**
 	 * Rechecks authorization, executes one local callback, and redacts failures.
 	 *
-	 * @param string               $name    Registered canonical ability name.
-	 * @param ExtensionAbility     $ability Declared extension ability.
+		 * @param ExtensionAbility     $ability Declared extension ability.
 	 * @param array<string, mixed> $input   Schema-validated ability input.
 	 * @return array<string, mixed>|WP_Error Extension result or fixed failure.
 	 */
@@ -191,12 +189,12 @@ final class ExtensionRegistrar {
 	/**
 	 * Appends a bounded receipt that excludes extension data and fault details.
 	 *
-		 * @param string $decision         Allowed or denied.
+	 * @param string $decision         Allowed or denied.
 	 * @param string $capability_class Redacted policy outcome.
 	 * @param int    $result_count     Fixed result count.
 	 * @return void
 	 */
-	private function append_receipt( string $ability, string $decision, string $capability_class, int $result_count ): void {
-		$this->audit_store->append( AuditReceipt::create( $ability, $decision, $capability_class, $result_count, gmdate( 'c' ) ) );
+	private function append_receipt( string $decision, string $capability_class, int $result_count ): void {
+		$this->audit_store->append( AuditReceipt::create( 'kiln/extension', $decision, $capability_class, $result_count, gmdate( 'c' ) ) );
 	}
 }
