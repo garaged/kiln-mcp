@@ -61,4 +61,4 @@ See [the container-test guide](docs/testing-environment.md) for Rancher Desktop 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M7's acceptance criteria are in [specs/requirements/m7-extensibility-sdk-policy-manifests.md](specs/requirements/m7-extensibility-sdk-policy-manifests.md). It establishes a typed, versioned, administrator-gated read-only extension contract while deliberately excluding extension writes, custom authorization, generic administration, and relays.
+M7's acceptance criteria are in [specs/requirements/m7-extensibility-sdk-policy-manifests.md](specs/requirements/m7-extensibility-sdk-policy-manifests.md). It establishes a typed, versioned, administrator-gated read-only extension contract while deliberately excluding extension writes, custom authorization, generic administration, and relays. The in-progress [extension SDK guide](docs/extension-sdk.md) defines its local-only provider contract and audit boundary.
