@@ -15,9 +15,7 @@
 
 | Milestone | Larger capability bundle | Primary user value | Security exit gate |
 |---|---|---|---|
-| M4 | Safe draft authoring | Create and update standard-post drafts with optimistic concurrency, bounded input, explicit target ownership, and local receipts | No publish/delete; per-post authorization; conflict refusal; full real-WordPress author/editor/subscriber matrix |
-| M5 | Content workflow controls | Explicit review, scheduled publish intent, trash/restore, and reversible lifecycle actions | Effect classification, confirmation token/approval record, idempotency behavior, recovery proof |
-| M6 | Site-structure development | Narrow tools for categories, tags, menus, and registered post-type discovery | Closed resource schemas; no arbitrary options; capability-specific authorization and audit |
+| M6 | Site-structure development | Narrow tools for categories, tags, menu metadata, and registered post-type discovery | Closed resource schemas; exact capability-specific authorization and audit; no navigation mutation |
 | M7 | Extensibility SDK and policy manifests | A FLOSS developer extension contract for independently versioned Kiln capabilities | Manifest validation, dependency isolation, deny-by-default policy, extension conformance suite |
 | M8 | Client interoperability and hardening | Fixture-driven MCP protocol suite, authenticated transport evidence, performance and upgrade compatibility | STDIO/HTTP compatibility matrix, origin/auth negative tests, load budgets, upgrade/rollback checks |
 
