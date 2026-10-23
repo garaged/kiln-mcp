@@ -34,6 +34,21 @@ if ( $expected_keys !== array_keys( $result ) || "available" !== $result["status
 }
 '
 
+
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$ability = wp_get_ability( "kiln-ext/fixture/facts" );
+$result = null === $ability ? null : $ability->execute( array() );
+if ( is_wp_error( $result ) || array( "status" ) !== array_keys( $result ) || "available" !== $result["status"] ) {
+    fwrite( STDERR, "Administrator could not execute the admitted M7 extension.\\n" );
+    exit( 1 );
+}
+
+if ( null !== wp_get_ability( "kiln-ext/failed-fixture/partial" ) ) {
+    fwrite( STDERR, "A throwing M7 extension admitted a partial ability.\\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-author '
 $ability = wp_get_ability( "kiln/list-posts" );
 if ( null === $ability ) {
@@ -397,7 +412,7 @@ foreach ( array(
 '
 
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln-ext/fixture/facts" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
         "kiln/read-post" === $ability_name
@@ -459,6 +474,11 @@ foreach ( $receipts as $receipt ) {
     if ( ( "kiln/list-posts" === $receipt["ability"] || "kiln/create-post-draft" === $receipt["ability"] || "kiln/update-post-draft" === $receipt["ability"] || "kiln/list-categories" === $receipt["ability"] || "kiln/create-category" === $receipt["ability"] ) && "denied" === $receipt["outcome"] ) {
         $has_denied = true;
     }
+}
+
+if ( false !== strpos( serialize( $receipts ), "fixture" ) || false !== strpos( serialize( $receipts ), "failed-fixture" ) ) {
+    fwrite( STDERR, "Kiln M7 audit receipts retained extension identity.\n" );
+    exit( 1 );
 }
 
 if ( ! $has_allowed || ! $has_denied ) {
