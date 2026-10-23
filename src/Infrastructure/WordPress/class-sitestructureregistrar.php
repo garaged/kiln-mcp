@@ -53,13 +53,13 @@ final class SiteStructureRegistrar {
 	 * @return void
 	 */
 	public function register_abilities(): void {
-		$this->register( AuditReceipt::LIST_SUPPORTED_POST_TYPES_ABILITY_NAME, __( 'List supported post types', 'kiln-mcp' ), array( $this, 'list_post_types' ), array( $this, 'can_manage_options' ), self::empty_input_schema(), self::post_type_output_schema() );
-		$this->register( AuditReceipt::LIST_SUPPORTED_TAXONOMIES_ABILITY_NAME, __( 'List supported taxonomies', 'kiln-mcp' ), array( $this, 'list_taxonomies' ), array( $this, 'can_manage_options' ), self::empty_input_schema(), self::taxonomy_output_schema() );
-		$this->register( AuditReceipt::LIST_NAVIGATION_MENUS_ABILITY_NAME, __( 'List navigation menus', 'kiln-mcp' ), array( $this, 'list_menus' ), array( $this, 'can_edit_theme_options' ), self::empty_input_schema(), self::menu_output_schema() );
-		$this->register( AuditReceipt::LIST_CATEGORIES_ABILITY_NAME, __( 'List categories', 'kiln-mcp' ), array( $this, 'list_categories' ), array( $this, 'can_manage_categories' ), self::page_input_schema(), self::term_output_schema() );
-		$this->register( AuditReceipt::LIST_TAGS_ABILITY_NAME, __( 'List tags', 'kiln-mcp' ), array( $this, 'list_tags' ), array( $this, 'can_manage_categories' ), self::page_input_schema(), self::term_output_schema() );
-		$this->register( AuditReceipt::CREATE_CATEGORY_ABILITY_NAME, __( 'Create category', 'kiln-mcp' ), array( $this, 'create_category' ), array( $this, 'can_manage_categories' ), self::category_seed_schema(), self::term_record_schema() );
-		$this->register( AuditReceipt::CREATE_TAG_ABILITY_NAME, __( 'Create tag', 'kiln-mcp' ), array( $this, 'create_tag' ), array( $this, 'can_manage_categories' ), self::tag_seed_schema(), self::term_record_schema() );
+		$this->register( AuditReceipt::LIST_SUPPORTED_POST_TYPES_ABILITY_NAME, __( 'List supported post types', 'kiln-mcp' ), array( $this, 'list_post_types' ), array( $this, 'can_list_post_types' ), self::empty_input_schema(), self::post_type_output_schema() );
+		$this->register( AuditReceipt::LIST_SUPPORTED_TAXONOMIES_ABILITY_NAME, __( 'List supported taxonomies', 'kiln-mcp' ), array( $this, 'list_taxonomies' ), array( $this, 'can_list_taxonomies' ), self::empty_input_schema(), self::taxonomy_output_schema() );
+		$this->register( AuditReceipt::LIST_NAVIGATION_MENUS_ABILITY_NAME, __( 'List navigation menus', 'kiln-mcp' ), array( $this, 'list_menus' ), array( $this, 'can_list_menus' ), self::empty_input_schema(), self::menu_output_schema() );
+		$this->register( AuditReceipt::LIST_CATEGORIES_ABILITY_NAME, __( 'List categories', 'kiln-mcp' ), array( $this, 'list_categories' ), array( $this, 'can_list_categories' ), self::page_input_schema(), self::term_output_schema() );
+		$this->register( AuditReceipt::LIST_TAGS_ABILITY_NAME, __( 'List tags', 'kiln-mcp' ), array( $this, 'list_tags' ), array( $this, 'can_list_tags' ), self::page_input_schema(), self::term_output_schema() );
+		$this->register( AuditReceipt::CREATE_CATEGORY_ABILITY_NAME, __( 'Create category', 'kiln-mcp' ), array( $this, 'create_category' ), array( $this, 'can_create_category' ), self::category_seed_schema(), self::term_record_schema() );
+		$this->register( AuditReceipt::CREATE_TAG_ABILITY_NAME, __( 'Create tag', 'kiln-mcp' ), array( $this, 'create_tag' ), array( $this, 'can_create_tag' ), self::tag_seed_schema(), self::term_record_schema() );
 	}
 
 	/**
@@ -67,8 +67,17 @@ final class SiteStructureRegistrar {
 	 *
 	 * @return bool Whether the active identity may inspect registered structure.
 	 */
-	public function can_manage_options(): bool {
+	public function can_list_post_types(): bool {
 		return $this->can( 'manage_options', AuditReceipt::LIST_SUPPORTED_POST_TYPES_ABILITY_NAME );
+	}
+
+	/**
+	 * Checks administrator-only registered-taxonomy discovery.
+	 *
+	 * @return bool Whether the active identity may inspect registered taxonomies.
+	 */
+	public function can_list_taxonomies(): bool {
+		return $this->can( 'manage_options', AuditReceipt::LIST_SUPPORTED_TAXONOMIES_ABILITY_NAME );
 	}
 
 	/**
@@ -76,7 +85,7 @@ final class SiteStructureRegistrar {
 	 *
 	 * @return bool Whether the active identity may inspect menus.
 	 */
-	public function can_edit_theme_options(): bool {
+	public function can_list_menus(): bool {
 		return $this->can( 'edit_theme_options', AuditReceipt::LIST_NAVIGATION_MENUS_ABILITY_NAME );
 	}
 
@@ -85,8 +94,35 @@ final class SiteStructureRegistrar {
 	 *
 	 * @return bool Whether the active identity may manage categories.
 	 */
-	public function can_manage_categories(): bool {
+	public function can_list_categories(): bool {
 		return $this->can( 'manage_categories', AuditReceipt::LIST_CATEGORIES_ABILITY_NAME );
+	}
+
+	/**
+	 * Checks standard tag discovery access.
+	 *
+	 * @return bool Whether the active identity may inspect tags.
+	 */
+	public function can_list_tags(): bool {
+		return $this->can( 'manage_categories', AuditReceipt::LIST_TAGS_ABILITY_NAME );
+	}
+
+	/**
+	 * Checks standard category-seeding access.
+	 *
+	 * @return bool Whether the active identity may seed categories.
+	 */
+	public function can_create_category(): bool {
+		return $this->can( 'manage_categories', AuditReceipt::CREATE_CATEGORY_ABILITY_NAME );
+	}
+
+	/**
+	 * Checks standard tag-seeding access.
+	 *
+	 * @return bool Whether the active identity may seed tags.
+	 */
+	public function can_create_tag(): bool {
+		return $this->can( 'manage_categories', AuditReceipt::CREATE_TAG_ABILITY_NAME );
 	}
 
 	/**
@@ -273,15 +309,13 @@ final class SiteStructureRegistrar {
 				'order'      => 'ASC',
 			)
 		);
-		if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
+		if ( is_wp_error( $terms ) ) {
 			return $this->deny( $ability, 'term_query_failed', 'kiln_structure_unavailable', __( 'Structure metadata is unavailable.', 'kiln-mcp' ) );
 		}
 
 		$items = array();
 		foreach ( $terms as $term ) {
-			if ( $term instanceof WP_Term ) {
-				$items[] = $this->term_record( $term );
-			}
+			$items[] = $this->term_record( $term );
 		}
 
 		return $this->allowed( $ability, 'manage_categories', $items );
@@ -320,7 +354,7 @@ final class SiteStructureRegistrar {
 		}
 
 		$inserted = wp_insert_term( $request->name, $taxonomy, array( 'parent' => $request->parent_id ) );
-		if ( is_wp_error( $inserted ) || ! is_array( $inserted ) || ! isset( $inserted['term_id'] ) || ! is_int( $inserted['term_id'] ) ) {
+		if ( is_wp_error( $inserted ) || ! isset( $inserted['term_id'] ) || ! is_int( $inserted['term_id'] ) ) {
 			return $this->deny( $ability, 'term_insert_failed', 'kiln_structure_seed_failed', __( 'The term could not be created.', 'kiln-mcp' ) );
 		}
 
