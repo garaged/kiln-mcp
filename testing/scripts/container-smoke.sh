@@ -95,6 +95,7 @@ list( $authenticated_body, $authenticated_headers ) = kiln_mcp_http_request( $au
 $authenticated_status = $authenticated_headers[0] ?? '';
 $response = is_string( $authenticated_body ) ? json_decode( $authenticated_body, true ) : null;
 if ( ! is_string( $authenticated_status ) || ! preg_match( '/ HTTP\/1\.1 2[0-9][0-9] /', $authenticated_status ) || ! is_array( $response ) || 9 !== ( $response['id'] ?? null ) || ! isset( $response['result'] ) ) {
+    fwrite( STDERR, 'Kiln M8 HTTP statuses: unauthenticated=' . $unauthenticated_status . '; authenticated=' . $authenticated_status . PHP_EOL );
     exit( 1 );
 }
 PHP
