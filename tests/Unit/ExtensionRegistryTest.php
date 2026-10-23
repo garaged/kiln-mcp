@@ -25,6 +25,27 @@ final class ExtensionRegistryTest extends TestCase {
 		}
 	}
 
+
+	public function test_it_refuses_a_conflicting_batch_without_partial_admission(): void {
+		$registry = new ExtensionRegistry();
+		$first = $this->manifest( 'example', 'facts' );
+		$registry->register( $first );
+
+		$this->expectException( InvalidArgumentException::class );
+
+		try {
+			$registry->register_all(
+				array(
+					$this->manifest( 'second', 'facts' ),
+					$this->manifest( 'example', 'other' ),
+				)
+			);
+		} finally {
+			self::assertSame( array( 'example' ), array_keys( $registry->manifests() ) );
+			self::assertSame( $first, $registry->manifests()['example'] );
+		}
+	}
+
 	public function test_it_admits_distinct_manifests(): void {
 		$registry = new ExtensionRegistry();
 		$registry->register( $this->manifest( 'example', 'facts' ) );
