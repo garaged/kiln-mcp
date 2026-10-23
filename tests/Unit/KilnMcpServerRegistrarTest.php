@@ -46,7 +46,7 @@ final class KilnMcpServerRegistrarTest extends TestCase {
 }
 
 final class KilnMcpServerRecorder {
-	/** @var array<int, mixed> */
+	/** @var array<int|string, mixed> */
 	public array $arguments = array();
 
 	/**
