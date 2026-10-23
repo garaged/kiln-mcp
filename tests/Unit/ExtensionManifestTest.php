@@ -34,7 +34,7 @@ final class ExtensionManifestTest extends TestCase {
 	/**
 	 * @return array<string, array{0: string, 1: string, 2: array<int, ExtensionAbility>}>
 	 */
-	public function invalid_manifest_provider(): array {
+	public static function invalid_manifest_provider(): array {
 		$open = new ExtensionAbility( 'open-schema', 'Open', 'Invalid schema.', array( 'type' => 'object', 'additionalProperties' => true, 'properties' => array(), 'required' => array() ), self::schema(), Closure::fromCallable( static fn( array $input ): array => array() ) );
 
 		return array(
