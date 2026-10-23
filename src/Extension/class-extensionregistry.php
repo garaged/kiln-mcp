@@ -52,6 +52,7 @@ final class ExtensionRegistry {
 	 *
 	 * @param ExtensionManifest $candidate Candidate manifest.
 	 * @return bool Whether an ability name already exists.
+	 * @throws LogicException When an admitted manifest violates its invariant.
 	 */
 	private function has_ability_collision( ExtensionManifest $candidate ): bool {
 		$names = array();
