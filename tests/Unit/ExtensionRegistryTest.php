@@ -17,10 +17,12 @@ final class ExtensionRegistryTest extends TestCase {
 		$first = $this->manifest( 'example', 'facts' );
 		$registry->register( $first );
 
-		$this->expectException( InvalidArgumentException::class );
-		$registry->register( $this->manifest( 'example', 'other' ) );
-
-		self::assertSame( $first, $registry->manifests()['example'] );
+		try {
+			$registry->register( $this->manifest( 'example', 'other' ) );
+			self::fail( 'A duplicate extension must be refused.' );
+		} catch ( InvalidArgumentException ) {
+			self::assertSame( $first, $registry->manifests()['example'] );
+		}
 	}
 
 	public function test_it_admits_distinct_manifests(): void {
