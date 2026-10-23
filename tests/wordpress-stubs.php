@@ -13,6 +13,26 @@ class WP_Post {
 	public string $post_modified_gmt;
 }
 
+class WP_Term {
+	public int $term_id;
+	public string $name;
+	public string $taxonomy;
+	public int $parent;
+	public int $count;
+}
+
+class WP_Post_Type {
+	public string $name;
+	public string $label;
+	public bool $hierarchical;
+}
+
+class WP_Taxonomy {
+	public string $name;
+	public string $label;
+	public bool $hierarchical;
+}
+
 class WP_Error {
 	public string $code;
 	public string $message;
@@ -304,4 +324,40 @@ function wp_unslash( mixed $value ): mixed {
 
 function absint( mixed $maybeint ): int {
 	return 0;
+}
+
+
+/** @return array<string, WP_Post_Type> */
+function get_post_types( array $args = array(), string $output = 'names' ): array {
+	return array();
+}
+
+/** @return array<string, WP_Taxonomy> */
+function get_taxonomies( array $args = array(), string $output = 'names' ): array {
+	return array();
+}
+
+/** @return array<int, WP_Term> */
+function wp_get_nav_menus( array $args = array() ): array {
+	return array();
+}
+
+/** @return array<int, WP_Term>|WP_Error */
+function get_terms( array $args = array() ): array|WP_Error {
+	return array();
+}
+
+/** @return WP_Term|WP_Error|null */
+function get_term( int $term, string $taxonomy = '' ): WP_Term|WP_Error|null {
+	return null;
+}
+
+/** @return array<string, int|string>|int|string|null */
+function term_exists( string $term, string $taxonomy = '', int $parent_term = 0 ): array|int|string|null {
+	return null;
+}
+
+/** @return array<string, int|string>|WP_Error */
+function wp_insert_term( string $term, string $taxonomy, array $args = array() ): array|WP_Error {
+	return new WP_Error();
 }
