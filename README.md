@@ -57,6 +57,15 @@ The portable test path is Docker Compose. It supports Rancher Desktop on macOS a
 
 See [the container-test guide](docs/testing-environment.md) for Rancher Desktop setup, architecture, troubleshooting, and command details.
 
+## Release artifact
+
+On Rancher Desktop or any Docker host, assemble and inspect a production ZIP without host PHP tooling:
+
+    make release-container-check
+    make release-container
+
+This writes the installable ZIP and SHA-256 sidecar to `dist/`. The host-native `make release` target is retained for systems that already have Composer 2 and `zip` installed.
+
 ## Status and roadmap
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
