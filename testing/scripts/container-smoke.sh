@@ -659,11 +659,129 @@ foreach ( array(
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$context = wp_get_ability( "kiln/get-active-theme-context" );
+$templates = wp_get_ability( "kiln/list-block-templates" );
+$parts = wp_get_ability( "kiln/list-block-template-parts" );
+$patterns = wp_get_ability( "kiln/list-active-theme-patterns" );
+if ( null === $context || null === $templates || null === $parts || null === $patterns ) {
+    file_put_contents( "php://stderr", "Kiln M10 theme context abilities were not registered.\n" );
+    exit( 1 );
+}
+
+$theme_state_before = array(
+    "stylesheet" => get_option( "stylesheet" ),
+    "template"   => get_option( "template" ),
+    "post_ids"   => get_posts(
+        array(
+            "post_type"      => array( "wp_template", "wp_template_part", "wp_global_styles", "wp_navigation", "wp_block" ),
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+    "menu_ids"   => wp_get_nav_menus( array( "fields" => "ids", "orderby" => "term_id", "order" => "ASC" ) ),
+);
+
+$theme = $context->execute( array() );
+if (
+    is_wp_error( $theme )
+    || array( "name", "stylesheet", "version", "has_parent", "is_block_theme" ) !== array_keys( $theme )
+    || "kiln-mcp-theme-context-fixture" !== $theme["stylesheet"]
+    || true !== $theme["is_block_theme"]
+) {
+    file_put_contents( "php://stderr", "Kiln M10 active-theme context was not the deterministic bounded block-theme fixture.\n" );
+    exit( 1 );
+}
+
+$results = array(
+    "templates" => $templates->execute( array( "limit" => 20, "page" => 1 ) ),
+    "parts"     => $parts->execute( array( "limit" => 20, "page" => 1 ) ),
+    "patterns"  => $patterns->execute( array( "limit" => 20, "page" => 1 ) ),
+);
+foreach ( $results as $result ) {
+    if ( is_wp_error( $result ) || array( "items" ) !== array_keys( $result ) || count( $result["items"] ) > 20 ) {
+        file_put_contents( "php://stderr", "Kiln M10 did not return a bounded theme context page.\n" );
+        exit( 1 );
+    }
+}
+
+$has_index   = false;
+$has_header  = false;
+$has_pattern = false;
+foreach ( $results["templates"]["items"] as $item ) {
+    if ( array( "slug", "title", "origin", "customized" ) !== array_keys( $item ) ) {
+        file_put_contents( "php://stderr", "Kiln M10 template metadata leaked an unexpected field.\n" );
+        exit( 1 );
+    }
+    $has_index = $has_index || "index" === $item["slug"];
+}
+foreach ( $results["parts"]["items"] as $item ) {
+    if ( array( "slug", "title", "origin", "customized", "area" ) !== array_keys( $item ) ) {
+        file_put_contents( "php://stderr", "Kiln M10 template-part metadata leaked an unexpected field.\n" );
+        exit( 1 );
+    }
+    $has_header = $has_header || "header" === $item["slug"];
+}
+foreach ( $results["patterns"]["items"] as $item ) {
+    if (
+        array( "slug", "title", "categories" ) !== array_keys( $item )
+        || isset( $item["content"], $item["filePath"] )
+    ) {
+        file_put_contents( "php://stderr", "Kiln M10 pattern metadata leaked content or a path.\n" );
+        exit( 1 );
+    }
+    $has_pattern = $has_pattern || "kiln-mcp-theme-context-fixture/hero" === $item["slug"];
+}
+if ( ! $has_index || ! $has_header || ! $has_pattern ) {
+    file_put_contents( "php://stderr", "Kiln M10 did not discover the deterministic fixture metadata.\n" );
+    exit( 1 );
+}
+
+foreach ( array(
+    $context->execute( array( "unexpected" => true ) ),
+    $templates->execute( array( "limit" => 21, "page" => 1 ) ),
+    $patterns->execute( array( "limit" => 1, "page" => 1, "global" => true ) ),
+) as $rejected ) {
+    if ( ! is_wp_error( $rejected ) ) {
+        file_put_contents( "php://stderr", "Kiln M10 accepted an out-of-scope theme context request.\n" );
+        exit( 1 );
+    }
+}
+
+$theme_state_after = array(
+    "stylesheet" => get_option( "stylesheet" ),
+    "template"   => get_option( "template" ),
+    "post_ids"   => get_posts(
+        array(
+            "post_type"      => array( "wp_template", "wp_template_part", "wp_global_styles", "wp_navigation", "wp_block" ),
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+    "menu_ids"   => wp_get_nav_menus( array( "fields" => "ids", "orderby" => "term_id", "order" => "ASC" ) ),
+);
+if ( $theme_state_before !== $theme_state_after ) {
+    file_put_contents( "php://stderr", "Kiln M10 changed WordPress theme, template, style, navigation, pattern, or menu state.\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln-ext/fixture--facts" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln/get-active-theme-context", "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln-ext/fixture--facts" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
-        "kiln/read-post" === $ability_name
+        in_array( $ability_name, array( "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns" ), true )
+            ? array(
+                "limit" => 1,
+                "page"  => 1,
+            )
+            : ( "kiln/read-post" === $ability_name
             ? array( "post_id" => 1 )
             : ( "kiln/list-posts" === $ability_name
             ? array(
@@ -683,7 +801,7 @@ foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post"
                 "title"                   => "Subscriber denied update",
                 "content"                 => "Denied body",
             )
-            : array() ) ) )
+            : array() ) ) ) )
     );
 
     if ( ! is_wp_error( $result ) ) {

@@ -22,6 +22,7 @@ use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteStructureRegistrar;
+use KilnMcp\Infrastructure\WordPress\ThemeContextRegistrar;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
@@ -50,7 +51,6 @@ final class Plugin {
 
 	/**
 	 * Creates policy and conditionally wires the supported adapter integration.
-	 *
 	 * Failing the adapter check does not register any Kiln capability.
 	 *
 	 * @return void
@@ -62,7 +62,6 @@ final class Plugin {
 		add_action( 'admin_menu', array( $operator_status_page, 'register_page' ) );
 
 		$adapter_version = defined( 'WP_MCP_VERSION' ) && is_string( WP_MCP_VERSION ) ? WP_MCP_VERSION : null;
-
 		if ( ! AdapterDependency::is_available(
 			class_exists( 'WP\\MCP\\Core\\McpAdapter' ),
 			function_exists( 'wp_register_ability' ),
@@ -80,6 +79,7 @@ final class Plugin {
 		$workflow_registrar        = new ContentWorkflowRegistrar( $audit_store, $approval_store );
 		$approval_page             = new WorkflowApprovalPage( $approval_store );
 		$structure_registrar       = new SiteStructureRegistrar( $audit_store );
+		$theme_context_registrar   = new ThemeContextRegistrar( $audit_store );
 		$extension_registrar       = new ExtensionRegistrar( $audit_store );
 		$server_registrar          = new KilnMcpServerRegistrar();
 
@@ -92,9 +92,11 @@ final class Plugin {
 		add_action( 'wp_abilities_api_init', array( $draft_authoring_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $workflow_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $structure_registrar, 'register_category' ) );
+		add_action( 'wp_abilities_api_categories_init', array( $theme_context_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $extension_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $workflow_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_init', array( $structure_registrar, 'register_abilities' ) );
+		add_action( 'wp_abilities_api_init', array( $theme_context_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_init', array( $extension_registrar, 'register_abilities' ) );
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
 		add_action( 'mcp_adapter_init', array( $server_registrar, 'register_server' ), 100 );

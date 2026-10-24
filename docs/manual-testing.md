@@ -1,5 +1,28 @@
 # Manual testing
 
+## Milestone 10
+
+### Automated real-WordPress contract
+
+Refresh the reviewed branch, then run:
+
+    git fetch origin
+    git switch feature/m10-theme-context-discovery
+    git pull --ff-only origin feature/m10-theme-context-discovery
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: the isolated runner activates a deterministic local block-theme fixture and proves that a site administrator can receive only the fixed theme metadata, template metadata, template-part metadata, and pattern metadata. It also proves that every page is capped at 20 items; source content and paths are absent; unknown input and oversize pages are refused; and a subscriber is denied every M10 ability.
+
+### Local administrator check
+
+1. Use a disposable local WordPress instance with an administrator account.
+2. Confirm the active theme is the intended block theme, then run the four M10 read-only abilities through the configured MCP Adapter.
+3. Verify that results contain only their documented fields: no HTML, CSS, PHP, `theme.json`, filesystem path, URL, option, user, credential, or plugin data.
+4. Confirm no theme, template, pattern, menu, style, global-style, file, or option is modified.
+5. Repeat as a subscriber and confirm every M10 ability is denied.
+
 ## Milestone 9
 
 ### Release artifact and operator status

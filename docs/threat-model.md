@@ -39,6 +39,8 @@
 | Operator diagnostic disclosure | manage_options local-only status page; four fixed allow-listed compatibility rows; no endpoint, credential, option, user, content, path, inventory, or stack-trace output |
 | Unsafe deployment guidance | explicit staging, backup, HTTPS, least-privilege, revocation, no-fixture, and no-CORS-relaxation steps; no automatic deployment or rollback |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
+| Theme source/configuration disclosure | `edit_theme_options` execution check; four fixed read-only abilities; closed schemas; 20-item pages; allow-listed active-theme, template, template-part, and pattern metadata only; no markup/content, paths, CSS/PHP/theme.json, URLs, options, identities, credentials, diagnostics, plugin inventory, or global pattern inventory |
+| Theme or sitewide visual mutation | no M10 write ability; no theme/template/part/pattern/menu/style/global-style/file/option operation; any future mutation requires an independently approved, approval-gated design |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 
 ## Explicit exclusions

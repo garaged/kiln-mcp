@@ -41,3 +41,10 @@ The adapter owns JSON-RPC framing, STDIO, HTTP sessions, and HTTP authentication
 M9 adds two non-capability adapters. The local release builder stages only the entry point, production source, production Composer autoloader, license, and WordPress-facing readme; a separate archive inspector rejects development files and verifies the SHA-256 sidecar. It never uploads an artifact or performs release deployment.
 
 The WordPress OperatorStatusPage is an administrator-only Tools-page adapter. It composes before the MCP Adapter availability gate, so missing dependencies remain diagnosable. Its pure status contract accepts primitive compatibility facts and returns only four allow-listed rows. It does not inspect options, routes, users, content, credentials, filesystem paths, or a plugin inventory, and it cannot configure or invoke MCP transport.
+
+
+## M10 theme-context boundary
+
+M10 adds one WordPress adapter and a pure `ThemeContext` capability module. The adapter calls only the active theme and block-template metadata APIs, maps their results through a fixed allow-list, and records redacted receipts. The capability module owns closed page validation and record shapes; it never imports WordPress classes.
+
+The adapter provides four `edit_theme_options`-guarded read-only abilities. It filters template records to the active stylesheet and obtains patterns from the active theme metadata interface rather than the global block-pattern registry. It never returns content, source files, configuration, paths, URLs, identities, or diagnostics; it makes no change to themes, templates, patterns, menus, styles, or options.
