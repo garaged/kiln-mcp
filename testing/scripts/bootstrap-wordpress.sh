@@ -22,6 +22,9 @@ done
 wp plugin install mcp-adapter --version="$MCP_ADAPTER_VERSION" --activate --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 
+cp -a /opt/kiln/fixtures/kiln-mcp-theme-context-fixture "$wp_path/wp-content/themes/"
+wp theme activate kiln-mcp-theme-context-fixture --allow-root --path="$wp_path"
+
 mkdir -p "$wp_path/wp-content/mu-plugins"
 cp /opt/kiln/fixtures/mu-plugins/kiln-mcp-test-http-auth.php "$wp_path/wp-content/mu-plugins/"
 
