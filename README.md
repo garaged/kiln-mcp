@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: M0–M8 are delivered. Milestone 9 is in development: production installation and operator onboarding.
+> Status: M0–M9 are delivered. Milestone 10 is in development: bounded theme-context discovery.
 
 ## Principles
 
@@ -31,12 +31,15 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 | `kiln/list-navigation-menus` | `edit_theme_options` | at most 20 menu IDs, names, and item counts; never items, URLs, or locations |
 | `kiln/list-categories` / `kiln/list-tags` | `manage_categories` | one closed page of at most 20 fixed term records |
 | `kiln/create-category` / `kiln/create-tag` | `manage_categories` | idempotent creation of one plain-text standard term; categories require an admitted parent |
+| `kiln/get-active-theme-context` | `edit_theme_options` | planned M10: active-theme metadata only |
+| `kiln/list-block-templates` / `kiln/list-block-template-parts` | `edit_theme_options` | planned M10: closed pages of at most 20 metadata records |
+| `kiln/list-active-theme-patterns` | `edit_theme_options` | planned M10: active-theme-only pattern metadata |
 
 The post reader excludes private, scheduled, trashed, password-protected, and custom-post-type content. It removes shortcodes and markup, reports truncation, and labels returned content as untrusted data. It does not expose user identity, comments, revisions, custom fields, media metadata, raw HTML, or generic post properties.
 
 Lifecycle approvals are issued only from **Tools → Kiln MCP approvals** by a `manage_options` administrator. Kiln stores only an approval hash, exact action/target/version binding, expiry, and consumed state; tokens expire in ten minutes, are one-time, and are never issued or returned through MCP.
 
-All discovery, authoring, lifecycle, and site-structure outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, post identifiers/data/URLs, identity, credentials, or errors.
+All discovery, authoring, lifecycle, site-structure, and theme-context outcomes create a bounded, local redacted audit receipt. Receipts never retain request input, identifiers/data/URLs, identity, credentials, or errors.
 
 Install and activate [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) before activating Kiln. For local clients, use the adapter's documented WP-CLI/STDIO server. For remote access, use its authenticated HTTP transport over HTTPS; Kiln does not add a relay.
 
@@ -70,4 +73,4 @@ This writes the installable ZIP and SHA-256 sidecar to `dist/`. The host-native 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M9's acceptance criteria are in [specs/requirements/m9-production-operator-onboarding.md](specs/requirements/m9-production-operator-onboarding.md). It adds a verifiable production ZIP, bounded administrator diagnostics, and secure operator onboarding without adding a relay, credential store, telemetry, custom transport, or broader authority. See the [operator guide](docs/operator-guide.md) for installation and connection steps.
+M10's acceptance criteria are in [specs/requirements/m10-theme-context-discovery.md](specs/requirements/m10-theme-context-discovery.md). It adds read-only, bounded active-theme planning context without exposing theme source, configuration, files, URLs, patterns outside the active theme, or any theme/site mutation.
