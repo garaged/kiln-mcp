@@ -48,3 +48,9 @@ The WordPress OperatorStatusPage is an administrator-only Tools-page adapter. It
 M10 adds one WordPress adapter and a pure `ThemeContext` capability module. The adapter calls only the active theme and block-template metadata APIs, maps their results through a fixed allow-list, and records redacted receipts. The capability module owns closed page validation and record shapes; it never imports WordPress classes.
 
 The adapter provides four `edit_theme_options`-guarded read-only abilities. It filters template records to the active stylesheet and obtains patterns from the active theme metadata interface rather than the global block-pattern registry. It never returns content, source files, configuration, paths, URLs, identities, or diagnostics; it makes no change to themes, templates, patterns, menus, styles, or options.
+
+## M11 page-context boundary
+
+M11 adds one PageContext capability module and a WordPress adapter. The module owns closed page-list and exact-page request validation plus allow-listed record shapes. The adapter calls only standard WordPress page APIs, permits only published or draft standard pages without passwords, applies edit_pages discovery and exact edit_post read checks, redacts page text, and retains bounded receipts.
+
+M11 exposes no page hierarchy, template, author, comment, revision, custom-field, media, raw markup, or write capability. It neither changes page nor site state nor introduces transport, relay, filesystem, database, shell, PHP, or telemetry access.
