@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace KilnMcp\Infrastructure\WordPress;
 
 use InvalidArgumentException;
-use KilnMcp\Capability\DraftAuthoring\PageDraftCreateRequest;
-use KilnMcp\Capability\DraftAuthoring\PageDraftUpdateRequest;
+use KilnMcp\Capability\PageDraftAuthoring\PageDraftCreateRequest;
+use KilnMcp\Capability\PageDraftAuthoring\PageDraftUpdateRequest;
 use KilnMcp\Capability\PostDiscovery\AuditReceipt;
 use WP_Error;
 use WP_Post;
@@ -90,7 +90,7 @@ final class PageDraftAuthoringRegistrar {
 	 * @param WP_Post $post_before  Post before the database update.
 	 * @return void
 	 */
-	public function record_post_update( int $page_id, WP_Post $post_after, WP_Post $post_before ): void {
+	public function record_page_update( int $page_id, WP_Post $post_after, WP_Post $post_before ): void {
 		unset( $post_before );
 
 		if ( 'post' !== $post_after->post_type ) {
