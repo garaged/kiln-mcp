@@ -120,7 +120,7 @@ final class ThemeContextRegistrar {
 			return $this->deny( AuditReceipt::GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME, 'invalid_input', 'kiln_theme_context_invalid_input' );
 		}
 
-		$theme = wp_get_theme();
+		$theme  = wp_get_theme();
 		$record = ThemeContextSnapshot::active_theme(
 			(string) $theme->get( 'Name' ),
 			(string) $theme->get_stylesheet(),
@@ -231,7 +231,7 @@ final class ThemeContextRegistrar {
 			$origin     = isset( $template->origin ) && is_string( $template->origin ) ? $template->origin : $template->source;
 			$customized = 'custom' === $template->source;
 			if ( 'wp_template_part' === $type ) {
-				$area     = isset( $template->area ) && is_string( $template->area ) ? $template->area : '';
+				$area    = isset( $template->area ) && is_string( $template->area ) ? $template->area : '';
 				$items[] = ThemeContextSnapshot::template_part( $template->slug, $template->title, $origin, $customized, $area );
 				continue;
 			}
