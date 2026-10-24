@@ -669,6 +669,22 @@ if ( null === $context || null === $templates || null === $parts || null === $pa
     exit( 1 );
 }
 
+$theme_state_before = array(
+    "stylesheet" => get_option( "stylesheet" ),
+    "template"   => get_option( "template" ),
+    "post_ids"   => get_posts(
+        array(
+            "post_type"      => array( "wp_template", "wp_template_part", "wp_global_styles", "wp_navigation", "wp_block" ),
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+    "menu_ids"   => wp_get_nav_menus( array( "fields" => "ids", "orderby" => "term_id", "order" => "ASC" ) ),
+);
+
 $theme = $context->execute( array() );
 if (
     is_wp_error( $theme )
@@ -733,6 +749,26 @@ foreach ( array(
         file_put_contents( "php://stderr", "Kiln M10 accepted an out-of-scope theme context request.\n" );
         exit( 1 );
     }
+}
+
+$theme_state_after = array(
+    "stylesheet" => get_option( "stylesheet" ),
+    "template"   => get_option( "template" ),
+    "post_ids"   => get_posts(
+        array(
+            "post_type"      => array( "wp_template", "wp_template_part", "wp_global_styles", "wp_navigation", "wp_block" ),
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+    "menu_ids"   => wp_get_nav_menus( array( "fields" => "ids", "orderby" => "term_id", "order" => "ASC" ) ),
+);
+if ( $theme_state_before !== $theme_state_after ) {
+    file_put_contents( "php://stderr", "Kiln M10 changed WordPress theme, template, style, navigation, pattern, or menu state.\n" );
+    exit( 1 );
 }
 '
 
