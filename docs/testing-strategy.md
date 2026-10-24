@@ -38,3 +38,8 @@ Every confirmed AI- or reviewer-found defect adds a focused regression test befo
 ## M9 release and operator boundary
 
 M9 adds a pure status-contract test for supported and blocked dependencies, including negative assertions for credential, URL, and filesystem-path disclosure. A composition-root test proves the administrator status page remains registered when the official adapter is unavailable. The real-WordPress smoke suite renders the status page as an administrator and verifies its fixed ready contract without sensitive content. The release gate assembles a no-dev ZIP in an isolated temporary directory, validates its SHA-256 sidecar, verifies required production files, and rejects development-only files.
+
+
+## M10 theme-context boundary
+
+M10 adds pure tests for exact pagination and allow-listed active-theme, template, template-part, and pattern record shapes. The real-WordPress smoke contract proves all four abilities register on the dedicated server, administrator results contain only the fixed keys and never exceed 20 records, malformed/unknown input is refused, and a subscriber is denied. It does not inspect template or pattern content; test assertions reject those field names explicitly.
