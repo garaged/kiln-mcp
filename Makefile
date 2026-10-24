@@ -35,10 +35,10 @@ release:
 	sh ./scripts/build-release.sh
 
 release-check:
-	@release_tmp=$(mktemp -d); \\
-	trap 'rm -rf "$release_tmp"' EXIT HUP INT TERM; \\
-	KILN_RELEASE_DIR="$release_tmp" sh ./scripts/build-release.sh; \\
-	sh ./scripts/check-release-archive.sh "$release_tmp/"*.zip
+	@release_tmp=$$(mktemp -d); \
+	trap 'rm -rf "$$release_tmp"' EXIT HUP INT TERM; \
+	KILN_RELEASE_DIR="$$release_tmp" sh ./scripts/build-release.sh; \
+	sh ./scripts/check-release-archive.sh "$$release_tmp/"*.zip
 
 manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
