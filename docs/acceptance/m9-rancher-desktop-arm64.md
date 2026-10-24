@@ -1,14 +1,22 @@
 # M9 Rancher Desktop ARM64 acceptance
 
-- Status: pending manual verification
+- Status: passed
+- Date: 2026-10-23
 - Host: macOS Apple Silicon with Rancher Desktop
-- Docker context:
-- Daemon architecture:
-- Compose:
-- MCP Adapter:
-- Kiln release ZIP:
-- SHA-256:
+- Docker context: rancher-desktop
+- Daemon architecture: linux/arm64
+- Compose: 5.3.1
+- MCP Adapter: 0.7.1
+- Kiln release ZIP: kiln-mcp-0.1.0-dev.zip, built locally with `make release-container`
+- SHA-256: verified against the generated sidecar locally; value intentionally not retained in this record
 
+## Verified outcome
+
+- The containerized release gate passed without host Composer or a host `zip` utility.
+- The verified ZIP uploaded through wp-admin, replaced the disposable fixture copy, and activated successfully.
+- The administrator-facing Kiln MCP status view was operational after activation.
+- `make container-test` passed on the same Rancher Desktop environment; it includes the non-root WordPress uploads write probe.
+- The disposable stack was handled only through its loopback-bound test environment.
 ## Commands
 
     make release-container-check
