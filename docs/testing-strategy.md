@@ -43,3 +43,7 @@ M9 adds a pure status-contract test for supported and blocked dependencies, incl
 ## M10 theme-context boundary
 
 M10 adds pure tests for exact pagination and allow-listed active-theme, template, template-part, and pattern record shapes. The real-WordPress smoke contract proves all four abilities register on the dedicated server, administrator results contain only the fixed keys and never exceed 20 records, malformed/unknown input is refused, and a subscriber is denied. It does not inspect template or pattern content; test assertions reject those field names explicitly.
+
+## M11 page-context boundary
+
+M11 adds unit coverage for closed page-list and exact-page-read input, fixed page snapshots, plain-text redaction, and bounded response contracts. The real-WordPress smoke contract seeds published, draft, private, and future pages; it proves administrator access to only admitted published or draft standard pages, rejects unknown input and oversized bounds, excludes raw markup and shortcodes, preserves page state, and denies both abilities to a subscriber. ARM64 Rancher Desktop acceptance is recorded separately before merge.
