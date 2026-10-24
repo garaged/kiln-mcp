@@ -16,8 +16,6 @@ final class KilnMcpServerRegistrar {
 	public const SERVER_ID = 'kiln-mcp';
 
 	/**
-	 * Registers the official adapter server.
-	 *
 	 * @param object $adapter Official MCP Adapter instance.
 	 * @return void
 	 */
@@ -47,10 +45,6 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
-	 * Allows only authenticated authors, editors, and administrators into the server.
-	 *
-	 * Individual ability callbacks retain their exact authorization checks.
-	 *
 	 * @return bool Whether the active WordPress user may reach the server.
 	 */
 	public function can_connect(): bool {
@@ -58,22 +52,17 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
-	 * Produces the explicit Kiln capability allow-list.
-	 *
 	 * @param array<mixed> $registered_abilities Ability registry keyed by name.
 	 * @return array<int, string> Sorted admitted capability names.
 	 */
 	public function ability_names( array $registered_abilities ): array {
 		$names = self::core_ability_names();
-
 		foreach ( array_keys( $registered_abilities ) as $name ) {
 			if ( ! is_string( $name ) || ( ! str_starts_with( $name, 'kiln/' ) && ! str_starts_with( $name, 'kiln-ext/' ) ) ) {
 				continue;
 			}
-
 			$names[] = $name;
 		}
-
 		$names = array_values( array_unique( $names ) );
 		sort( $names, SORT_STRING );
 
@@ -81,8 +70,6 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
-	 * Applies the pure transport-admission rule.
-	 *
 	 * @param bool $authenticated Whether WordPress authenticated the request.
 	 * @param bool $can_edit_posts Whether the user may author posts.
 	 * @return bool Whether transport admission is allowed.
@@ -92,8 +79,6 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
-	 * Returns the fixed core capability set.
-	 *
 	 * @return array<int, string> Kiln core ability names.
 	 */
 	public static function core_ability_names(): array {
@@ -101,6 +86,10 @@ final class KilnMcpServerRegistrar {
 			'kiln/create-category',
 			'kiln/create-post-draft',
 			'kiln/create-tag',
+			'kiln/get-active-theme-context',
+			'kiln/list-active-theme-patterns',
+			'kiln/list-block-template-parts',
+			'kiln/list-block-templates',
 			'kiln/list-categories',
 			'kiln/list-navigation-menus',
 			'kiln/list-posts',
@@ -118,8 +107,6 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
-	 * Reads the WordPress ability registry when it is available.
-	 *
 	 * @return array<mixed> Registered abilities keyed by name.
 	 */
 	private function registered_abilities(): array {
