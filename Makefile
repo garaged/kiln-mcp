@@ -96,6 +96,7 @@ container-test: container-preflight
 		exit 1; \
 	fi
 	$(COMPOSE) build test-runner
+	$(COMPOSE) exec -T --user www-data wordpress sh -ec 'test -d /var/www/html/wp-content/uploads && touch /var/www/html/wp-content/uploads/.kiln-upload-probe && rm /var/www/html/wp-content/uploads/.kiln-upload-probe'
 	$(COMPOSE) run --rm --no-deps test-runner
 
 container-logs:
