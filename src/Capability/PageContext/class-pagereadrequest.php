@@ -16,6 +16,8 @@ use InvalidArgumentException;
  */
 final class PageReadRequest {
 	/**
+	 * Applies the bounded page-context contract.
+	 *
 	 * @param int $page_id Admitted page identifier.
 	 */
 	private function __construct(
@@ -28,6 +30,7 @@ final class PageReadRequest {
 	 *
 	 * @param array<string, mixed> $input Candidate request.
 	 * @return self Validated request.
+	 * @throws InvalidArgumentException When input is not one exact positive page ID.
 	 */
 	public static function from_input( array $input ): self {
 		if (
