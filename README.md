@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: M0–M9 are delivered. Milestone 10 is in development: bounded theme-context discovery.
+> Status: M0–M10 are delivered. Milestone 11 is in development: bounded page discovery and read.
 
 ## Principles
 
@@ -31,9 +31,9 @@ It gives WordPress developers a fast, extensible, and security-first way to expo
 | `kiln/list-navigation-menus` | `edit_theme_options` | at most 20 menu IDs, names, and item counts; never items, URLs, or locations |
 | `kiln/list-categories` / `kiln/list-tags` | `manage_categories` | one closed page of at most 20 fixed term records |
 | `kiln/create-category` / `kiln/create-tag` | `manage_categories` | idempotent creation of one plain-text standard term; categories require an admitted parent |
-| `kiln/get-active-theme-context` | `edit_theme_options` | planned M10: active-theme metadata only |
+| `kiln/get-active-theme-context` | `edit_theme_options` | active-theme metadata only |
 | `kiln/list-block-templates` / `kiln/list-block-template-parts` | `edit_theme_options` | planned M10: closed pages of at most 20 metadata records |
-| `kiln/list-active-theme-patterns` | `edit_theme_options` | planned M10: active-theme-only pattern metadata |
+| `kiln/list-active-theme-patterns` | `edit_theme_options` | active-theme-only pattern metadata |\n| `kiln/list-pages` | `edit_pages` | planned M11: maximum 20 standard published/draft page metadata records |\n| `kiln/read-page` | `edit_post` for the exact page | planned M11: one standard page as up to 12,000 characters of plain text |
 
 The post reader excludes private, scheduled, trashed, password-protected, and custom-post-type content. It removes shortcodes and markup, reports truncation, and labels returned content as untrusted data. It does not expose user identity, comments, revisions, custom fields, media metadata, raw HTML, or generic post properties.
 
