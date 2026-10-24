@@ -261,7 +261,7 @@ final class ThemeContextRegistrar {
 	 *
 	 * @param string                           $ability Ability identifier.
 	 * @param array<int, array<string, mixed>> $items   Candidate fixed records.
-	 * @param PagedThemeContextRequest          $request Bounded page request.
+	 * @param PagedThemeContextRequest         $request Bounded page request.
 	 * @return array<string, array<int, array<string, mixed>>> Fixed page.
 	 */
 	private function paged_allowed( string $ability, array $items, PagedThemeContextRequest $request ): array {
