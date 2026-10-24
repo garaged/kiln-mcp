@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace KilnMcp\Tests\Unit;
 
 use InvalidArgumentException;
-use KilnMcp\Capability\PagePage draftAuthoring\PagePage draftCreateRequest;
-use KilnMcp\Capability\PagePage draftAuthoring\PagePage draftUpdateRequest;
+use KilnMcp\Capability\PageDraftAuthoring\PageDraftCreateRequest;
+use KilnMcp\Capability\PageDraftAuthoring\PageDraftUpdateRequest;
 use PHPUnit\Framework\TestCase;
 
-final class PagePagePage draftAuthoringRequestTest extends TestCase {
+final class PagePageDraftAuthoringRequestTest extends TestCase {
 	public function test_it_accepts_closed_plain_text_creation_input(): void {
-		$request = PagePage draftCreateRequest::from_input(
+		$request = PageDraftCreateRequest::from_input(
 			array(
 				'title'   => 'Kiln draft',
 				'content' => "First line\nSecond line",
@@ -23,7 +23,7 @@ final class PagePagePage draftAuthoringRequestTest extends TestCase {
 	}
 
 	public function test_it_accepts_closed_exact_target_update_input(): void {
-		$request = PagePage draftUpdateRequest::from_input(
+		$request = PageDraftUpdateRequest::from_input(
 			array(
 				'page_id'                 => 42,
 				'expected_modified_token' => str_repeat( 'a', 64 ),
@@ -44,7 +44,7 @@ final class PagePagePage draftAuthoringRequestTest extends TestCase {
 	public function test_it_rejects_non_plain_or_unbounded_create_input( array $input ): void {
 		$this->expectException( InvalidArgumentException::class );
 
-		PagePage draftCreateRequest::from_input( $input );
+		PageDraftCreateRequest::from_input( $input );
 	}
 
 	/**
@@ -74,7 +74,7 @@ final class PagePagePage draftAuthoringRequestTest extends TestCase {
 			'long body'     => array(
 				array(
 					'title'   => 'Page draft',
-					'content' => str_repeat( 'x', PagePage draftCreateRequest::MAX_CONTENT_CHARACTERS + 1 ),
+					'content' => str_repeat( 'x', PageDraftCreateRequest::MAX_CONTENT_CHARACTERS + 1 ),
 				),
 			),
 		);
@@ -88,7 +88,7 @@ final class PagePagePage draftAuthoringRequestTest extends TestCase {
 	public function test_it_rejects_invalid_update_target_or_token( array $input ): void {
 		$this->expectException( InvalidArgumentException::class );
 
-		PagePage draftUpdateRequest::from_input( $input );
+		PageDraftUpdateRequest::from_input( $input );
 	}
 
 	/**
