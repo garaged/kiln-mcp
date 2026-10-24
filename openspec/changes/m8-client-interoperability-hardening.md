@@ -10,7 +10,7 @@ Kiln must prove its policy-controlled WordPress abilities work through the offic
 - explicit authenticated transport admission and preservation of per-ability authorization;
 - fixture-driven STDIO and HTTP JSON-RPC protocol coverage;
 - origin/authentication negative tests, response and elapsed-time budgets;
-- adapter-version candidate and rollback compatibility evidence;
+- adapter-version candidate and rollback compatibility support, with recorded evidence required before adopting a newer adapter release;
 - CI, Rancher Desktop acceptance, upgrade guidance, and traceability updates.
 
 ## Constraints
