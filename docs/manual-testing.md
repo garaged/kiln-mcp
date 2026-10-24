@@ -1,5 +1,29 @@
 # Manual testing
 
+## Milestone 9
+
+### Release artifact and operator status
+
+Run:
+
+    make release-container-check
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: the containerized release gate builds a production-only ZIP in a temporary directory without requiring host Composer or a host zip utility, validates its SHA-256 sidecar, loads the packaged Kiln composition root through its own autoloader, and rejects development-only content. The real-WordPress smoke suite also proves that the non-root WordPress web user can create and remove a probe in `wp-content/uploads`, then renders **Tools → Kiln MCP status** for an administrator and verifies the four allow-listed compatibility rows without a credential, URL, or filesystem-path disclosure.
+
+### Rancher Desktop acceptance
+
+1. Use a disposable local WordPress environment with Rancher Desktop on macOS Apple Silicon.
+2. Run the command sequence above and record the Docker context, daemon architecture, Compose version, and successful output.
+3. Build a local artifact with make release-container; this is the supported Rancher Desktop path and needs no host Composer or zip utility. Verify the printed checksum using shasum -a 256 before uploading it to the disposable site. make release remains available for hosts that already provide Composer and zip.
+4. Start a freshly bootstrapped disposable site with make container-up, then upload through **Plugins → Add New → Upload Plugin** at http://127.0.0.1:8080/wp-admin. If the stack existed before an updated bootstrap, run make container-down first so its volumes are recreated. Because the smoke fixture already contains Kiln from the checked-out source, choose WordPress’s standard **Replace current with uploaded** action if it detects that installed fixture. The disposable administrator is `kiln-admin`; its known test password is documented only by the bootstrap fixture. Do not reuse it anywhere.
+5. Alternatively, copy the verified ZIP into the disposable WordPress container and force-install it with WP-CLI using the project name and compose file from the Makefile.
+6. Open **Tools → Kiln MCP status** as an administrator. Confirm all four checks are ready and the page discloses no endpoint, credential, content, user, option, filesystem-path, or plugin-inventory data.
+7. Run make container-down and remove the local artifact after verification. Do not use production credentials, relax CORS, or expose the disposable environment publicly.
+
+
 ## Milestone 8
 
 ### Automated protocol contract

@@ -253,3 +253,35 @@ requirements:
       - .github/workflows/quality.yml
       - docs/manual-testing.md
       - docs/acceptance/m8-rancher-desktop-arm64.md
+
+  - id: REQ-M9-001
+    source: specs/requirements/m9-production-operator-onboarding.md
+    validation:
+      - scripts/build-release.sh
+      - scripts/check-release-archive.sh
+      - Makefile
+  - id: REQ-M9-002
+    source: specs/requirements/m9-production-operator-onboarding.md
+    validation:
+      - src/Infrastructure/WordPress/class-operatorstatuspage.php
+      - tests/Unit/OperatorStatusPageTest.php
+      - tests/Unit/PluginOperatorStatusTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M9-003
+    source: specs/requirements/m9-production-operator-onboarding.md
+    validation:
+      - src/Infrastructure/WordPress/class-operatorstatuspage.php
+      - tests/Unit/OperatorStatusPageTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M9-004
+    source: specs/requirements/m9-production-operator-onboarding.md
+    validation:
+      - docs/operator-guide.md
+      - docs/manual-testing.md
+      - readme.txt
+  - id: REQ-M9-005
+    source: specs/requirements/m9-production-operator-onboarding.md
+    validation:
+      - .github/workflows/quality.yml
+      - docs/manual-testing.md
+      - docs/acceptance/m9-rancher-desktop-arm64.md

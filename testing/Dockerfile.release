@@ -1,0 +1,7 @@
+ARG COMPOSER_IMAGE=composer:2.8
+FROM ${COMPOSER_IMAGE}
+
+USER root
+RUN apk add --no-cache zip
+
+WORKDIR /workspace

@@ -4,7 +4,7 @@
 
 It gives WordPress developers a fast, extensible, and security-first way to expose narrowly scoped site capabilities to MCP clients—without a mandatory hosted relay, account, or paid service.
 
-> Status: M0–M7 are delivered. Milestone 8 is in development: official-adapter interoperability and transport hardening.
+> Status: M0–M8 are delivered. Milestone 9 is in development: production installation and operator onboarding.
 
 ## Principles
 
@@ -57,8 +57,17 @@ The portable test path is Docker Compose. It supports Rancher Desktop on macOS a
 
 See [the container-test guide](docs/testing-environment.md) for Rancher Desktop setup, architecture, troubleshooting, and command details.
 
+## Release artifact
+
+On Rancher Desktop or any Docker host, assemble and inspect a production ZIP without host PHP tooling:
+
+    make release-container-check
+    make release-container
+
+This writes the installable ZIP and SHA-256 sidecar to `dist/`. The host-native `make release` target is retained for systems that already have Composer 2 and `zip` installed.
+
 ## Status and roadmap
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
-M8's acceptance criteria are in [specs/requirements/m8-client-interoperability-hardening.md](specs/requirements/m8-client-interoperability-hardening.md). It proves the dedicated official-adapter protocol boundary through STDIO and authenticated HTTP while deliberately excluding a custom transport, relay, credential store, and broader capability authority.
+M9's acceptance criteria are in [specs/requirements/m9-production-operator-onboarding.md](specs/requirements/m9-production-operator-onboarding.md). It adds a verifiable production ZIP, bounded administrator diagnostics, and secure operator onboarding without adding a relay, credential store, telemetry, custom transport, or broader authority. See the [operator guide](docs/operator-guide.md) for installation and connection steps.

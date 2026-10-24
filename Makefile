@@ -3,11 +3,14 @@
 COMPOSE_PROJECT ?= kiln-mcp-test
 COMPOSE_FILE ?= testing/compose.yaml
 COMPOSE = docker compose --project-name $(COMPOSE_PROJECT) --file $(COMPOSE_FILE)
+RELEASE_CONTAINER_IMAGE ?= kiln-mcp-release:local
+RELEASE_CONTAINER_DOCKERFILE ?= testing/Dockerfile.release
+RELEASE_COMPOSER_IMAGE ?= composer:2.8
 
-.PHONY: help install test lint analyse specs architecture check ci manual-m0 container-preflight container-build container-up container-test container-logs container-down
+.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-test container-logs container-down
 
 help:
-	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 container-preflight container-build container-up container-test container-logs container-down"
+	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-test container-logs container-down"
 
 install:
 	composer install --no-interaction --prefer-dist
@@ -27,9 +30,49 @@ specs:
 architecture:
 	composer architecture-check
 
-check: specs architecture lint analyse test
+check: specs architecture lint analyse test release-check
 
 ci: check
+
+release:
+	sh ./scripts/build-release.sh
+
+release-check:
+	@release_tmp=$$(mktemp -d); \
+	trap 'rm -rf "$$release_tmp"' EXIT HUP INT TERM; \
+	KILN_RELEASE_DIR="$$release_tmp" sh ./scripts/build-release.sh; \
+	sh ./scripts/check-release-archive.sh "$$release_tmp/"*.zip
+
+release-container-build:
+	docker build --pull \
+		--build-arg COMPOSER_IMAGE=$(RELEASE_COMPOSER_IMAGE) \
+		--file $(RELEASE_CONTAINER_DOCKERFILE) \
+		--tag $(RELEASE_CONTAINER_IMAGE) \
+		.
+
+release-container: release-container-build
+	docker run --rm \
+		--user "$$(id -u):$$(id -g)" \
+		--volume "$(CURDIR):/workspace" \
+		--workdir /workspace \
+		--env COMPOSER_HOME=/tmp/composer \
+		--env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+		$(RELEASE_CONTAINER_IMAGE) \
+		sh ./scripts/build-release.sh
+
+release-container-check: release-container-build
+	@release_tmp=$$(mktemp -d "$$(pwd)/.release-check.XXXXXX"); \
+	trap 'rm -rf "$$release_tmp"' EXIT HUP INT TERM; \
+	release_path="/workspace/$${release_tmp##*/}"; \
+	docker run --rm \
+		--user "$$(id -u):$$(id -g)" \
+		--volume "$(CURDIR):/workspace" \
+		--workdir /workspace \
+		--env COMPOSER_HOME=/tmp/composer \
+		--env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+		--env KILN_RELEASE_DIR="$$release_path" \
+		$(RELEASE_CONTAINER_IMAGE) \
+		sh -ec 'sh ./scripts/build-release.sh && sh ./scripts/check-release-archive.sh "$$KILN_RELEASE_DIR/"*.zip'
 
 manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
@@ -52,6 +95,7 @@ container-test: container-preflight
 		exit 1; \
 	fi
 	$(COMPOSE) build test-runner
+	$(COMPOSE) exec -T --user www-data wordpress sh -ec 'test -d /var/www/html/wp-content/uploads && touch /var/www/html/wp-content/uploads/.kiln-upload-probe && rm /var/www/html/wp-content/uploads/.kiln-upload-probe'
 	$(COMPOSE) run --rm --no-deps test-runner
 
 container-logs:

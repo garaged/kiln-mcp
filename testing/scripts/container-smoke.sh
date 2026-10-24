@@ -7,6 +7,11 @@ wp core is-installed --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
+if [ "$( wp option get home --allow-root --path="$wp_path" )" != "http://$KILN_MCP_PUBLIC_HOST" ]; then
+    echo "Kiln test site URL must use the host-visible loopback address." >&2
+    exit 1
+fi
+
 stdio_diagnostics="$( mktemp )"
 stdio_response="$(
     printf '%s\n' \
@@ -41,10 +46,17 @@ declare(strict_types=1);
 const KILN_MCP_HTTP_ENDPOINT = 'http://wordpress/?rest_route=/kiln-mcp/mcp';
 const KILN_MCP_PROTOCOL_VERSION = '2025-11-25';
 
+function kiln_mcp_http_host(): string {
+    $host = getenv( 'KILN_MCP_PUBLIC_HOST' );
+
+    return is_string( $host ) && '' !== $host ? $host : '127.0.0.1:8080';
+}
+
 function kiln_mcp_http_request( ?string $authorization, array $message, ?string $session_id = null ): array {
     $headers = array(
         'Content-Type: application/json',
         'Accept: application/json, text/event-stream',
+        'Host: ' . kiln_mcp_http_host(),
     );
     if ( null !== $authorization ) {
         $headers[] = 'Authorization: ' . $authorization;
@@ -78,6 +90,7 @@ function kiln_mcp_http_raw_request( string $authorization, string $payload, stri
                 'header'        => implode( "\r\n", array(
                     'Content-Type: application/json',
                     'Accept: application/json, text/event-stream',
+                    'Host: ' . kiln_mcp_http_host(),
                     'Authorization: ' . $authorization,
                     'Mcp-Session-Id: ' . $session_id,
                     'MCP-Protocol-Version: ' . KILN_MCP_PROTOCOL_VERSION,
@@ -718,6 +731,28 @@ if ( false !== strpos( serialize( $receipts ), "fixture" ) || false !== strpos( 
 
 if ( ! $has_allowed || ! $has_denied ) {
     file_put_contents( "php://stderr", "Kiln audit receipts did not record discovery outcomes.\n" );
+    exit( 1 );
+}
+'
+
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$page = new \KilnMcp\Infrastructure\WordPress\OperatorStatusPage( "0.1.0-dev" );
+ob_start();
+$page->render();
+$html = ob_get_clean();
+$statuses = \KilnMcp\Infrastructure\WordPress\OperatorStatusPage::statuses(
+    "0.1.0-dev",
+    PHP_VERSION,
+    function_exists( "wp_register_ability" ),
+    class_exists( "WP\\MCP\\Core\\McpAdapter" ),
+    defined( "WP_MCP_VERSION" ) ? WP_MCP_VERSION : null
+);
+if ( ! str_contains( $html, "Kiln MCP status" ) || 4 !== count( $statuses ) || "ready" !== $statuses[3]["state"] ) {
+    file_put_contents( "php://stderr", "Kiln M9 operator status did not render the bounded ready contract.\n" );
+    exit( 1 );
+}
+if ( false !== strpos( strtolower( $html ), "password" ) || false !== strpos( strtolower( $html ), "http://" ) || false !== strpos( strtolower( $html ), "https://" ) || false !== strpos( strtolower( $html ), "/var/" ) ) {
+    file_put_contents( "php://stderr", "Kiln M9 operator status exposed sensitive diagnostic material.\n" );
     exit( 1 );
 }
 '

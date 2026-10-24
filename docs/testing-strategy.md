@@ -33,3 +33,8 @@ M6 adds pure tests for closed page and taxonomy-seed inputs. Its real-WordPress 
 The real-WordPress baseline is the container-test Make target. It builds the production plugin artifact, waits for a healthy database and WordPress instance, installs the pinned MCP Adapter, activates Kiln MCP in a fresh site, then executes an isolated smoke runner. The same target runs in Linux CI; manual Rancher Desktop Apple Silicon evidence is required before support is claimed. Protocol-stream interoperability remains a future fixture-driven contract once a dedicated MCP client suite is introduced.
 
 Every confirmed AI- or reviewer-found defect adds a focused regression test before its fix is accepted.
+
+
+## M9 release and operator boundary
+
+M9 adds a pure status-contract test for supported and blocked dependencies, including negative assertions for credential, URL, and filesystem-path disclosure. A composition-root test proves the administrator status page remains registered when the official adapter is unavailable. The real-WordPress smoke suite renders the status page as an administrator and verifies its fixed ready contract without sensitive content. The release gate assembles a no-dev ZIP in an isolated temporary directory, validates its SHA-256 sidecar, verifies required production files, and rejects development-only files.

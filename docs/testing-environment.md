@@ -25,9 +25,16 @@ flowchart TD
   RUN --> RESULT["Pass/fail evidence"]
 ```
 
-The host port is bound only to `127.0.0.1`. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
+The bootstrap grants the WordPress web user ownership of `wp-content`, including `uploads`; the smoke suite creates and removes a probe there as that user before it starts protocol tests. The host port is bound only to `127.0.0.1`. Bootstrap stores that loopback URL as the WordPress site URL, so browser redirects remain on the host-visible address. The smoke runner connects through the private `wordpress` service DNS but sends the loopback Host header; this preserves both browser access and private in-network tests. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
 
 ## Quick start
+
+For a release ZIP without installing Composer or a zip utility on the host, use the same container runtime:
+
+    make release-container-check
+    make release-container
+
+The artifact and SHA-256 sidecar are written to `dist/`. The normal `make release` target remains available for hosts that already provide Composer and `zip`.
 
 ```sh
 make container-preflight
@@ -63,7 +70,8 @@ Install Docker Engine plus the Compose v2 plugin, ensure your user can access th
 
 ## Current assertions
 
-The M2 smoke runner proves:
+The complete regression smoke runner proves all prior milestone contracts and M9 additionally builds the production-only artifact through the quality gate, validates its checksum/contents, and renders the bounded administrator operator-status view without sensitive disclosure. Earlier M2-specific assertions remain part of the same suite:
+
 
 - WordPress, MCP Adapter, and Kiln MCP activate correctly;
 - an administrator can execute the bounded site-health capability;

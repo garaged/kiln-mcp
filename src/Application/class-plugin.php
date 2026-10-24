@@ -17,6 +17,7 @@ use KilnMcp\Infrastructure\WordPress\ContentWorkflowRegistrar;
 use KilnMcp\Infrastructure\WordPress\DraftAuthoringRegistrar;
 use KilnMcp\Infrastructure\WordPress\ExtensionRegistrar;
 use KilnMcp\Infrastructure\WordPress\KilnMcpServerRegistrar;
+use KilnMcp\Infrastructure\WordPress\OperatorStatusPage;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
@@ -56,6 +57,9 @@ final class Plugin {
 	 */
 	public function bootstrap(): void {
 		ToolPolicy::deny_by_default();
+
+		$operator_status_page = new OperatorStatusPage( $this->version );
+		add_action( 'admin_menu', array( $operator_status_page, 'register_page' ) );
 
 		$adapter_version = defined( 'WP_MCP_VERSION' ) && is_string( WP_MCP_VERSION ) ? WP_MCP_VERSION : null;
 

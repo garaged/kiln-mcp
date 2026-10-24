@@ -59,6 +59,17 @@ class WP_Error {
  * @return void
  */
 function add_action( string $hook_name, callable $callback, int $priority = 10, int $accepted_args = 1 ): void {
+	$actions = $GLOBALS['kiln_mcp_test_actions'] ?? array();
+	if ( ! is_array( $actions ) ) {
+		$actions = array();
+	}
+	$actions[] = array(
+		'hook'     => $hook_name,
+		'callback' => $callback,
+		'priority' => $priority,
+		'accepted' => $accepted_args,
+	);
+	$GLOBALS['kiln_mcp_test_actions'] = $actions;
 }
 
 /**

@@ -50,4 +50,7 @@ wp option update kiln_mcp_fixture_published_id "$published_id" --allow-root --pa
 wp option update kiln_mcp_fixture_author_draft_id "$author_draft_id" --allow-root --path="$wp_path"
 wp option update kiln_mcp_fixture_private_id "$private_id" --allow-root --path="$wp_path"
 
+mkdir -p "$wp_path/wp-content/uploads"
+chown -R www-data:www-data "$wp_path/wp-content"
+
 echo "WordPress bootstrap completed."
