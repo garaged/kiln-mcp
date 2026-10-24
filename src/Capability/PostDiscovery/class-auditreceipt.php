@@ -28,6 +28,10 @@ final class AuditReceipt {
 	public const LIST_TAGS_ABILITY_NAME                 = 'kiln/list-tags';
 	public const CREATE_CATEGORY_ABILITY_NAME           = 'kiln/create-category';
 	public const CREATE_TAG_ABILITY_NAME                = 'kiln/create-tag';
+	public const GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME  = 'kiln/get-active-theme-context';
+	public const LIST_BLOCK_TEMPLATES_ABILITY_NAME      = 'kiln/list-block-templates';
+	public const LIST_BLOCK_TEMPLATE_PARTS_ABILITY_NAME = 'kiln/list-block-template-parts';
+	public const LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME = 'kiln/list-active-theme-patterns';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
