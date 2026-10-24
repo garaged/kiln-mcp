@@ -93,7 +93,7 @@ final class PageDraftAuthoringRegistrar {
 	public function record_page_update( int $page_id, WP_Post $post_after, WP_Post $post_before ): void {
 		unset( $post_before );
 
-		if ( 'post' !== $post_after->post_type ) {
+		if ( 'page' !== $post_after->post_type ) {
 			return;
 		}
 
