@@ -333,3 +333,51 @@ requirements:
       - .github/workflows/quality.yml
       - docs/manual-testing.md
       - docs/acceptance/m10-rancher-desktop-arm64.md
+
+  - id: REQ-M11-001
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Infrastructure/WordPress/class-pagecontextregistrar.php
+      - tests/Unit/PageContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-002
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Capability/PageContext/class-pagedpagerequest.php
+      - src/Infrastructure/WordPress/class-pagecontextregistrar.php
+      - tests/Unit/PageContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-003
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Capability/PageContext/class-pagereadrequest.php
+      - src/Infrastructure/WordPress/class-pagecontextregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-004
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Capability/PageContext/class-pagesnapshot.php
+      - src/Infrastructure/WordPress/class-pagecontextregistrar.php
+      - tests/Unit/PageContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-005
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Infrastructure/WordPress/class-pagecontextregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-006
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - docs/threat-model.md
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M11-007
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - src/Infrastructure/WordPress/class-kilnmcpserverregistrar.php
+      - tests/Unit/KilnMcpServerRegistrarTest.php
+  - id: REQ-M11-008
+    source: specs/requirements/m11-page-discovery-read.md
+    validation:
+      - .github/workflows/quality.yml
+      - docs/manual-testing.md
+      - docs/acceptance/m11-rancher-desktop-arm64.md
