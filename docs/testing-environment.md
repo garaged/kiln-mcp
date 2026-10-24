@@ -63,7 +63,8 @@ Install Docker Engine plus the Compose v2 plugin, ensure your user can access th
 
 ## Current assertions
 
-The M2 smoke runner proves:
+The complete regression smoke runner proves all prior milestone contracts and M9 additionally builds the production-only artifact through the quality gate, validates its checksum/contents, and renders the bounded administrator operator-status view without sensitive disclosure. Earlier M2-specific assertions remain part of the same suite:
+
 
 - WordPress, MCP Adapter, and Kiln MCP activate correctly;
 - an administrator can execute the bounded site-health capability;
