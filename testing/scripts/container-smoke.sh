@@ -7,6 +7,11 @@ wp core is-installed --allow-root --path="$wp_path"
 wp plugin is-active mcp-adapter --allow-root --path="$wp_path"
 wp plugin is-active kiln-mcp --allow-root --path="$wp_path"
 
+if [ "$( wp option get home --allow-root --path="$wp_path" )" != "http://$KILN_MCP_PUBLIC_HOST" ]; then
+    echo "Kiln test site URL must use the host-visible loopback address." >&2
+    exit 1
+fi
+
 stdio_diagnostics="$( mktemp )"
 stdio_response="$(
     printf '%s\n' \
