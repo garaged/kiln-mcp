@@ -25,7 +25,7 @@ flowchart TD
   RUN --> RESULT["Pass/fail evidence"]
 ```
 
-The host port is bound only to `127.0.0.1`. Bootstrap stores that loopback URL as the WordPress site URL, so browser redirects remain on the host-visible address. The smoke runner connects through the private `wordpress` service DNS but sends the loopback Host header; this preserves both browser access and private in-network tests. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
+The bootstrap grants the WordPress web user ownership of `wp-content`, including `uploads`; the smoke suite creates and removes a probe there as that user before it starts protocol tests. The host port is bound only to `127.0.0.1`. Bootstrap stores that loopback URL as the WordPress site URL, so browser redirects remain on the host-visible address. The smoke runner connects through the private `wordpress` service DNS but sends the loopback Host header; this preserves both browser access and private in-network tests. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
 
 ## Quick start
 
