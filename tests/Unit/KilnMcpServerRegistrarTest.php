@@ -26,6 +26,8 @@ final class KilnMcpServerRegistrarTest extends TestCase {
 		$ability_names = $configured_abilities;
 		self::assertContains( 'kiln/site-health-summary', $ability_names );
 		self::assertContains( 'kiln/get-active-theme-context', $ability_names );
+		self::assertContains( 'kiln/create-page-draft', $ability_names );
+		self::assertContains( 'kiln/update-page-draft', $ability_names );
 		self::assertContains( 'kiln/list-block-templates', $ability_names );
 		self::assertContains( 'kiln/list-block-template-parts', $ability_names );
 		self::assertContains( 'kiln/list-active-theme-patterns', $ability_names );
