@@ -114,7 +114,7 @@ final class PageContextRegistrar {
 
 		$items = array();
 		foreach ( get_posts( $request->to_query_arguments() ) as $page ) {
-			if ( $page instanceof WP_Post && $this->is_admitted_page( $page ) ) {
+			if ( $this->is_admitted_page( $page ) ) {
 				$items[] = PageSnapshot::metadata(
 					$page->ID,
 					$page->post_title,
