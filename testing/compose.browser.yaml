@@ -1,0 +1,9 @@
+# Optional host exposure for manual browser inspection only.
+#
+# The base compose file deliberately publishes no host ports so container-test
+# cannot collide with an unrelated local service. Keep this overlay with the
+# same project name when invoking make container-up.
+services:
+  wordpress:
+    ports:
+      - "127.0.0.1:${KILN_MCP_TEST_PORT:-8080}:80"

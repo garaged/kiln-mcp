@@ -772,15 +772,95 @@ if ( $theme_state_before !== $theme_state_after ) {
 }
 '
 
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$list = wp_get_ability( "kiln/list-pages" );
+$read = wp_get_ability( "kiln/read-page" );
+if ( null === $list || null === $read ) {
+    file_put_contents( "php://stderr", "Kiln M11 page context abilities were not registered.\n" );
+    exit( 1 );
+}
+
+$state_before = array(
+    "published_page_id" => get_option( "kiln_mcp_fixture_published_page_id" ),
+    "private_page_id"   => get_option( "kiln_mcp_fixture_private_page_id" ),
+    "future_page_id"    => get_option( "kiln_mcp_fixture_future_page_id" ),
+    "page_ids"          => get_posts(
+        array(
+            "post_type"      => "page",
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+);
+
+$pages = $list->execute( array( "status" => "publish", "limit" => 20, "page" => 1 ) );
+$page_id = (int) get_option( "kiln_mcp_fixture_published_page_id" );
+$read_result = $read->execute( array( "page_id" => $page_id ) );
+if (
+    is_wp_error( $pages )
+    || count( $pages["items"] ) > 20
+    || is_wp_error( $read_result )
+    || array( "id", "title", "status", "modified_at", "modified_token", "permalink", "content_text", "content_truncated", "untrusted_data_notice" ) !== array_keys( $read_result )
+    || $page_id !== $read_result["id"]
+    || false !== strpos( $read_result["content_text"], "<" )
+    || false !== strpos( $read_result["content_text"], "[gallery]" )
+) {
+    file_put_contents( "php://stderr", "Kiln M11 did not return the bounded redacted page contract.\n" );
+    exit( 1 );
+}
+foreach ( $pages["items"] as $item ) {
+    if ( array( "id", "title", "status", "modified_at", "permalink" ) !== array_keys( $item ) || "private" === $item["status"] ) {
+        file_put_contents( "php://stderr", "Kiln M11 page discovery leaked an unexpected field or private page.\n" );
+        exit( 1 );
+    }
+}
+foreach ( array(
+    $read->execute( array( "page_id" => (int) get_option( "kiln_mcp_fixture_private_page_id" ) ) ),
+    $read->execute( array( "page_id" => (int) get_option( "kiln_mcp_fixture_future_page_id" ) ) ),
+    $read->execute( array( "page_id" => $page_id, "template" => "unsafe" ) ),
+    $list->execute( array( "status" => "publish", "limit" => 21, "page" => 1 ) ),
+) as $rejected ) {
+    if ( ! is_wp_error( $rejected ) ) {
+        file_put_contents( "php://stderr", "Kiln M11 accepted an out-of-scope page request.\n" );
+        exit( 1 );
+    }
+}
+
+$state_after = array(
+    "published_page_id" => get_option( "kiln_mcp_fixture_published_page_id" ),
+    "private_page_id"   => get_option( "kiln_mcp_fixture_private_page_id" ),
+    "future_page_id"    => get_option( "kiln_mcp_fixture_future_page_id" ),
+    "page_ids"          => get_posts(
+        array(
+            "post_type"      => "page",
+            "post_status"    => "any",
+            "fields"         => "ids",
+            "posts_per_page" => -1,
+            "orderby"        => "ID",
+            "order"          => "ASC",
+        )
+    ),
+);
+if ( $state_before !== $state_after ) {
+    file_put_contents( "php://stderr", "Kiln M11 changed page or site state.\n" );
+    exit( 1 );
+}
+'
+
 wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln/get-active-theme-context", "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln-ext/fixture--facts" ) as $ability_name ) {
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln/get-active-theme-context", "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages", "kiln/read-page", "kiln-ext/fixture--facts" ) as $ability_name ) {
     $ability = wp_get_ability( $ability_name );
     $result  = null === $ability ? null : $ability->execute(
-        in_array( $ability_name, array( "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns" ), true )
+        in_array( $ability_name, array( "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages" ), true )
             ? array(
                 "limit" => 1,
                 "page"  => 1,
             )
+            : ( "kiln/read-page" === $ability_name
+            ? array( "page_id" => 1 )
             : ( "kiln/read-post" === $ability_name
             ? array( "post_id" => 1 )
             : ( "kiln/list-posts" === $ability_name
@@ -801,7 +881,7 @@ foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post"
                 "title"                   => "Subscriber denied update",
                 "content"                 => "Denied body",
             )
-            : array() ) ) ) )
+            : array() ) ) ) ) )
     );
 
     if ( ! is_wp_error( $result ) ) {

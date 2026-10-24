@@ -1,5 +1,20 @@
 # Manual testing
 
+## Milestone 11
+
+### Automated real-WordPress contract
+
+Refresh the reviewed branch, then run:
+
+    git fetch origin
+    git switch feature/m11-page-discovery-read
+    git pull --ff-only origin feature/m11-page-discovery-read
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: the isolated runner proves an administrator can list only bounded standard published/draft pages and read one admitted page as bounded plain text; private/future/malformed requests are refused; page hierarchy, template, author, comments, revisions, custom fields, media, raw markup, and shortcodes are absent; a subscriber is denied; and before/after state is unchanged. This automated path publishes no host browser port, so an unrelated local service using port 8080 cannot affect it.
+
 ## Milestone 10
 
 ### Automated real-WordPress contract
@@ -41,7 +56,7 @@ Expected result: the containerized release gate builds a production-only ZIP in 
 1. Use a disposable local WordPress environment with Rancher Desktop on macOS Apple Silicon.
 2. Run the command sequence above and record the Docker context, daemon architecture, Compose version, and successful output.
 3. Build a local artifact with make release-container; this is the supported Rancher Desktop path and needs no host Composer or zip utility. Verify the printed checksum using shasum -a 256 before uploading it to the disposable site. make release remains available for hosts that already provide Composer and zip.
-4. Start a freshly bootstrapped disposable site with make container-up, then upload through **Plugins → Add New → Upload Plugin** at http://127.0.0.1:8080/wp-admin. If the stack existed before an updated bootstrap, run make container-down first so its volumes are recreated. Because the smoke fixture already contains Kiln from the checked-out source, choose WordPress’s standard **Replace current with uploaded** action if it detects that installed fixture. The disposable administrator is `kiln-admin`; its known test password is documented only by the bootstrap fixture. Do not reuse it anywhere.
+4. Start a freshly bootstrapped disposable site with `make container-up`, then upload through **Plugins → Add New → Upload Plugin** at http://127.0.0.1:8080/wp-admin. If port 8080 is occupied, use `KILN_MCP_TEST_PORT=8081 make container-up` and visit that port instead. If the stack existed before an updated bootstrap, run make container-down first so its volumes are recreated. Because the smoke fixture already contains Kiln from the checked-out source, choose WordPress’s standard **Replace current with uploaded** action if it detects that installed fixture. The disposable administrator is `kiln-admin`; its known test password is documented only by the bootstrap fixture. Do not reuse it anywhere.
 5. Alternatively, copy the verified ZIP into the disposable WordPress container and force-install it with WP-CLI using the project name and compose file from the Makefile.
 6. Open **Tools → Kiln MCP status** as an administrator. Confirm all four checks are ready and the page discloses no endpoint, credential, content, user, option, filesystem-path, or plugin-inventory data.
 7. Run make container-down and remove the local artifact after verification. Do not use production credentials, relax CORS, or expose the disposable environment publicly.
@@ -93,7 +108,7 @@ Expected result: M1–M6 regression coverage remains green. M7 additionally acti
 3. Confirm container-preflight reports the intended Rancher Desktop context and native architecture.
 4. Confirm container-test reports Container smoke checks passed.
 5. Record the Docker context, daemon architecture, Compose version, and successful output.
-6. Confirm no container port other than the loopback-bound disposable WordPress test port is published. Do not use production credentials, a public Docker listener, or a real extension with unreviewed PHP.
+6. Confirm `make container-test` publishes no host port. `make container-up` may publish only the selected loopback browser port. Do not use production credentials, a public Docker listener, or a real extension with unreviewed PHP.
 
 ## Milestone 6
 
@@ -167,6 +182,6 @@ Expected result: specification, architecture, coding-standard, static-analysis, 
 
 ### Clean-environment confirmation
 
-On macOS Apple Silicon with Rancher Desktop and on Linux x86-64, record the operating system, CPU architecture, Rancher Desktop/Docker Engine and Compose versions, selected Docker context, successful container command output, and confirmation that only localhost port 8080 is published.
+On macOS Apple Silicon with Rancher Desktop and on Linux x86-64, record the operating system, CPU architecture, Rancher Desktop/Docker Engine and Compose versions, selected Docker context, successful container command output, and confirmation that automated tests publish no host port (or that manual browser inspection uses only the selected loopback port).
 
 No production WordPress site, credentials, or Docker TCP listener may be used.

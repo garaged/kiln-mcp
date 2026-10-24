@@ -41,7 +41,7 @@
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Theme source/configuration disclosure | `edit_theme_options` execution check; four fixed read-only abilities; closed schemas; 20-item pages; allow-listed active-theme, template, template-part, and pattern metadata only; no markup/content, paths, CSS/PHP/theme.json, URLs, options, identities, credentials, diagnostics, plugin inventory, or global pattern inventory |
 | Theme or sitewide visual mutation | no M10 write ability; no theme/template/part/pattern/menu/style/global-style/file/option operation; any future mutation requires an independently approved, approval-gated design |
-| Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
+| Page content overexposure | fixed standard-page type, published/draft-only admission, `edit_pages` list gate, exact `edit_post` read gate, closed schemas, 20-item pages, 12,000-character plain-text cap, local redacted receipts |\n| Page hierarchy/template disclosure or mutation | no hierarchy, template, author, comment, revision, custom-field, media, raw-markup, or mutation field; no M11 write ability; any page write requires a separately approved design |\n| Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 
 ## Explicit exclusions
 
