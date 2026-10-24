@@ -1,5 +1,20 @@
 # Manual testing
 
+## Milestone 11
+
+### Automated real-WordPress contract
+
+Refresh the reviewed branch, then run:
+
+    git fetch origin
+    git switch feature/m11-page-discovery-read
+    git pull --ff-only origin feature/m11-page-discovery-read
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: the isolated runner proves an administrator can list only bounded standard published/draft pages and read one admitted page as bounded plain text; private/future/malformed requests are refused; page hierarchy, template, author, comments, revisions, custom fields, media, raw markup, and shortcodes are absent; a subscriber is denied; and before/after state is unchanged.
+
 ## Milestone 10
 
 ### Automated real-WordPress contract
