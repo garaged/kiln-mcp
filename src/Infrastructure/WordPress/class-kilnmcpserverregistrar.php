@@ -94,6 +94,7 @@ final class KilnMcpServerRegistrar {
 	public static function core_ability_names(): array {
 		return array(
 			'kiln/create-category',
+			'kiln/create-page-draft',
 			'kiln/create-post-draft',
 			'kiln/create-tag',
 			'kiln/get-active-theme-context',
@@ -114,6 +115,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/schedule-post-publication',
 			'kiln/site-health-summary',
 			'kiln/trash-post',
+			'kiln/update-page-draft',
 			'kiln/update-post-draft',
 		);
 	}
