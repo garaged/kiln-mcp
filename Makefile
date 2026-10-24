@@ -4,10 +4,10 @@ COMPOSE_PROJECT ?= kiln-mcp-test
 COMPOSE_FILE ?= testing/compose.yaml
 COMPOSE = docker compose --project-name $(COMPOSE_PROJECT) --file $(COMPOSE_FILE)
 
-.PHONY: help install test lint analyse specs architecture check ci manual-m0 container-preflight container-build container-up container-test container-logs container-down
+.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check container-preflight container-build container-up container-test container-logs container-down
 
 help:
-	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 container-preflight container-build container-up container-test container-logs container-down"
+	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check container-preflight container-build container-up container-test container-logs container-down"
 
 install:
 	composer install --no-interaction --prefer-dist
@@ -30,6 +30,15 @@ architecture:
 check: specs architecture lint analyse test
 
 ci: check
+
+release:
+	sh ./scripts/build-release.sh
+
+release-check:
+	@release_tmp=$(mktemp -d); \\
+	trap 'rm -rf "$release_tmp"' EXIT HUP INT TERM; \\
+	KILN_RELEASE_DIR="$release_tmp" sh ./scripts/build-release.sh; \\
+	sh ./scripts/check-release-archive.sh "$release_tmp/"*.zip
 
 manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
