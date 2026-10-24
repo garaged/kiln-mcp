@@ -35,3 +35,9 @@ The WordPress adapter owns `manage_options`, MCP discovery, REST exclusion, read
 M8 registers one dedicated `kiln-mcp` server through the official MCP Adapter. It allow-lists Kiln core and admitted extension ability names rather than inheriting every public ability from WordPress. The server’s transport admission requires an authenticated `edit_posts` user; individual ability callbacks continue to make the final per-tool authorization decision.
 
 The adapter owns JSON-RPC framing, STDIO, HTTP sessions, and HTTP authentication. Kiln owns only server membership, the transport admission callback, policy contracts, and protocol conformance fixtures. It neither parses MCP requests nor stores client credentials, and it must not introduce a proxy, relay, CORS override, custom transport, or outbound service.
+
+## M9 release and operator boundary
+
+M9 adds two non-capability adapters. The local release builder stages only the entry point, production source, production Composer autoloader, license, and WordPress-facing readme; a separate archive inspector rejects development files and verifies the SHA-256 sidecar. It never uploads an artifact or performs release deployment.
+
+The WordPress OperatorStatusPage is an administrator-only Tools-page adapter. It composes before the MCP Adapter availability gate, so missing dependencies remain diagnosable. Its pure status contract accepts primitive compatibility facts and returns only four allow-listed rows. It does not inspect options, routes, users, content, credentials, filesystem paths, or a plugin inventory, and it cannot configure or invoke MCP transport.
