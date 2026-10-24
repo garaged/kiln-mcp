@@ -285,3 +285,51 @@ requirements:
       - .github/workflows/quality.yml
       - docs/manual-testing.md
       - docs/acceptance/m9-rancher-desktop-arm64.md
+
+  - id: REQ-M10-001
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Infrastructure/WordPress/class-themecontextregistrar.php
+      - tests/Unit/ThemeContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-002
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Capability/ThemeContext/class-themecontextsnapshot.php
+      - tests/Unit/ThemeContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-003
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Capability/ThemeContext/class-pagedthemecontextrequest.php
+      - src/Infrastructure/WordPress/class-themecontextregistrar.php
+      - tests/Unit/ThemeContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-004
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Infrastructure/WordPress/class-themecontextregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-005
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Capability/ThemeContext/class-themecontextsnapshot.php
+      - src/Infrastructure/WordPress/class-themecontextregistrar.php
+      - tests/Unit/ThemeContextTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-006
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Infrastructure/WordPress/class-themecontextregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M10-007
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - src/Infrastructure/WordPress/class-kilnmcpserverregistrar.php
+      - tests/Unit/KilnMcpServerRegistrarTest.php
+  - id: REQ-M10-008
+    source: specs/requirements/m10-theme-context-discovery.md
+    validation:
+      - .github/workflows/quality.yml
+      - docs/manual-testing.md
+      - docs/acceptance/m10-rancher-desktop-arm64.md
