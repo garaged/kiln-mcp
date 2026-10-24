@@ -18,9 +18,10 @@ Expected result: the release gate builds a production-only ZIP in a temporary di
 1. Use a disposable local WordPress environment with Rancher Desktop on macOS Apple Silicon.
 2. Run the command sequence above and record the Docker context, daemon architecture, Compose version, and successful output.
 3. Build a local artifact with make release; verify the printed checksum using shasum -a 256 before uploading it to the disposable site.
-4. Install the official MCP Adapter, upload the verified Kiln ZIP, and open **Tools → Kiln MCP status** as an administrator.
-5. Confirm all four checks are ready and the page discloses no endpoint, credential, content, user, option, filesystem-path, or plugin-inventory data.
-6. Remove the local artifact after verification. Do not use production credentials, relax CORS, or expose the disposable environment publicly.
+4. Start the disposable site with make container-up, then upload through **Plugins → Add New → Upload Plugin** at http://127.0.0.1:8080/wp-admin. The disposable administrator is `kiln-admin`; its known test password is documented only by the bootstrap fixture. Do not reuse it anywhere.
+5. Alternatively, copy the verified ZIP into the disposable WordPress container and force-install it with WP-CLI using the project name and compose file from the Makefile.
+6. Open **Tools → Kiln MCP status** as an administrator. Confirm all four checks are ready and the page discloses no endpoint, credential, content, user, option, filesystem-path, or plugin-inventory data.
+7. Run make container-down and remove the local artifact after verification. Do not use production credentials, relax CORS, or expose the disposable environment publicly.
 
 
 ## Milestone 8
