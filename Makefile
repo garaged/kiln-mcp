@@ -27,7 +27,7 @@ specs:
 architecture:
 	composer architecture-check
 
-check: specs architecture lint analyse test
+check: specs architecture lint analyse test release-check
 
 ci: check
 
