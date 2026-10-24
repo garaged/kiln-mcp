@@ -6,6 +6,7 @@
 - Docker context: rancher-desktop
 - Daemon architecture: linux/arm64
 - Compose: 5.3.1
+- MCP Adapter: 0.7.1 pinned baseline
 
 ## Commands
 
