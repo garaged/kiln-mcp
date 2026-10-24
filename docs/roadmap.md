@@ -13,12 +13,13 @@
 | M6 | Bounded site-structure discovery and idempotent category/tag seeding | Merged |
 | M7 | Governed read-only extension SDK and policy manifests | Merged |
 | M8 | Client interoperability and transport hardening | Merged |
+| M9 | Production installation and operator onboarding | Merged |
 
-## Remaining capability plan
+## Current capability plan
 
 | Milestone | Larger capability bundle | Primary user value | Security exit gate |
 |---|---|---|---|
-| M9 | Production installation and operator onboarding | Verifiable self-hosted release, compatibility diagnostics, and safe operational setup | Production-only ZIP + checksum, bounded administrator diagnostics, Linux/ARM64 acceptance |
+| M10 | Bounded theme-context discovery | Safe active-theme, template, template-part, and pattern awareness before development recommendations | Read-only metadata only, `edit_theme_options`, 20-item bounds, active-theme pattern filtering, Linux/ARM64 acceptance |
 
 ## Delivery rules
 
@@ -28,4 +29,4 @@ No milestone expands to generic REST forwarding, arbitrary database/filesystem a
 
 ## Current position
 
-Kiln has completed secure discovery (M1–M3), controlled draft authoring (M4), approval-gated lifecycle effects (M5), bounded site-structure development (M6), and a governed read-only extension SDK (M7). M8 proves Kiln’s narrow capability surface through the official adapter over STDIO and authenticated HTTP. M9 now makes that boundary operational through a production-only artifact, bounded administrator diagnostics, and secure onboarding; custom transports, browser CORS bypasses, relays, credential storage, extension writes, broad site configuration, navigation mutation, and permanent deletion remain deliberately deferred.
+Kiln has completed secure discovery (M1–M3), controlled draft authoring (M4), approval-gated lifecycle effects (M5), bounded site-structure development (M6), a governed read-only extension SDK (M7), official-adapter interoperability (M8), and production operator onboarding (M9). M10 adds only the safe visual-planning layer: active-theme metadata and bounded template, template-part, and active-theme-pattern metadata. Theme source, markup, configuration, file access, global pattern inventory, navigation mutation, style/global-style changes, and all theme mutation remain deliberately deferred.
