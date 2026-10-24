@@ -315,58 +315,13 @@ final class PageContextRegistrar {
 					'type'      => 'string',
 					'minLength' => 64,
 					'maxLength' => 64,
-					'pattern'   => '^[a-f0-9]{64}
+					'pattern'   => '^[a-f0-9]{64}$',
+				),
 				'permalink'             => array( 'type' => 'string' ),
 				'content_text'          => array(
 					'type'      => 'string',
 					'maxLength' => PostContentRedactor::MAX_CHARACTERS,
 				),
-				'content_truncated'     => array( 'type' => 'boolean' ),
-				'untrusted_data_notice' => array( 'type' => 'string' ),
-			)
-		);
-	}
-
-	/**
-	 * Applies the bounded page-context contract.
-	 *
-	 * @param array<string, mixed> $properties Fixed field map.
-	 * @return array<string, mixed> Closed record schema.
-	 */
-	private static function record_schema( array $properties ): array {
-		return array(
-			'type'                 => 'object',
-			'additionalProperties' => false,
-			'properties'           => $properties,
-			'required'             => array_keys( $properties ),
-		);
-	}
-
-	/**
-	 * Applies the bounded page-context contract.
-	 *
-	 * @param array<string, mixed> $properties Fixed field map.
-	 * @return array<string, mixed> Closed list schema.
-	 */
-	private static function list_schema( array $properties ): array {
-		return array(
-			'type'                 => 'object',
-			'additionalProperties' => false,
-			'properties'           => array(
-				'items' => array(
-					'type'     => 'array',
-					'maxItems' => PagedPageRequest::MAX_ITEMS,
-					'items'    => self::record_schema( $properties ),
-				),
-			),
-			'required'             => array( 'items' ),
-		);
-	}
-}
-,
-				),
-				'permalink'             => array( 'type' => 'string' ),
-				'content_text'          => array( 'type' => 'string', 'maxLength' => PostContentRedactor::MAX_CHARACTERS ),
 				'content_truncated'     => array( 'type' => 'boolean' ),
 				'untrusted_data_notice' => array( 'type' => 'string' ),
 			)
