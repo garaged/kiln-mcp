@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace KilnMcp\Capability\DraftAuthoring;
+namespace KilnMcp\Capability\PageDraftAuthoring;
 
 use InvalidArgumentException;
 
