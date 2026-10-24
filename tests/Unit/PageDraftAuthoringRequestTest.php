@@ -9,7 +9,7 @@ use KilnMcp\Capability\PageDraftAuthoring\PageDraftCreateRequest;
 use KilnMcp\Capability\PageDraftAuthoring\PageDraftUpdateRequest;
 use PHPUnit\Framework\TestCase;
 
-final class PagePageDraftAuthoringRequestTest extends TestCase {
+final class PageDraftAuthoringRequestTest extends TestCase {
 	public function test_it_accepts_closed_plain_text_creation_input(): void {
 		$request = PageDraftCreateRequest::from_input(
 			array(
