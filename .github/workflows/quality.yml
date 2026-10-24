@@ -34,6 +34,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run disposable real-WordPress smoke test
         run: make container-test
+      - name: Assemble and inspect release with the containerized toolchain
+        run: make release-container-check
       - name: Collect container diagnostics on failure
         if: failure()
         run: make container-logs
