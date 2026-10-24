@@ -34,16 +34,18 @@ trap 'rm -rf "$work_dir"' EXIT HUP INT TERM
 stage_dir="$work_dir/kiln-mcp"
 
 mkdir -p "$stage_dir"
-cp "$root_dir/kiln-mcp.php" "$root_dir/LICENSE" "$root_dir/readme.txt" "$stage_dir/"
+cp "$root_dir/kiln-mcp.php" "$root_dir/LICENSE" "$root_dir/readme.txt" "$root_dir/composer.json" "$stage_dir/"
 cp -R "$root_dir/src" "$stage_dir/src"
 
-COMPOSER_VENDOR_DIR="$stage_dir/vendor" "$composer_bin" install \
+"$composer_bin" install \
 	--no-dev \
 	--no-interaction \
 	--prefer-dist \
 	--no-progress \
 	--optimize-autoloader \
-	--working-dir="$root_dir"
+	--working-dir="$stage_dir"
+
+rm -f "$stage_dir/composer.json" "$stage_dir/composer.lock"
 
 if [ ! -f "$stage_dir/vendor/autoload.php" ]; then
 	echo "Production Composer autoloader was not generated." >&2
