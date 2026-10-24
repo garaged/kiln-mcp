@@ -11,14 +11,14 @@
 
 ## Commands
 
-    make release-check
+    make release-container-check
     make container-preflight
     make container-test
     make container-down
 
 ## Manual install verification
 
-1. Run `make release` on the checked-out M9 branch.
+1. Run `make release-container` on the checked-out M9 branch. This is the accepted Rancher Desktop path and does not require host Composer or a host `zip` utility.
 2. Verify the ZIP with its SHA-256 sidecar using `shasum -a 256`.
 3. Start the disposable site with `make container-up`, upload the verified Kiln ZIP through `http://127.0.0.1:8080/wp-admin`, and activate it. The official MCP Adapter is already present in this disposable fixture.
 4. As an administrator, open **Tools → Kiln MCP status**.
