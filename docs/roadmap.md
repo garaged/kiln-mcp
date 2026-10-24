@@ -21,6 +21,14 @@
 |---|---|---|---|
 | M10 | Bounded theme-context discovery | Safe active-theme, template, template-part, and pattern awareness before development recommendations | Read-only metadata only, `edit_theme_options`, 20-item bounds, active-theme pattern filtering, Linux/ARM64 acceptance |
 
+## Definition of done
+
+An approved milestone is complete only when its implementation, automated tests,
+documentation, CI remediation, and PR readiness are complete in the existing
+branch and draft PR. The authoritative execution protocol is
+[`AGENTS.md`](../AGENTS.md); required user manual acceptance and explicit merge
+approval remain mandatory gates.
+
 ## Delivery rules
 
 Each milestone remains one pull request and one independently releasable capability bundle. A milestone may contain multiple related tools only when they share one authorization model, effect class, threat boundary, and acceptance environment.
