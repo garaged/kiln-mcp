@@ -20,10 +20,10 @@
 
 1. Run `make release` on the checked-out M9 branch.
 2. Verify the ZIP with its SHA-256 sidecar using `shasum -a 256`.
-3. In the disposable local site, install the official MCP Adapter and upload the verified Kiln ZIP.
+3. Start the disposable site with `make container-up`, upload the verified Kiln ZIP through `http://127.0.0.1:8080/wp-admin`, and activate it. The official MCP Adapter is already present in this disposable fixture.
 4. As an administrator, open **Tools → Kiln MCP status**.
 5. Confirm all four checks are ready and that the page contains no endpoint, credential, option, content, identity, filesystem-path, or plugin-inventory data.
-6. Delete the local release ZIP after the test. Do not use production credentials or relax CORS.
+6. Run `make container-down`, then delete the local release ZIP. Do not use production credentials or relax CORS.
 
 ## Result
 
