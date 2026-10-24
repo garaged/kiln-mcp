@@ -32,7 +32,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: kiln_test_password
-      WORDPRESS_URL: http://wordpress
+      WORDPRESS_URL: http://127.0.0.1:${KILN_MCP_TEST_PORT:-8080}
       MCP_ADAPTER_VERSION: ${MCP_ADAPTER_VERSION:-0.7.1}
     depends_on:
       database:
@@ -89,6 +89,7 @@ services:
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: kiln_test_password
+      KILN_MCP_PUBLIC_HOST: 127.0.0.1:${KILN_MCP_TEST_PORT:-8080}
     depends_on:
       wordpress:
         condition: service_healthy
