@@ -8,10 +8,10 @@ RELEASE_CONTAINER_IMAGE ?= kiln-mcp-release:local
 RELEASE_CONTAINER_DOCKERFILE ?= testing/Dockerfile.release
 RELEASE_COMPOSER_IMAGE ?= composer:2.8
 
-.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-test container-logs container-down
+.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-manual-up container-test container-logs container-down
 
 help:
-	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-test container-logs container-down"
+	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check release-container-build release-container release-container-check container-preflight container-build container-up container-manual-up container-test container-logs container-down"
 
 install:
 	composer install --no-interaction --prefer-dist
@@ -89,6 +89,9 @@ container-up: container-preflight
 		$(COMPOSE_BROWSER) logs --no-color || true; \
 		exit 1; \
 	fi
+
+container-manual-up: container-down container-up
+	@printf '%s\n' "Disposable browser site: http://127.0.0.1:${KILN_MCP_TEST_PORT:-8080}"
 
 container-test: container-preflight
 	@if ! $(COMPOSE) up --build --wait wordpress; then \
