@@ -2,24 +2,23 @@
 
 ## Status
 
-Pending manual acceptance.
+Passed — 2026-10-24.
 
-## Required environment record
+## Environment record
 
-- date:
 - host: macOS Apple Silicon
-- Docker context:
-- daemon architecture:
-- Compose version:
-- WordPress image and MCP Adapter version:
+- Docker context: `rancher-desktop`
+- daemon architecture: `linux/arm64`
+- Compose version: `5.3.1`
+- fixture: WordPress `7.1.3-php8.2` with the repository-pinned MCP Adapter fixture
 
-## Required evidence
+## Evidence
 
-1. A refreshed `feature/m11-page-discovery-read` branch passes `make container-preflight`, `make container-test`, and `make container-down`. The automated test path publishes no host browser port; an unrelated service using port 8080 must not affect it. Browser inspection remains optional through `make container-up` and can use `KILN_MCP_TEST_PORT=<free-port>`.
-2. An administrator can list only bounded standard published/draft page metadata and read one admitted page as bounded plain text.
-3. Markup, shortcodes, private/future/trashed/password-protected/non-page targets, hierarchy, template, author, comment, revision, custom-field, and media data are absent or refused.
-4. A subscriber is denied both M11 abilities.
-5. Before-and-after state confirms the calls do not change page or site state.
-6. Cleanup removes the disposable environment.
+1. On the refreshed `feature/m11-page-discovery-read` branch, `make container-preflight`, `make container-test`, and `make container-down` passed on Rancher Desktop ARM64. The successful test was rerun from a clean disposable environment after teardown of an earlier manual stack.
+2. The container suite verified bounded standard published/draft page metadata and a bounded plain-text read of an admitted page.
+3. It verified that markup, shortcodes, protected and unsupported targets, and out-of-scope page/site metadata are absent or refused.
+4. It verified subscriber denial for both M11 abilities.
+5. It verified before-and-after WordPress state preservation.
+6. `make container-down` removed the disposable environment.
 
-Do not mark this record passed until the commands and observations above are performed on the local Rancher Desktop environment.
+The automated test path publishes no host browser port. Optional browser inspection uses `make container-up` and may select a loopback port with `KILN_MCP_TEST_PORT=<free-port>`.
