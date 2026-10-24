@@ -15,11 +15,13 @@ Expected result: M1–M7 regression coverage remains green. M8 additionally prov
 ### Upgrade and rollback rehearsal
 
 1. Use only the disposable environment and its generated test credentials.
-2. Run `MCP_ADAPTER_VERSION=<candidate> make container-test`, followed by `make container-down`.
+2. When a release newer than the pinned baseline is available, run `MCP_ADAPTER_VERSION=<candidate> make container-test`, followed by `make container-down`.
 3. Roll back by running `make container-test` with no version override, followed by `make container-down`; the pinned baseline is `0.7.1`.
 4. Confirm both runs report the full protocol matrix as passed.
 5. Confirm no raw application password appears in terminal output, Git history, option values, audit receipts, or support artifacts.
-6. Record the pinned and candidate adapter versions, protocol revision, Docker context, daemon architecture, Compose version, and successful output.
+6. Record the pinned and candidate adapter versions, protocol revision, Docker context, daemon architecture, Compose version, and successful output in the release change or issue that proposes adoption.
+
+Do not fabricate this evidence by selecting an equal or older version. Until a newer release exists, the pinned-baseline suite and its Linux CI/Rancher Desktop records are the M8 compatibility evidence.
 
 ### Local connection boundary
 
