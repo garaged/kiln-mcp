@@ -48,10 +48,17 @@ published_id="$(wp post create --post_type=post --post_status=publish --post_tit
 author_draft_id="$(wp post create --post_type=post --post_status=draft --post_title="Kiln author draft fixture" --post_content="Author draft body" --post_author="$author_id" --allow-root --path="$wp_path" --porcelain)"
 wp post create --post_type=post --post_status=draft --post_title="Kiln admin draft fixture" --post_content="This body must never be returned by discovery." --post_author=1 --allow-root --path="$wp_path"
 private_id="$(wp post create --post_type=post --post_status=private --post_title="Kiln private fixture" --post_content="This post must never be read." --post_author=1 --allow-root --path="$wp_path" --porcelain)"
+published_page_id="$(wp post create --post_type=page --post_status=publish --post_title="Kiln published page fixture" --post_content="<p>Visible <strong>page</strong> text [gallery]</p>" --post_author=1 --allow-root --path="$wp_path" --porcelain)"
+wp post create --post_type=page --post_status=draft --post_title="Kiln draft page fixture" --post_content="Draft page body" --post_author=1 --allow-root --path="$wp_path"
+private_page_id="$(wp post create --post_type=page --post_status=private --post_title="Kiln private page fixture" --post_content="This page must never be read." --post_author=1 --allow-root --path="$wp_path" --porcelain)"
+future_page_id="$(wp post create --post_type=page --post_status=future --post_date="2030-01-01 00:00:00" --post_title="Kiln future page fixture" --post_content="This page must never be read." --post_author=1 --allow-root --path="$wp_path" --porcelain)"
 
 wp option update kiln_mcp_fixture_published_id "$published_id" --allow-root --path="$wp_path"
 wp option update kiln_mcp_fixture_author_draft_id "$author_draft_id" --allow-root --path="$wp_path"
 wp option update kiln_mcp_fixture_private_id "$private_id" --allow-root --path="$wp_path"
+wp option update kiln_mcp_fixture_published_page_id "$published_page_id" --allow-root --path="$wp_path"
+wp option update kiln_mcp_fixture_private_page_id "$private_page_id" --allow-root --path="$wp_path"
+wp option update kiln_mcp_fixture_future_page_id "$future_page_id" --allow-root --path="$wp_path"
 
 mkdir -p "$wp_path/wp-content/uploads"
 chown -R www-data:www-data "$wp_path/wp-content"
