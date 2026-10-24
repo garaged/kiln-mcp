@@ -30,20 +30,16 @@ if ! printf '%s\n' "$entries" | grep -Eq '^kiln-mcp/src/.+\.php$'; then
 	exit 1
 fi
 
+if printf '%s\n' "$entries" | grep -Eq '(^|/)(tests|testing|docs|scripts|\.github|\.git|vendor/bin)(/|$)|(^|/)(composer\.json|composer\.lock|phpunit\.xml|phpstan\.neon\.dist)$'; then
+	echo "Release archive contains development-only material." >&2
+	exit 1
+fi
+
 archive_test_dir=$(mktemp -d "${TMPDIR:-/tmp}/kiln-mcp-release-check.XXXXXX")
 trap 'rm -rf "$archive_test_dir"' EXIT HUP INT TERM
 unzip -q "$archive" -d "$archive_test_dir"
 if ! php -r 'require $argv[1]; exit( class_exists( "KilnMcp\\Application\\Plugin" ) ? 0 : 1 );' "$archive_test_dir/kiln-mcp/vendor/autoload.php"; then
 	echo "Release archive cannot autoload the Kiln plugin composition root." >&2
-	exit 1
-fi
-if printf '%s\n' "$entries" | grep -Eq '(^|/)(tests|testing|docs|scripts|\.github|\.git|vendor/bin)(/|$)|(^|/)(composer\.json|composer\.lock|phpunit\.xml|phpstan\.neon\.dist)
-	echo "Release archive contains development-only material." >&2
-	exit 1
-fi
-
-echo "Release archive checks passed."; then
-	echo "Release archive contains development-only material." >&2
 	exit 1
 fi
 
