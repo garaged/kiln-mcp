@@ -18,6 +18,7 @@ use KilnMcp\Infrastructure\WordPress\DraftAuthoringRegistrar;
 use KilnMcp\Infrastructure\WordPress\ExtensionRegistrar;
 use KilnMcp\Infrastructure\WordPress\KilnMcpServerRegistrar;
 use KilnMcp\Infrastructure\WordPress\OperatorStatusPage;
+use KilnMcp\Infrastructure\WordPress\PageContextRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostDiscoveryRegistrar;
 use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
