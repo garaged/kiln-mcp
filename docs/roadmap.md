@@ -19,7 +19,8 @@
 
 | Milestone | Larger capability bundle | Primary user value | Security exit gate |
 |---|---|---|---|
-| M10 | Bounded theme-context discovery | Safe active-theme, template, template-part, and pattern awareness before development recommendations | Merged |\n| M11 | Bounded page discovery and read | Safe page planning context before any page authoring | Read-only standard pages only, `edit_pages`/exact `edit_post`, 20-item bounds, 12,000-character redacted reads, Linux/ARM64 acceptance |
+| M10 | Bounded theme-context discovery | Safe active-theme, template, template-part, and pattern awareness before development recommendations | Merged |\n| M11 | Bounded page discovery and read | Safe page planning context before any page authoring | Merged |
+| M12 | Safe page drafting | Create and revise page drafts after page discovery | Draft-only standard pages, `edit_pages`/exact `edit_post`, opaque token, no lifecycle or structural mutation |
 
 ## Definition of done
 
