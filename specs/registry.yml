@@ -381,3 +381,31 @@ requirements:
       - .github/workflows/quality.yml
       - docs/manual-testing.md
       - docs/acceptance/m11-rancher-desktop-arm64.md
+
+  - id: REQ-M12-001
+    source: specs/requirements/m12-page-drafting.md
+    validation:
+      - src/Infrastructure/WordPress/class-pagedraftauthoringregistrar.php
+      - tests/Unit/PageDraftAuthoringRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M12-002
+    source: specs/requirements/m12-page-drafting.md
+    validation:
+      - src/Capability/PageDraftAuthoring/class-pagedraftupdaterequest.php
+      - src/Infrastructure/WordPress/class-pagedraftauthoringregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M12-003
+    source: specs/requirements/m12-page-drafting.md
+    validation:
+      - src/Infrastructure/WordPress/class-pagedraftauthoringregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M12-004
+    source: specs/requirements/m12-page-drafting.md
+    validation:
+      - tests/Unit/PageDraftAuthoringRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M12-005
+    source: specs/requirements/m12-page-drafting.md
+    validation:
+      - docs/acceptance/m12-rancher-desktop-arm64.md
+      - docs/manual-testing.md
