@@ -18,6 +18,8 @@ final class PagedThemeContextRequest {
 	public const MAX_ITEMS = 20;
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param int $limit Maximum returned records.
 	 * @param int $page  One-indexed page.
 	 */
@@ -28,6 +30,8 @@ final class PagedThemeContextRequest {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input Closed pagination input.
 	 * @return self Validated bounded request.
 	 * @throws InvalidArgumentException When input is not the exact page contract.
