@@ -49,8 +49,8 @@ final class PageDraftUpdateRequest {
 			throw new InvalidArgumentException( 'Draft update input is invalid.' );
 		}
 
-		DraftCreateRequest::assert_plain_text( $input['title'], DraftCreateRequest::MAX_TITLE_CHARACTERS, true );
-		DraftCreateRequest::assert_plain_text( $input['content'], DraftCreateRequest::MAX_CONTENT_CHARACTERS, false );
+		PageDraftCreateRequest::assert_plain_text( $input['title'], PageDraftCreateRequest::MAX_TITLE_CHARACTERS, true );
+		PageDraftCreateRequest::assert_plain_text( $input['content'], PageDraftCreateRequest::MAX_CONTENT_CHARACTERS, false );
 
 		return new self( $input['page_id'], $input['expected_modified_token'], $input['title'], $input['content'] );
 	}
