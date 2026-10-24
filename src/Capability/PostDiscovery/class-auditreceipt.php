@@ -34,6 +34,8 @@ final class AuditReceipt {
 	public const LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME = 'kiln/list-active-theme-patterns';
 	public const LIST_PAGES_ABILITY_NAME                 = 'kiln/list-pages';
 	public const READ_PAGE_ABILITY_NAME                  = 'kiln/read-page';
+	public const CREATE_PAGE_DRAFT_ABILITY_NAME          = 'kiln/create-page-draft';
+	public const UPDATE_PAGE_DRAFT_ABILITY_NAME          = 'kiln/update-page-draft';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
