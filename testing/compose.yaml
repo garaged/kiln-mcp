@@ -66,7 +66,7 @@ services:
       test:
         - CMD-SHELL
         - >-
-          php -r 'exit(false === @file_get_contents("http://localhost/wp-login.php") ? 1 : 0);'
+          php -r '$context = stream_context_create(array("http" => array("header" => "Host: 127.0.0.1:${KILN_MCP_TEST_PORT:-8080}"))); exit(false === @file_get_contents("http://localhost/wp-login.php", false, $context) ? 1 : 0);'
       interval: 2s
       timeout: 3s
       retries: 30
