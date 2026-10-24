@@ -25,6 +25,10 @@ final class KilnMcpServerRegistrarTest extends TestCase {
 		/** @var array<int, string> $ability_names */
 		$ability_names = $configured_abilities;
 		self::assertContains( 'kiln/site-health-summary', $ability_names );
+		self::assertContains( 'kiln/get-active-theme-context', $ability_names );
+		self::assertContains( 'kiln/list-block-templates', $ability_names );
+		self::assertContains( 'kiln/list-block-template-parts', $ability_names );
+		self::assertContains( 'kiln/list-active-theme-patterns', $ability_names );
 		self::assertNotContains( 'unrelated/plugin-ability', $ability_names );
 	}
 
