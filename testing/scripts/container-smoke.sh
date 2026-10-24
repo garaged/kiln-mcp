@@ -41,10 +41,17 @@ declare(strict_types=1);
 const KILN_MCP_HTTP_ENDPOINT = 'http://wordpress/?rest_route=/kiln-mcp/mcp';
 const KILN_MCP_PROTOCOL_VERSION = '2025-11-25';
 
+function kiln_mcp_http_host(): string {
+    $host = getenv( 'KILN_MCP_PUBLIC_HOST' );
+
+    return is_string( $host ) && '' !== $host ? $host : '127.0.0.1:8080';
+}
+
 function kiln_mcp_http_request( ?string $authorization, array $message, ?string $session_id = null ): array {
     $headers = array(
         'Content-Type: application/json',
         'Accept: application/json, text/event-stream',
+        'Host: ' . kiln_mcp_http_host(),
     );
     if ( null !== $authorization ) {
         $headers[] = 'Authorization: ' . $authorization;
@@ -78,6 +85,7 @@ function kiln_mcp_http_raw_request( string $authorization, string $payload, stri
                 'header'        => implode( "\r\n", array(
                     'Content-Type: application/json',
                     'Accept: application/json, text/event-stream',
+                    'Host: ' . kiln_mcp_http_host(),
                     'Authorization: ' . $authorization,
                     'Mcp-Session-Id: ' . $session_id,
                     'MCP-Protocol-Version: ' . KILN_MCP_PROTOCOL_VERSION,
