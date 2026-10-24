@@ -22,6 +22,8 @@ final class ThemeContextRegistrar {
 	private const CATEGORY = 'kiln-theme-context';
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param AuditReceiptStore $audit_store Locally retained receipt store.
 	 */
 	public function __construct(
@@ -30,6 +32,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return void
 	 */
 	public function register_category(): void {
@@ -43,6 +47,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return void
 	 */
 	public function register_abilities(): void {
@@ -53,6 +59,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return bool Whether the active identity may inspect active-theme metadata.
 	 */
 	public function can_get_active_theme_context(): bool {
@@ -60,6 +68,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return bool Whether the active identity may inspect block templates.
 	 */
 	public function can_list_block_templates(): bool {
@@ -67,6 +77,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return bool Whether the active identity may inspect block template parts.
 	 */
 	public function can_list_block_template_parts(): bool {
@@ -74,6 +86,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return bool Whether the active identity may inspect active-theme patterns.
 	 */
 	public function can_list_active_theme_patterns(): bool {
@@ -81,6 +95,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param string $ability Exact ability identifier.
 	 * @return bool Whether the active identity may inspect theme context.
 	 */
@@ -94,6 +110,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input Closed empty input.
 	 * @return array<string, bool|string>|WP_Error Fixed active-theme metadata or refusal.
 	 */
@@ -117,6 +135,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input Closed page input.
 	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed metadata page or refusal.
 	 */
@@ -125,6 +145,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input Closed page input.
 	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed metadata page or refusal.
 	 */
@@ -133,6 +155,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input Closed page input.
 	 * @return array<string, array<int, array<string, array<int, string>|string>>>|WP_Error Fixed metadata page or refusal.
 	 */
@@ -173,6 +197,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param string               $type    WordPress block-template type.
 	 * @param string               $ability Exact ability identifier.
 	 * @param array<string, mixed> $input   Closed page input.
@@ -216,6 +242,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $input   Closed page input.
 	 * @param string               $ability Exact ability identifier.
 	 * @return PagedThemeContextRequest|WP_Error Valid request or stable refusal.
@@ -229,6 +257,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param string                         $ability Ability identifier.
 	 * @param array<int, array<string, mixed>> $items Candidate fixed records.
 	 * @param PagedThemeContextRequest        $request Bounded page request.
@@ -248,6 +278,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param string $ability Ability identifier.
 	 * @param string $class   Redacted cause class.
 	 * @param string $code    Stable public error code.
@@ -260,6 +292,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param string               $name    Ability identifier.
 	 * @param string               $label   User-facing label.
 	 * @param callable             $execute     Fixed executor.
@@ -292,6 +326,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function empty_input_schema(): array {
@@ -304,6 +340,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function page_input_schema(): array {
@@ -319,6 +357,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function active_theme_output_schema(): array {
@@ -334,6 +374,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function template_output_schema(): array {
@@ -348,6 +390,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function template_part_output_schema(): array {
@@ -363,6 +407,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<string, mixed> JSON Schema.
 	 */
 	private static function pattern_output_schema(): array {
@@ -380,6 +426,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $properties Fixed field map.
 	 * @return array<string, mixed> Closed record schema.
 	 */
@@ -393,6 +441,8 @@ final class ThemeContextRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<string, mixed> $properties Fixed field map.
 	 * @return array<string, mixed> Closed list schema.
 	 */
