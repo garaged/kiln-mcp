@@ -16,6 +16,8 @@ final class KilnMcpServerRegistrar {
 	public const SERVER_ID = 'kiln-mcp';
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param object $adapter Official MCP Adapter instance.
 	 * @return void
 	 */
@@ -45,6 +47,8 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return bool Whether the active WordPress user may reach the server.
 	 */
 	public function can_connect(): bool {
@@ -52,6 +56,8 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param array<mixed> $registered_abilities Ability registry keyed by name.
 	 * @return array<int, string> Sorted admitted capability names.
 	 */
@@ -70,6 +76,8 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @param bool $authenticated Whether WordPress authenticated the request.
 	 * @param bool $can_edit_posts Whether the user may author posts.
 	 * @return bool Whether transport admission is allowed.
@@ -79,6 +87,8 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<int, string> Kiln core ability names.
 	 */
 	public static function core_ability_names(): array {
@@ -107,6 +117,8 @@ final class KilnMcpServerRegistrar {
 	}
 
 	/**
+	 * Applies the bounded theme-context contract.
+	 *
 	 * @return array<mixed> Registered abilities keyed by name.
 	 */
 	private function registered_abilities(): array {
