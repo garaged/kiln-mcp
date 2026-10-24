@@ -51,6 +51,7 @@ container-test: container-preflight
 		$(COMPOSE) logs --no-color || true; \
 		exit 1; \
 	fi
+	$(COMPOSE) build test-runner
 	$(COMPOSE) run --rm --no-deps test-runner
 
 container-logs:
