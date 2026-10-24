@@ -29,6 +29,13 @@ The host port is bound only to `127.0.0.1`. Bootstrap stores that loopback URL a
 
 ## Quick start
 
+For a release ZIP without installing Composer or a zip utility on the host, use the same container runtime:
+
+    make release-container-check
+    make release-container
+
+The artifact and SHA-256 sidecar are written to `dist/`. The normal `make release` target remains available for hosts that already provide Composer and `zip`.
+
 ```sh
 make container-preflight
 make container-test
