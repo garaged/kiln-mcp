@@ -4,8 +4,11 @@
 
 ### Automated real-WordPress contract
 
-Run:
+Refresh the reviewed branch, then run:
 
+    git fetch origin
+    git switch feature/m10-theme-context-discovery
+    git pull --ff-only origin feature/m10-theme-context-discovery
     make container-preflight
     make container-test
     make container-down
