@@ -24,3 +24,21 @@ OpenSpec is a controlled change-execution aid; it never supersedes normative req
 ## Workflow
 
 Create one branch and draft pull request per coherent milestone. Do not merge without explicit user approval.
+
+
+## Milestone execution
+
+For an approved milestone, complete the entire scoped milestone in its existing
+branch and draft PR without pausing after internal implementation slices.
+
+Use bounded commits internally, but do not request direction or provide interim
+handoffs for each slice. Continue through implementation, automated tests,
+documentation, CI remediation, and PR readiness.
+
+Stop only when:
+
+- a material product, security, legal, licensing, or architecture decision is required;
+- required manual acceptance must be performed by the user; or
+- an external dependency prevents safe progress.
+
+Do not merge without explicit user approval.
