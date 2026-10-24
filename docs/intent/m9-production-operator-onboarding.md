@@ -6,7 +6,7 @@ A site operator can obtain a deterministic, self-contained Kiln release ZIP, ins
 
 ## Release contract
 
-The release builder assembles only the WordPress plugin entry point, production PHP source, production Composer vendor tree, license, and operator-facing readme into a directory named `kiln-mcp`. It writes a SHA-256 sidecar for the ZIP and refuses an incomplete or polluted archive. Development tests, container fixtures, Git metadata, CI files, and Composer development dependencies are excluded.
+The release builder assembles only the WordPress plugin entry point, production PHP source, production Composer vendor tree, license, and operator-facing readme into a directory named `kiln-mcp`. It writes a SHA-256 sidecar for the ZIP and refuses an incomplete or polluted archive. Archive validation must also load Kiln’s composition root using the ZIP’s own production autoloader, so staged development paths cannot leak into an installable artifact. Development tests, container fixtures, Git metadata, CI files, and Composer development dependencies are excluded.
 
 ## Operator contract
 
