@@ -1,5 +1,28 @@
 # Manual testing
 
+## Milestone 9
+
+### Release artifact and operator status
+
+Run:
+
+    make release-check
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: the release gate builds a production-only ZIP in a temporary directory, validates its SHA-256 sidecar, and rejects development-only content. The real-WordPress smoke suite renders **Tools → Kiln MCP status** for an administrator and verifies the four allow-listed compatibility rows without a credential, URL, or filesystem-path disclosure.
+
+### Rancher Desktop acceptance
+
+1. Use a disposable local WordPress environment with Rancher Desktop on macOS Apple Silicon.
+2. Run the command sequence above and record the Docker context, daemon architecture, Compose version, and successful output.
+3. Build a local artifact with make release; verify the printed checksum using shasum -a 256 before uploading it to the disposable site.
+4. Install the official MCP Adapter, upload the verified Kiln ZIP, and open **Tools → Kiln MCP status** as an administrator.
+5. Confirm all four checks are ready and the page discloses no endpoint, credential, content, user, option, filesystem-path, or plugin-inventory data.
+6. Remove the local artifact after verification. Do not use production credentials, relax CORS, or expose the disposable environment publicly.
+
+
 ## Milestone 8
 
 ### Automated protocol contract
