@@ -46,19 +46,48 @@ final class ThemeContextRegistrar {
 	 * @return void
 	 */
 	public function register_abilities(): void {
-		$this->register( AuditReceipt::GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME, __( 'Get active theme context', 'kiln-mcp' ), array( $this, 'get_active_theme_context' ), self::empty_input_schema(), self::active_theme_output_schema() );
-		$this->register( AuditReceipt::LIST_BLOCK_TEMPLATES_ABILITY_NAME, __( 'List block templates', 'kiln-mcp' ), array( $this, 'list_block_templates' ), self::page_input_schema(), self::template_output_schema() );
-		$this->register( AuditReceipt::LIST_BLOCK_TEMPLATE_PARTS_ABILITY_NAME, __( 'List block template parts', 'kiln-mcp' ), array( $this, 'list_block_template_parts' ), self::page_input_schema(), self::template_part_output_schema() );
-		$this->register( AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME, __( 'List active theme patterns', 'kiln-mcp' ), array( $this, 'list_active_theme_patterns' ), self::page_input_schema(), self::pattern_output_schema() );
+		$this->register( AuditReceipt::GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME, __( 'Get active theme context', 'kiln-mcp' ), array( $this, 'get_active_theme_context' ), array( $this, 'can_get_active_theme_context' ), self::empty_input_schema(), self::active_theme_output_schema() );
+		$this->register( AuditReceipt::LIST_BLOCK_TEMPLATES_ABILITY_NAME, __( 'List block templates', 'kiln-mcp' ), array( $this, 'list_block_templates' ), array( $this, 'can_list_block_templates' ), self::page_input_schema(), self::template_output_schema() );
+		$this->register( AuditReceipt::LIST_BLOCK_TEMPLATE_PARTS_ABILITY_NAME, __( 'List block template parts', 'kiln-mcp' ), array( $this, 'list_block_template_parts' ), array( $this, 'can_list_block_template_parts' ), self::page_input_schema(), self::template_part_output_schema() );
+		$this->register( AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME, __( 'List active theme patterns', 'kiln-mcp' ), array( $this, 'list_active_theme_patterns' ), array( $this, 'can_list_active_theme_patterns' ), self::page_input_schema(), self::pattern_output_schema() );
 	}
 
 	/**
 	 * @return bool Whether the active identity may inspect active-theme metadata.
 	 */
-	public function can_inspect_theme_context(): bool {
+	public function can_get_active_theme_context(): bool {
+		return $this->can( AuditReceipt::GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME );
+	}
+
+	/**
+	 * @return bool Whether the active identity may inspect block templates.
+	 */
+	public function can_list_block_templates(): bool {
+		return $this->can( AuditReceipt::LIST_BLOCK_TEMPLATES_ABILITY_NAME );
+	}
+
+	/**
+	 * @return bool Whether the active identity may inspect block template parts.
+	 */
+	public function can_list_block_template_parts(): bool {
+		return $this->can( AuditReceipt::LIST_BLOCK_TEMPLATE_PARTS_ABILITY_NAME );
+	}
+
+	/**
+	 * @return bool Whether the active identity may inspect active-theme patterns.
+	 */
+	public function can_list_active_theme_patterns(): bool {
+		return $this->can( AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME );
+	}
+
+	/**
+	 * @param string $ability Exact ability identifier.
+	 * @return bool Whether the active identity may inspect theme context.
+	 */
+	private function can( string $ability ): bool {
 		$allowed = current_user_can( 'edit_theme_options' );
 		if ( ! $allowed ) {
-			$this->audit_store->append( AuditReceipt::create( AuditReceipt::GET_ACTIVE_THEME_CONTEXT_ABILITY_NAME, 'denied', 'not_edit_theme_options', 0, gmdate( 'c' ) ) );
+			$this->audit_store->append( AuditReceipt::create( $ability, 'denied', 'not_edit_theme_options', 0, gmdate( 'c' ) ) );
 		}
 
 		return $allowed;
@@ -113,6 +142,10 @@ final class ThemeContextRegistrar {
 			return $request;
 		}
 
+		if ( ! wp_is_block_theme() ) {
+			return $this->paged_allowed( AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME, array(), $request );
+		}
+
 		$theme = wp_get_theme();
 		$items = array();
 		foreach ( $theme->get_block_patterns() as $pattern ) {
@@ -133,7 +166,7 @@ final class ThemeContextRegistrar {
 					}
 				}
 			}
-			$items[] = ThemeContextSnapshot::pattern( $pattern['slug'], $pattern['title'], $categories );
+			$items[] = ThemeContextSnapshot::pattern( $pattern['slug'], $pattern['title'], array_slice( $categories, 0, PagedThemeContextRequest::MAX_ITEMS ) );
 		}
 
 		return $this->paged_allowed( AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME, $items, $request );
@@ -229,12 +262,13 @@ final class ThemeContextRegistrar {
 	/**
 	 * @param string               $name    Ability identifier.
 	 * @param string               $label   User-facing label.
-	 * @param callable             $execute Fixed executor.
-	 * @param array<string, mixed> $input   Closed input schema.
+	 * @param callable             $execute     Fixed executor.
+	 * @param callable             $permission Fixed permission callback.
+	 * @param array<string, mixed> $input       Closed input schema.
 	 * @param array<string, mixed> $output  Closed output schema.
 	 * @return void
 	 */
-	private function register( string $name, string $label, callable $execute, array $input, array $output ): void {
+	private function register( string $name, string $label, callable $execute, callable $permission, array $input, array $output ): void {
 		wp_register_ability(
 			$name,
 			array(
@@ -244,7 +278,7 @@ final class ThemeContextRegistrar {
 				'input_schema'        => $input,
 				'output_schema'       => $output,
 				'execute_callback'    => $execute,
-				'permission_callback' => array( $this, 'can_inspect_theme_context' ),
+				'permission_callback' => $permission,
 				'meta'                => array(
 					'annotations'  => array(
 						'readonly'   => true,
