@@ -2,7 +2,7 @@
 set -eu
 
 archive=${1:?Usage: check-release-archive.sh path/to/kiln-mcp.zip}
-checksum="$archive.sha256
+checksum="$archive.sha256"
 
 if [ ! -f "$archive" ] || [ ! -f "$checksum" ]; then
 	echo "Release archive and SHA-256 sidecar are required." >&2
