@@ -11,7 +11,7 @@ Run:
     make container-test
     make container-down
 
-Expected result: the containerized release gate builds a production-only ZIP in a temporary directory without requiring host Composer or a host zip utility, validates its SHA-256 sidecar, and rejects development-only content. The real-WordPress smoke suite also proves that the non-root WordPress web user can create and remove a probe in `wp-content/uploads`, then renders **Tools → Kiln MCP status** for an administrator and verifies the four allow-listed compatibility rows without a credential, URL, or filesystem-path disclosure.
+Expected result: the containerized release gate builds a production-only ZIP in a temporary directory without requiring host Composer or a host zip utility, validates its SHA-256 sidecar, loads the packaged Kiln composition root through its own autoloader, and rejects development-only content. The real-WordPress smoke suite also proves that the non-root WordPress web user can create and remove a probe in `wp-content/uploads`, then renders **Tools → Kiln MCP status** for an administrator and verifies the four allow-listed compatibility rows without a credential, URL, or filesystem-path disclosure.
 
 ### Rancher Desktop acceptance
 
