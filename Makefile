@@ -72,8 +72,7 @@ release-container-check: release-container-build
 		--env COMPOSER_CACHE_DIR=/tmp/composer-cache \
 		--env KILN_RELEASE_DIR="$$release_path" \
 		$(RELEASE_CONTAINER_IMAGE) \
-		sh ./scripts/build-release.sh; \
-	sh ./scripts/check-release-archive.sh "$$release_tmp/"*.zip
+		sh -ec 'sh ./scripts/build-release.sh && sh ./scripts/check-release-archive.sh "$$KILN_RELEASE_DIR/"*.zip'
 
 manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
