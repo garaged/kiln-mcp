@@ -3,11 +3,12 @@
 COMPOSE_PROJECT ?= kiln-mcp-test
 COMPOSE_FILE ?= testing/compose.yaml
 COMPOSE = docker compose --project-name $(COMPOSE_PROJECT) --file $(COMPOSE_FILE)
+RELEASE_CONTAINER_IMAGE ?= composer:2.8
 
-.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check container-preflight container-build container-up container-test container-logs container-down
+.PHONY: help install test lint analyse specs architecture check ci manual-m0 release release-check release-container release-container-check container-preflight container-build container-up container-test container-logs container-down
 
 help:
-	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check container-preflight container-build container-up container-test container-logs container-down"
+	@printf '%s\n' "Targets: install test lint analyse specs architecture check ci manual-m0 release release-check release-container release-container-check container-preflight container-build container-up container-test container-logs container-down"
 
 install:
 	composer install --no-interaction --prefer-dist
@@ -35,10 +36,35 @@ release:
 	sh ./scripts/build-release.sh
 
 release-check:
-	@release_tmp=$$(mktemp -d); \
-	trap 'rm -rf "$$release_tmp"' EXIT HUP INT TERM; \
-	KILN_RELEASE_DIR="$$release_tmp" sh ./scripts/build-release.sh; \
-	sh ./scripts/check-release-archive.sh "$$release_tmp/"*.zip
+	@release_tmp=$(mktemp -d); \
+	trap 'rm -rf "$release_tmp"' EXIT HUP INT TERM; \
+	KILN_RELEASE_DIR="$release_tmp" sh ./scripts/build-release.sh; \
+	sh ./scripts/check-release-archive.sh "$release_tmp/"*.zip
+
+release-container:
+	docker run --rm \
+		--user "$(id -u):$(id -g)" \
+		--volume "$(CURDIR):/workspace" \
+		--workdir /workspace \
+		--env COMPOSER_HOME=/tmp/composer \
+		--env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+		$(RELEASE_CONTAINER_IMAGE) \
+		sh -ec 'apk add --no-cache zip >/dev/null && sh ./scripts/build-release.sh'
+
+release-container-check:
+	@release_tmp=$(mktemp -d "$(pwd)/.release-check.XXXXXX"); \
+	trap 'rm -rf "$release_tmp"' EXIT HUP INT TERM; \
+	release_path="/workspace/${release_tmp##*/}"; \
+	docker run --rm \
+		--user "$(id -u):$(id -g)" \
+		--volume "$(CURDIR):/workspace" \
+		--workdir /workspace \
+		--env COMPOSER_HOME=/tmp/composer \
+		--env COMPOSER_CACHE_DIR=/tmp/composer-cache \
+		--env KILN_RELEASE_DIR="$release_path" \
+		$(RELEASE_CONTAINER_IMAGE) \
+		sh -ec 'apk add --no-cache zip >/dev/null && sh ./scripts/build-release.sh'; \
+	sh ./scripts/check-release-archive.sh "$release_tmp/"*.zip
 
 manual-m0:
 	@printf '%s\n' "Follow docs/manual-testing.md#milestone-0."
