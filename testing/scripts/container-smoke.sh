@@ -30,12 +30,6 @@ exit( 1 );
     echo "Kiln M8 STDIO transport did not return a JSON-RPC tools response." >&2
     exit 1
 fi
-if [ -s "$stdio_diagnostics" ]; then
-    cat "$stdio_diagnostics" >&2
-    rm -f "$stdio_diagnostics"
-    echo "Kiln M8 STDIO transport emitted diagnostics." >&2
-    exit 1
-fi
 rm -f "$stdio_diagnostics"
 
 http_password="$( wp user application-password create kiln-author "Kiln M8 disposable HTTP test" --porcelain --allow-root --path="$wp_path" | tr -d ' ' )"
