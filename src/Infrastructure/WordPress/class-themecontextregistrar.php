@@ -138,7 +138,7 @@ final class ThemeContextRegistrar {
 	 * Applies the bounded theme-context contract.
 	 *
 	 * @param array<string, mixed> $input Closed page input.
-	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed metadata page or refusal.
+	 * @return array<string, array<int, array<string, mixed>>>|WP_Error Fixed metadata page or refusal.
 	 */
 	public function list_block_templates( array $input ): array|WP_Error {
 		return $this->list_templates( 'wp_template', AuditReceipt::LIST_BLOCK_TEMPLATES_ABILITY_NAME, $input );
@@ -148,7 +148,7 @@ final class ThemeContextRegistrar {
 	 * Applies the bounded theme-context contract.
 	 *
 	 * @param array<string, mixed> $input Closed page input.
-	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed metadata page or refusal.
+	 * @return array<string, array<int, array<string, mixed>>>|WP_Error Fixed metadata page or refusal.
 	 */
 	public function list_block_template_parts( array $input ): array|WP_Error {
 		return $this->list_templates( 'wp_template_part', AuditReceipt::LIST_BLOCK_TEMPLATE_PARTS_ABILITY_NAME, $input );
@@ -158,7 +158,7 @@ final class ThemeContextRegistrar {
 	 * Applies the bounded theme-context contract.
 	 *
 	 * @param array<string, mixed> $input Closed page input.
-	 * @return array<string, array<int, array<string, array<int, string>|string>>>|WP_Error Fixed metadata page or refusal.
+	 * @return array<string, array<int, array<string, mixed>>>|WP_Error Fixed metadata page or refusal.
 	 */
 	public function list_active_theme_patterns( array $input ): array|WP_Error {
 		$request = $this->request( $input, AuditReceipt::LIST_ACTIVE_THEME_PATTERNS_ABILITY_NAME );
@@ -174,8 +174,7 @@ final class ThemeContextRegistrar {
 		$items = array();
 		foreach ( $theme->get_block_patterns() as $pattern ) {
 			if (
-				! is_array( $pattern )
-				|| ! isset( $pattern['slug'], $pattern['title'] )
+				! isset( $pattern['slug'], $pattern['title'] )
 				|| ! is_string( $pattern['slug'] )
 				|| ! is_string( $pattern['title'] )
 			) {
@@ -202,7 +201,7 @@ final class ThemeContextRegistrar {
 	 * @param string               $type    WordPress block-template type.
 	 * @param string               $ability Exact ability identifier.
 	 * @param array<string, mixed> $input   Closed page input.
-	 * @return array<string, array<int, array<string, bool|string>>>|WP_Error Fixed metadata page or refusal.
+	 * @return array<string, array<int, array<string, mixed>>>|WP_Error Fixed metadata page or refusal.
 	 */
 	private function list_templates( string $type, string $ability, array $input ): array|WP_Error {
 		$request = $this->request( $input, $ability );
@@ -218,8 +217,7 @@ final class ThemeContextRegistrar {
 		$items      = array();
 		foreach ( get_block_templates( array(), $type ) as $template ) {
 			if (
-				! is_object( $template )
-				|| ! isset( $template->theme, $template->slug, $template->title, $template->source )
+				! isset( $template->theme, $template->slug, $template->title, $template->source )
 				|| $stylesheet !== $template->theme
 				|| ! is_string( $template->slug )
 				|| ! is_string( $template->title )
@@ -268,7 +266,10 @@ final class ThemeContextRegistrar {
 		usort(
 			$items,
 			static function ( array $left, array $right ): int {
-				return strcmp( (string) $left['slug'], (string) $right['slug'] );
+				$left_slug  = isset( $left['slug'] ) && is_string( $left['slug'] ) ? $left['slug'] : '';
+				$right_slug = isset( $right['slug'] ) && is_string( $right['slug'] ) ? $right['slug'] : '';
+
+				return strcmp( $left_slug, $right_slug );
 			}
 		);
 		$page = array_slice( $items, ( $request->page - 1 ) * $request->limit, $request->limit );
