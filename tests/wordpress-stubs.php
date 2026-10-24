@@ -433,3 +433,56 @@ function wp_insert_term( string $term, string $taxonomy, array $args = array() )
 	}
 	return array( 'term_id' => 1 );
 }
+
+
+class WP_Theme {
+	/**
+	 * @return string
+	 */
+	public function get( string $header ): string {
+		return '';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_stylesheet(): string {
+		return '';
+	}
+
+	/**
+	 * @return WP_Theme|false
+	 */
+	public function parent(): WP_Theme|false {
+		return false;
+	}
+
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
+	public function get_block_patterns(): array {
+		return array();
+	}
+}
+
+/**
+ * @return WP_Theme
+ */
+function wp_get_theme(): WP_Theme {
+	return new WP_Theme();
+}
+
+/**
+ * @return bool
+ */
+function wp_is_block_theme(): bool {
+	return false;
+}
+
+/**
+ * @param array<string, mixed> $query Block template query.
+ * @return array<int, object>
+ */
+function get_block_templates( array $query = array(), string $template_type = 'wp_template' ): array {
+	return array();
+}
