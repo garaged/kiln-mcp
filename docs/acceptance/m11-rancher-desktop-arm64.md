@@ -15,7 +15,7 @@ Pending manual acceptance.
 
 ## Required evidence
 
-1. A refreshed `feature/m11-page-discovery-read` branch passes `make container-preflight`, `make container-test`, and `make container-down`.
+1. A refreshed `feature/m11-page-discovery-read` branch passes `make container-preflight`, `make container-test`, and `make container-down`. The automated test path publishes no host browser port; an unrelated service using port 8080 must not affect it. Browser inspection remains optional through `make container-up` and can use `KILN_MCP_TEST_PORT=<free-port>`.
 2. An administrator can list only bounded standard published/draft page metadata and read one admitted page as bounded plain text.
 3. Markup, shortcodes, private/future/trashed/password-protected/non-page targets, hierarchy, template, author, comment, revision, custom-field, and media data are absent or refused.
 4. A subscriber is denied both M11 abilities.
