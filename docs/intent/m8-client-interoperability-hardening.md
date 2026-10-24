@@ -14,7 +14,7 @@ The server uses the installed official MCP Adapter's HTTP and STDIO transports. 
 
 M8 treats the adapter version as an explicit compatibility input. The disposable suite pins the supported adapter release and exercises MCP initialization, tool discovery, ability discovery, schema inspection, authorized execution, authorization denial, malformed request rejection, and bounded responses over both transports. The suite records the supported MCP protocol revision(s) rather than assuming one client implementation.
 
-A controlled adapter-version override runs the same suite for an upgrade candidate. A rollback to the pinned version must restore the compatibility baseline without changing Kiln options, approvals, or audit-record shape.
+A controlled adapter-version override runs the same suite for an upgrade candidate. A rollback to the pinned version must restore the compatibility baseline without changing Kiln options, approvals, or audit-record shape. The pinned baseline is M8 evidence; a newer upstream adapter release triggers a recorded candidate-and-rollback rehearsal before that release may be adopted.
 
 ## Hardening boundary
 
