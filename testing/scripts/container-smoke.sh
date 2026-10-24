@@ -30,6 +30,12 @@ exit( 1 );
     echo "Kiln M8 STDIO transport did not return a JSON-RPC tools response." >&2
     exit 1
 fi
+if [ -s "$stdio_diagnostics" ]; then
+    cat "$stdio_diagnostics" >&2
+    rm -f "$stdio_diagnostics"
+    echo "Kiln M8 STDIO transport emitted diagnostics." >&2
+    exit 1
+fi
 rm -f "$stdio_diagnostics"
 
 http_password="$( wp user application-password create kiln-author "Kiln M8 disposable HTTP test" --porcelain --allow-root --path="$wp_path" | tr -d ' ' )"
@@ -168,14 +174,18 @@ list( $tools_body, $tools_headers ) = kiln_mcp_http_request(
 );
 $tools_response = is_string( $tools_body ) ? json_decode( $tools_body, true ) : null;
 $tool_names = array();
+$health_tool_has_schema = false;
 if ( is_array( $tools_response['result']['tools'] ?? null ) ) {
     foreach ( $tools_response['result']['tools'] as $tool ) {
         if ( is_array( $tool ) && isset( $tool['name'] ) && is_string( $tool['name'] ) ) {
             $tool_names[] = $tool['name'];
+            if ( 'kiln-site-health-summary' === $tool['name'] && is_array( $tool['inputSchema'] ?? null ) ) {
+                $health_tool_has_schema = true;
+            }
         }
     }
 }
-if ( ! kiln_mcp_is_success( $tools_headers[0] ?? '' ) || ! is_array( $tools_response ) || 11 !== ( $tools_response['id'] ?? null ) || ! in_array( 'kiln-site-health-summary', $tool_names, true ) || in_array( 'mcp-adapter-discover-abilities', $tool_names, true ) ) {
+if ( ! kiln_mcp_is_success( $tools_headers[0] ?? '' ) || ! is_array( $tools_response ) || 11 !== ( $tools_response['id'] ?? null ) || ! in_array( 'kiln-site-health-summary', $tool_names, true ) || ! $health_tool_has_schema || in_array( 'mcp-adapter-discover-abilities', $tool_names, true ) ) {
     file_put_contents( "php://stderr", 'Kiln M8 HTTP tool discovery did not preserve the dedicated allow-list.' . PHP_EOL );
     exit( 1 );
 }
