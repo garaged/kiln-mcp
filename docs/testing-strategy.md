@@ -47,3 +47,7 @@ M10 adds pure tests for exact pagination and allow-listed active-theme, template
 ## M11 page-context boundary
 
 M11 adds unit coverage for closed page-list and exact-page-read input, fixed page snapshots, plain-text redaction, and bounded response contracts. The real-WordPress smoke contract seeds published, draft, private, and future pages; it proves administrator access to only admitted published or draft standard pages, rejects unknown input and oversized bounds, excludes raw markup and shortcodes, preserves page state, and denies both abilities to a subscriber. ARM64 Rancher Desktop acceptance is recorded separately before merge.
+
+## M12 page-draft authoring boundary
+
+M12 reuses the bounded plain-text and opaque modification-token model proven in M4, but admits only standard page drafts. Unit contracts reject invalid IDs, tokens, markup, and unknown fields. The real-WordPress suite proves active-user-owned draft creation, exact token-protected update, stale-token refusal, workflow and hierarchy preservation, subscriber denial, and receipt redaction.

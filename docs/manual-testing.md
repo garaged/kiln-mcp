@@ -185,3 +185,13 @@ Expected result: specification, architecture, coding-standard, static-analysis, 
 On macOS Apple Silicon with Rancher Desktop and on Linux x86-64, record the operating system, CPU architecture, Rancher Desktop/Docker Engine and Compose versions, selected Docker context, successful container command output, and confirmation that automated tests publish no host port (or that manual browser inspection uses only the selected loopback port).
 
 No production WordPress site, credentials, or Docker TCP listener may be used.
+
+## Milestone 12
+
+Run the standard automated contract:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: an authorized user can create one active-user-owned standard page draft and revise that exact draft only with its current opaque modification token. The suite refuses stale tokens, markup, unknown fields, subscriber access, publication, and structural fields such as hierarchy, template, slug, author, metadata, taxonomy, media, and password. It leaves every non-draft page unchanged.

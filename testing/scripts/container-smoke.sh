@@ -850,42 +850,66 @@ if ( $state_before !== $state_after ) {
 }
 '
 
-wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
-foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln/get-active-theme-context", "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages", "kiln/read-page", "kiln-ext/fixture--facts" ) as $ability_name ) {
-    $ability = wp_get_ability( $ability_name );
-    $result  = null === $ability ? null : $ability->execute(
-        in_array( $ability_name, array( "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages" ), true )
-            ? array(
-                "limit" => 1,
-                "page"  => 1,
-            )
-            : ( "kiln/read-page" === $ability_name
-            ? array( "page_id" => 1 )
-            : ( "kiln/read-post" === $ability_name
-            ? array( "post_id" => 1 )
-            : ( "kiln/list-posts" === $ability_name
-            ? array(
-                "status" => "publish",
-                "limit"  => 1,
-                "page"   => 1,
-            )
-            : ( "kiln/create-post-draft" === $ability_name
-            ? array(
-                "title"   => "Subscriber denied draft",
-                "content" => "Denied body",
-            )
-            : ( "kiln/update-post-draft" === $ability_name
-            ? array(
-                "post_id"                 => 1,
-                "expected_modified_token" => str_repeat( "a", 64 ),
-                "title"                   => "Subscriber denied update",
-                "content"                 => "Denied body",
-            )
-            : array() ) ) ) ) )
-    );
+wp eval --allow-root --path="$wp_path" --user=kiln-admin '
+$create = wp_get_ability( "kiln/create-page-draft" );
+$update = wp_get_ability( "kiln/update-page-draft" );
+if ( null === $create || null === $update ) {
+    file_put_contents( "php://stderr", "Kiln M12 page drafting abilities were not registered.\n" );
+    exit( 1 );
+}
+$before = get_posts( array( "post_type" => "page", "post_status" => "any", "fields" => "ids", "posts_per_page" => -1 ) );
+$created = $create->execute( array( "title" => "Kiln M12 draft", "content" => "First draft body" ) );
+if ( is_wp_error( $created ) || "draft" !== $created["status"] || 1 !== (int) get_post( $created["id"] )->post_author ) {
+    file_put_contents( "php://stderr", "Kiln M12 did not create an active-user-owned page draft.\n" );
+    exit( 1 );
+}
+$updated = $update->execute( array( "page_id" => $created["id"], "expected_modified_token" => $created["modified_token"], "title" => "Kiln M12 revised", "content" => "Revised page body" ) );
+if ( is_wp_error( $updated ) || "draft" !== $updated["status"] || "Kiln M12 revised" !== $updated["title"] ) {
+    file_put_contents( "php://stderr", "Kiln M12 did not update an admitted page draft.\n" );
+    exit( 1 );
+}
+foreach ( array(
+    $update->execute( array( "page_id" => $created["id"], "expected_modified_token" => $created["modified_token"], "title" => "Stale", "content" => "Rejected" ) ),
+    $create->execute( array( "title" => "Invalid", "content" => "<p>markup</p>" ) ),
+    $create->execute( array( "title" => "Invalid", "content" => "body", "status" => "publish" ) )
+) as $rejected ) {
+    if ( ! is_wp_error( $rejected ) ) {
+        file_put_contents( "php://stderr", "Kiln M12 accepted an out-of-scope page draft request.\n" );
+        exit( 1 );
+    }
+}
+$after = get_post( $created["id"] );
+if ( ! $after instanceof WP_Post || "page" !== $after->post_type || "draft" !== $after->post_status || 0 !== (int) $after->post_parent || "" !== $after->post_password ) {
+    file_put_contents( "php://stderr", "Kiln M12 changed protected page workflow or hierarchy state.\n" );
+    exit( 1 );
+}
+'
 
-    if ( ! is_wp_error( $result ) ) {
-        file_put_contents( "php://stderr", "Subscriber unexpectedly executed " . $ability_name . ".\n" );
+wp eval --allow-root --path="$wp_path" --user=kiln-subscriber '
+foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post", "kiln/create-post-draft", "kiln/update-post-draft", "kiln/publish-post", "kiln/schedule-post-publication", "kiln/trash-post", "kiln/restore-post", "kiln/list-supported-post-types", "kiln/list-supported-taxonomies", "kiln/list-navigation-menus", "kiln/list-categories", "kiln/list-tags", "kiln/create-category", "kiln/create-tag", "kiln/get-active-theme-context", "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages", "kiln/read-page", "kiln/create-page-draft", "kiln/update-page-draft", "kiln-ext/fixture--facts" ) as $ability_name ) {
+    $ability = wp_get_ability( $ability_name );
+    if ( null === $ability ) {
+        file_put_contents( "php://stderr", "Kiln ability was not registered: " . $ability_name . ".\\n" );
+        exit( 1 );
+    }
+    $input = array();
+    if ( in_array( $ability_name, array( "kiln/list-block-templates", "kiln/list-block-template-parts", "kiln/list-active-theme-patterns", "kiln/list-pages" ), true ) ) {
+        $input = array( "limit" => 1, "page" => 1 );
+    } elseif ( "kiln/read-page" === $ability_name ) {
+        $input = array( "page_id" => 1 );
+    } elseif ( "kiln/read-post" === $ability_name ) {
+        $input = array( "post_id" => 1 );
+    } elseif ( "kiln/list-posts" === $ability_name ) {
+        $input = array( "status" => "publish", "limit" => 1, "page" => 1 );
+    } elseif ( "kiln/create-post-draft" === $ability_name || "kiln/create-page-draft" === $ability_name ) {
+        $input = array( "title" => "Subscriber denied draft", "content" => "Denied body" );
+    } elseif ( "kiln/update-post-draft" === $ability_name ) {
+        $input = array( "post_id" => 1, "expected_modified_token" => str_repeat( "a", 64 ), "title" => "Subscriber denied update", "content" => "Denied body" );
+    } elseif ( "kiln/update-page-draft" === $ability_name ) {
+        $input = array( "page_id" => 1, "expected_modified_token" => str_repeat( "a", 64 ), "title" => "Subscriber denied update", "content" => "Denied body" );
+    }
+    if ( ! is_wp_error( $ability->execute( $input ) ) ) {
+        file_put_contents( "php://stderr", "Subscriber unexpectedly executed " . $ability_name . ".\\n" );
         exit( 1 );
     }
 }

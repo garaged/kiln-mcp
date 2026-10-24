@@ -73,4 +73,6 @@ This writes the installable ZIP and SHA-256 sidecar to `dist/`. The host-native 
 
 The [product roadmap](docs/roadmap.md) tracks delivered milestones, the current capability bundle, remaining feature groups, and their security exit gates.
 
+M12's acceptance criteria are in [specs/requirements/m12-page-drafting.md](specs/requirements/m12-page-drafting.md). It adds bounded creation and optimistic-concurrency revision of standard page drafts only; publishing and structural page mutations remain excluded.
+
 M10's acceptance criteria are in [specs/requirements/m10-theme-context-discovery.md](specs/requirements/m10-theme-context-discovery.md). It adds read-only, bounded active-theme planning context without exposing theme source, configuration, files, URLs, patterns outside the active theme, or any theme/site mutation.
