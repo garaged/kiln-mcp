@@ -30,6 +30,11 @@
 | Partial or failed extension registration | provider-local staging registry; atomic batch admission; exceptions and collisions discard that provider's complete batch while later valid providers and Kiln core continue |
 | Extension capability privilege escalation | fixed core-owned `manage_options` gate; read-only/idempotent metadata; core-owned MCP discovery; REST disabled; executor rechecks authorization; no extension-supplied permission callback or write effect |
 | Extension audit leakage | generic `kiln/extension` receipt class; bounded local receipts omit extension identity, input/output, callback, paths, and exception detail |
+| Unrelated ability exposure | dedicated adapter server allow-lists Kiln names only; fixture proves unrelated/default-server abilities are absent |
+| Subscriber transport discovery | dedicated server admission requires authenticated `edit_posts`; a subscriber is denied before ability discovery |
+| Cross-origin credential abuse | HTTP negative fixture asserts no wildcard cross-origin response; Kiln adds no CORS override, proxy, or browser-facing credential channel |
+| Protocol or session resource exhaustion | pinned adapter compatibility matrix; malformed/oversized fixture requests, fixed request counts, response-size cap, elapsed-time budget, and candidate-version gate |
+| Upgrade-induced policy drift | explicit adapter-version input; candidate plus rollback suite proves policy data and receipt schemas retain their contract |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 

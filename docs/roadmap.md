@@ -11,13 +11,13 @@
 | M4 | Safe draft creation and optimistic-concurrency draft updates | Merged |
 | M5 | Approval-gated publish, schedule, trash, and restore for exact posts | Merged |
 | M6 | Bounded site-structure discovery and idempotent category/tag seeding | Merged |
+| M7 | Governed read-only extension SDK and policy manifests | Merged |
 
 ## Remaining capability plan
 
 | Milestone | Larger capability bundle | Primary user value | Security exit gate |
 |---|---|---|---|
-| M7 | Extensibility SDK and policy manifests | A FLOSS, read-only v1 developer extension contract for independently versioned Kiln capabilities | Atomic manifest validation, dependency isolation, fixed administrator policy, extension conformance suite |
-| M8 | Client interoperability and hardening | Fixture-driven MCP protocol suite, authenticated transport evidence, performance and upgrade compatibility | STDIO/HTTP compatibility matrix, origin/auth negative tests, load budgets, upgrade/rollback checks |
+| M8 | Client interoperability and hardening | Fixture-driven MCP protocol suite, authenticated transport evidence, performance and upgrade compatibility | Explicit adapter server boundary, STDIO/HTTP matrix, origin/auth negatives, load budgets, upgrade/rollback checks |
 
 ## Delivery rules
 
@@ -27,4 +27,4 @@ No milestone expands to generic REST forwarding, arbitrary database/filesystem a
 
 ## Current position
 
-Kiln has completed secure discovery (M1–M3), controlled draft authoring (M4), approval-gated lifecycle effects (M5), and bounded site-structure development (M6). M7 now establishes a governed read-only extension SDK; extension writes, custom authorization, broad site configuration, navigation mutation, and permanent deletion remain deliberately deferred.
+Kiln has completed secure discovery (M1–M3), controlled draft authoring (M4), approval-gated lifecycle effects (M5), bounded site-structure development (M6), and a governed read-only extension SDK (M7). M8 now proves Kiln’s narrow capability surface through the official adapter over STDIO and authenticated HTTP; custom transports, browser CORS bypasses, relays, credential storage, extension writes, broad site configuration, navigation mutation, and permanent deletion remain deliberately deferred.

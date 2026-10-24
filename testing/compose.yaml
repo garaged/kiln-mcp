@@ -33,6 +33,7 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: kiln_test_password
       WORDPRESS_URL: http://wordpress
+      MCP_ADAPTER_VERSION: ${MCP_ADAPTER_VERSION:-0.7.1}
     depends_on:
       database:
         condition: service_healthy

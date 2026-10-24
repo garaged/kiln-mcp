@@ -29,3 +29,9 @@ M1 publishes one adapter-discoverable ability, `kiln/site-health-summary`. It is
 M7 adds a governed extension adapter, not a plugin-execution sandbox. Installed extensions use a dedicated WordPress hook to populate a private staging registry with typed manifests. A provider's manifests are committed only as one valid, non-colliding batch; an exception or conflict discards that provider and dispatch continues. Core derives the logical identity `kiln-ext/{extension-id}/{ability-id}` and encodes the registered WordPress ability as `kiln-ext/{extension-id}--{ability-id}` because the Abilities API requires exactly one namespace slash. IDs refuse double hyphens, so the encoding is collision-free.
 
 The WordPress adapter owns `manage_options`, MCP discovery, REST exclusion, readonly/idempotent metadata, callback wrapping, and generic redacted receipts. Extensions supply only label, description, closed schemas, and a local executor. This keeps the MCP-facing surface explicit while preserving the administrator trust boundary of installed WordPress code.
+
+## M8 adapter transport boundary
+
+M8 registers one dedicated `kiln-mcp` server through the official MCP Adapter. It allow-lists Kiln core and admitted extension ability names rather than inheriting every public ability from WordPress. The server’s transport admission requires an authenticated `edit_posts` user; individual ability callbacks continue to make the final per-tool authorization decision.
+
+The adapter owns JSON-RPC framing, STDIO, HTTP sessions, and HTTP authentication. Kiln owns only server membership, the transport admission callback, policy contracts, and protocol conformance fixtures. It neither parses MCP requests nor stores client credentials, and it must not introduce a proxy, relay, CORS override, custom transport, or outbound service.

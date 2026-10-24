@@ -98,6 +98,20 @@ function current_user_can( string $capability, mixed ...$args ): bool {
 }
 
 /**
+ * @return bool
+ */
+function is_user_logged_in(): bool {
+	return false;
+}
+
+/**
+ * @return array<mixed>
+ */
+function wp_get_abilities(): array {
+	return array();
+}
+
+/**
  * @return int
  */
 function get_current_user_id(): int {
