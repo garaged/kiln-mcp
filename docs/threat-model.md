@@ -35,6 +35,9 @@
 | Cross-origin credential abuse | HTTP negative fixture asserts no wildcard cross-origin response; Kiln adds no CORS override, proxy, or browser-facing credential channel |
 | Protocol or session resource exhaustion | pinned adapter compatibility matrix; malformed/oversized fixture requests, fixed request counts, response-size cap, elapsed-time budget, and candidate-version gate |
 | Upgrade-induced policy drift | explicit adapter-version input; candidate plus rollback suite proves policy data and receipt schemas retain their contract |
+| Malicious or incomplete plugin artifact | local production-only release assembly, SHA-256 sidecar, required-entry and forbidden-file archive inspection, and manual checksum verification before upload |
+| Operator diagnostic disclosure | manage_options local-only status page; four fixed allow-listed compatibility rows; no endpoint, credential, option, user, content, path, inventory, or stack-trace output |
+| Unsafe deployment guidance | explicit staging, backup, HTTPS, least-privilege, revocation, no-fixture, and no-CORS-relaxation steps; no automatic deployment or rollback |
 | Audit-log disclosure | local retention, allow-listed receipt fields, no identity name/ID, query/filter, content, URL, credential, or arbitrary error payload |
 | Resource exhaustion | schema limits, pagination, rate limits, timeout budgets, bounded batch size, 12,000-character single-read cap |
 
