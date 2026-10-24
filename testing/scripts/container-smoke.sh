@@ -928,7 +928,7 @@ foreach ( array( "kiln/site-health-summary", "kiln/list-posts", "kiln/read-post"
                 "title"                   => "Subscriber denied update",
                 "content"                 => "Denied body",
             )
-            : array() ) ) ) ) ) )
+            : array() ) ) ) ) ) ) ) )
     );
 
     if ( ! is_wp_error( $result ) ) {
