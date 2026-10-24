@@ -723,23 +723,23 @@ if ( ! $has_allowed || ! $has_denied ) {
 '
 
 wp eval --allow-root --path="$wp_path" --user=kiln-admin '
-$page = new \\KilnMcp\\Infrastructure\\WordPress\\OperatorStatusPage( "0.1.0-dev" );
+$page = new \KilnMcp\Infrastructure\WordPress\OperatorStatusPage( "0.1.0-dev" );
 ob_start();
 $page->render();
 $html = ob_get_clean();
-$statuses = \\KilnMcp\\Infrastructure\\WordPress\\OperatorStatusPage::statuses(
+$statuses = \KilnMcp\Infrastructure\WordPress\OperatorStatusPage::statuses(
     "0.1.0-dev",
     PHP_VERSION,
     function_exists( "wp_register_ability" ),
-    class_exists( "WP\\\\MCP\\\\Core\\\\McpAdapter" ),
+    class_exists( "WP\\MCP\\Core\\McpAdapter" ),
     defined( "WP_MCP_VERSION" ) ? WP_MCP_VERSION : null
 );
 if ( ! str_contains( $html, "Kiln MCP status" ) || 4 !== count( $statuses ) || "ready" !== $statuses[3]["state"] ) {
-    file_put_contents( "php://stderr", "Kiln M9 operator status did not render the bounded ready contract.\\n" );
+    file_put_contents( "php://stderr", "Kiln M9 operator status did not render the bounded ready contract.\n" );
     exit( 1 );
 }
 if ( false !== strpos( strtolower( $html ), "password" ) || false !== strpos( strtolower( $html ), "http://" ) || false !== strpos( strtolower( $html ), "https://" ) || false !== strpos( strtolower( $html ), "/var/" ) ) {
-    file_put_contents( "php://stderr", "Kiln M9 operator status exposed sensitive diagnostic material.\\n" );
+    file_put_contents( "php://stderr", "Kiln M9 operator status exposed sensitive diagnostic material.\n" );
     exit( 1 );
 }
 '
