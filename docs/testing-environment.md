@@ -18,14 +18,14 @@ flowchart TD
   DEV["Developer or CI"] --> CLI["docker compose / Make"]
   CLI --> DB["MariaDB: ephemeral volume"]
   CLI --> BOOT["Bootstrap: install + activate"]
-  BOOT --> WP["WordPress: loopback-only port"]
+  BOOT --> WP["WordPress: private test network"]
   WP --> RUN["Test runner: smoke assertions"]
   DB --> BOOT
   DB --> WP
   RUN --> RESULT["Pass/fail evidence"]
 ```
 
-The bootstrap grants the WordPress web user ownership of `wp-content`, including `uploads`; the smoke suite creates and removes a probe there as that user before it starts protocol tests. The host port is bound only to `127.0.0.1`. Bootstrap stores that loopback URL as the WordPress site URL, so browser redirects remain on the host-visible address. The smoke runner connects through the private `wordpress` service DNS but sends the loopback Host header; this preserves both browser access and private in-network tests. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
+The bootstrap grants the WordPress web user ownership of `wp-content`, including `uploads`; the smoke suite creates and removes a probe there as that user before it starts protocol tests. Automated tests use only the private `wordpress` service DNS and publish no host port, so they cannot collide with another local service. Bootstrap stores a loopback URL as the WordPress site URL and the smoke runner sends its matching Host header. `make container-up` adds a loopback-only browser overlay for manual inspection. Containers use test-only credentials and a named volume; `make container-down` removes both volumes.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ make container-test
 make container-down
 ```
 
-The test site is available only while the stack is up at <http://127.0.0.1:8080>.
+`make container-test` deliberately does not expose a browser port. For an inspectable local site, run `make container-up`; it uses <http://127.0.0.1:8080> by default. If that port is occupied, choose another loopback port, for example `KILN_MCP_TEST_PORT=8081 make container-up`.
 
 ## Rancher Desktop on macOS
 
@@ -63,14 +63,14 @@ Install Docker Engine plus the Compose v2 plugin, ensure your user can access th
 |---|---|
 | `make container-preflight` | fail fast on missing daemon, Compose v2, or insecure TCP configuration |
 | `make container-build` | build the plugin-aware WordPress image |
-| `make container-up` | start an inspectable test stack; print service logs automatically if startup fails |
+| `make container-up` | start an inspectable test stack with a loopback-only browser port; print service logs automatically if startup fails |
 | `make container-test` | build, bootstrap WordPress, activate Kiln MCP, and run smoke checks; print service logs automatically if startup fails |
 | `make container-logs` | show combined diagnostics for a still-running stack |
 | `make container-down` | stop services and delete test volumes |
 
 ## Current assertions
 
-The complete regression smoke runner proves all prior milestone contracts and M9 additionally builds the production-only artifact through the quality gate, validates its checksum/contents, and renders the bounded administrator operator-status view without sensitive disclosure. Earlier M2-specific assertions remain part of the same suite:
+The complete regression smoke runner proves all prior milestone contracts. M9 additionally builds the production-only artifact through the quality gate, validates its checksum/contents, and renders the bounded administrator operator-status view without sensitive disclosure. M11 proves bounded page discovery and plain-text page reads, refusal of private/future and malformed requests, subscriber denial, and unchanged page state. Earlier M2-specific assertions remain part of the same suite:
 
 
 - WordPress, MCP Adapter, and Kiln MCP activate correctly;
