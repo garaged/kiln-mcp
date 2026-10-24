@@ -18,6 +18,8 @@ final class PagedPageRequest {
 	public const MAX_ITEMS = 20;
 
 	/**
+	 * Applies the bounded page-context contract.
+	 *
 	 * @param string $status Admitted page status.
 	 * @param int    $limit  Bounded page size.
 	 * @param int    $page   One-based page number.
@@ -34,6 +36,7 @@ final class PagedPageRequest {
 	 *
 	 * @param array<string, mixed> $input Candidate request.
 	 * @return self Validated request.
+	 * @throws InvalidArgumentException When input is not a closed bounded page query.
 	 */
 	public static function from_input( array $input ): self {
 		if (
