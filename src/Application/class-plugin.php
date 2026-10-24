@@ -75,6 +75,7 @@ final class Plugin {
 		$approval_store            = new WorkflowApprovalStore();
 		$post_registrar            = new PostDiscoveryRegistrar( $audit_store );
 		$post_read_registrar       = new PostReadRegistrar( $audit_store );
+		$page_context_registrar    = new PageContextRegistrar( $audit_store );
 		$draft_authoring_registrar = new DraftAuthoringRegistrar( $audit_store );
 		$workflow_registrar        = new ContentWorkflowRegistrar( $audit_store, $approval_store );
 		$approval_page             = new WorkflowApprovalPage( $approval_store );
@@ -88,6 +89,7 @@ final class Plugin {
 		add_action( 'wp_abilities_api_categories_init', array( $post_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $post_registrar, 'register_ability' ) );
 		add_action( 'wp_abilities_api_init', array( $post_read_registrar, 'register_ability' ) );
+		add_action( 'wp_abilities_api_init', array( $page_context_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $draft_authoring_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $draft_authoring_registrar, 'register_abilities' ) );
 		add_action( 'wp_abilities_api_categories_init', array( $workflow_registrar, 'register_category' ) );
