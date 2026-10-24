@@ -228,10 +228,10 @@ final class ThemeContextRegistrar {
 				continue;
 			}
 
-			$origin = isset( $template->origin ) && is_string( $template->origin ) ? $template->origin : $template->source;
+			$origin     = isset( $template->origin ) && is_string( $template->origin ) ? $template->origin : $template->source;
 			$customized = 'custom' === $template->source;
 			if ( 'wp_template_part' === $type ) {
-				$area = isset( $template->area ) && is_string( $template->area ) ? $template->area : '';
+				$area     = isset( $template->area ) && is_string( $template->area ) ? $template->area : '';
 				$items[] = ThemeContextSnapshot::template_part( $template->slug, $template->title, $origin, $customized, $area );
 				continue;
 			}
@@ -259,9 +259,9 @@ final class ThemeContextRegistrar {
 	/**
 	 * Applies the bounded theme-context contract.
 	 *
-	 * @param string                         $ability Ability identifier.
-	 * @param array<int, array<string, mixed>> $items Candidate fixed records.
-	 * @param PagedThemeContextRequest        $request Bounded page request.
+	 * @param string                           $ability Ability identifier.
+	 * @param array<int, array<string, mixed>> $items   Candidate fixed records.
+	 * @param PagedThemeContextRequest          $request Bounded page request.
 	 * @return array<string, array<int, array<string, mixed>>> Fixed page.
 	 */
 	private function paged_allowed( string $ability, array $items, PagedThemeContextRequest $request ): array {
@@ -281,12 +281,12 @@ final class ThemeContextRegistrar {
 	 * Applies the bounded theme-context contract.
 	 *
 	 * @param string $ability Ability identifier.
-	 * @param string $class   Redacted cause class.
+	 * @param string $capability_class Redacted cause class.
 	 * @param string $code    Stable public error code.
 	 * @return WP_Error Stable refusal.
 	 */
-	private function deny( string $ability, string $class, string $code ): WP_Error {
-		$this->audit_store->append( AuditReceipt::create( $ability, 'denied', $class, 0, gmdate( 'c' ) ) );
+	private function deny( string $ability, string $capability_class, string $code ): WP_Error {
+		$this->audit_store->append( AuditReceipt::create( $ability, 'denied', $capability_class, 0, gmdate( 'c' ) ) );
 
 		return new WP_Error( $code, __( 'Theme context is unavailable.', 'kiln-mcp' ) );
 	}
@@ -294,12 +294,12 @@ final class ThemeContextRegistrar {
 	/**
 	 * Applies the bounded theme-context contract.
 	 *
-	 * @param string               $name    Ability identifier.
-	 * @param string               $label   User-facing label.
-	 * @param callable             $execute     Fixed executor.
+	 * @param string               $name       Ability identifier.
+	 * @param string               $label      User-facing label.
+	 * @param callable             $execute    Fixed executor.
 	 * @param callable             $permission Fixed permission callback.
-	 * @param array<string, mixed> $input       Closed input schema.
-	 * @param array<string, mixed> $output  Closed output schema.
+	 * @param array<string, mixed> $input      Closed input schema.
+	 * @param array<string, mixed> $output     Closed output schema.
 	 * @return void
 	 */
 	private function register( string $name, string $label, callable $execute, callable $permission, array $input, array $output ): void {
@@ -349,8 +349,15 @@ final class ThemeContextRegistrar {
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(
-				'limit' => array( 'type' => 'integer', 'minimum' => 1, 'maximum' => PagedThemeContextRequest::MAX_ITEMS ),
-				'page'  => array( 'type' => 'integer', 'minimum' => 1 ),
+				'limit' => array(
+					'type'    => 'integer',
+					'minimum' => 1,
+					'maximum' => PagedThemeContextRequest::MAX_ITEMS,
+				),
+				'page'  => array(
+					'type'    => 'integer',
+					'minimum' => 1,
+				),
 			),
 			'required'             => array( 'limit', 'page' ),
 		);
