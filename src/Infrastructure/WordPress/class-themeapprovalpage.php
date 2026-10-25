@@ -177,7 +177,15 @@ final class ThemeApprovalPage {
 		}
 
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
+			$wordpress_root = defined( 'ABSPATH' ) ? constant( 'ABSPATH' ) : null;
+			if ( ! is_string( $wordpress_root ) || '' === $wordpress_root ) {
+				return array(
+					'type'    => 'error',
+					'message' => __( 'The local theme ZIP could not be accepted.', 'kiln-mcp' ),
+				);
+			}
+
+			require_once $wordpress_root . 'wp-admin/includes/file.php';
 		}
 
 		$uploaded = wp_handle_upload(
@@ -187,8 +195,7 @@ final class ThemeApprovalPage {
 				'mimes'     => array( 'zip' => 'application/zip' ),
 			)
 		);
-		if ( ! is_array( $uploaded )
-			|| ! isset( $uploaded['file'] )
+		if ( ! isset( $uploaded['file'] )
 			|| ! is_string( $uploaded['file'] ) ) {
 			return array(
 				'type'    => 'error',
