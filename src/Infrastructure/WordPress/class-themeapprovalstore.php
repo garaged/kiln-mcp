@@ -103,7 +103,9 @@ final class ThemeApprovalStore {
 			$records[] = $record;
 		}
 
-		update_option( self::OPTION_NAME, array_slice( $records, -self::MAX_APPROVALS ), false );
+		if ( ! update_option( self::OPTION_NAME, array_slice( $records, -self::MAX_APPROVALS ), false ) ) {
+			return;
+		}
 	}
 
 	/**
@@ -120,6 +122,7 @@ final class ThemeApprovalStore {
 		$valid_records = array();
 		foreach ( $records as $record ) {
 			if ( is_array( $record ) ) {
+				/** @var array<string, mixed> $record */
 				$valid_records[] = $record;
 			}
 		}
