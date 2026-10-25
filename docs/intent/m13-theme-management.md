@@ -8,7 +8,7 @@ Allow an MCP client to manage a WordPress theme safely through the same local-ad
 - an identified WordPress.org theme slug; and
 - an administrator-supplied ZIP uploaded through the local WordPress administration workflow.
 
-No remote ZIP URL, arbitrary download URL, filesystem path, shell command, or PHP source is accepted.
+No remote ZIP URL, arbitrary download URL, filesystem path, shell command, or PHP source is accepted. Before a local ZIP is retained, Kiln performs a fail-closed archive and PHP static scan; a blocked archive cannot be approved or installed.
 
 ## Abilities
 - discover bounded installed-theme and update metadata;
@@ -17,4 +17,4 @@ No remote ZIP URL, arbitrary download URL, filesystem path, shell command, or PH
 - restore the previously active installed theme after failed health validation.
 
 ## Safety contract
-Each effect is bound to the action, theme stylesheet, selected artifact/version identity, and current state. Approval is issued only by a `manage_options` administrator, expires quickly, and is single-use. ZIPs are never accepted over MCP: an administrator uploads them locally, Kiln retains only bounded artifact metadata and a digest, and the write executor rechecks all preconditions. Theme source, PHP, CSS, credentials, paths, remote URLs, and archive contents are never returned through MCP.
+Each effect is bound to the action, theme stylesheet, selected artifact/version identity, scan verdict, and current state. Approval is issued only by a `manage_options` administrator, expires quickly, and is single-use. ZIPs are never accepted over MCP: an administrator uploads them locally, Kiln retains only bounded artifact metadata, a digest, and a redacted scan verdict, and the write executor rechecks all preconditions. Theme source, PHP, CSS, credentials, paths, remote URLs, archive contents, and scanner match detail are never returned through MCP.
