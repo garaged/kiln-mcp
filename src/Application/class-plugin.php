@@ -29,6 +29,7 @@ use KilnMcp\Infrastructure\WordPress\ThemeContextRegistrar;
 use KilnMcp\Infrastructure\WordPress\ThemeApprovalPage;
 use KilnMcp\Infrastructure\WordPress\ThemeActivationRegistrar;
 use KilnMcp\Infrastructure\WordPress\ThemeApprovalStore;
+use KilnMcp\Infrastructure\WordPress\ThemeArtifactStore;
 use KilnMcp\Infrastructure\WordPress\ThemeRollbackRegistrar;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
@@ -91,7 +92,8 @@ final class Plugin {
 		$theme_context_registrar    = new ThemeContextRegistrar( $audit_store );
 		$installed_theme_registrar  = new InstalledThemeRegistrar( $audit_store );
 		$theme_approval_store       = new ThemeApprovalStore();
-		$theme_approval_page        = new ThemeApprovalPage( $theme_approval_store );
+		$theme_artifact_store       = new ThemeArtifactStore();
+		$theme_approval_page        = new ThemeApprovalPage( $theme_approval_store, $theme_artifact_store );
 		$theme_activation_registrar = new ThemeActivationRegistrar( $audit_store, $theme_approval_store );
 		$theme_rollback_registrar   = new ThemeRollbackRegistrar( $audit_store, $theme_approval_store );
 		$extension_registrar        = new ExtensionRegistrar( $audit_store );
