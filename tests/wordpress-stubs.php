@@ -354,6 +354,14 @@ function sanitize_key( string $key ): string {
 	return $key;
 }
 
+function sanitize_file_name( string $filename ): string {
+	return $filename;
+}
+
+function sanitize_text_field( string $str ): string {
+	return $str;
+}
+
 function wp_unslash( mixed $value ): mixed {
 	return $value;
 }
