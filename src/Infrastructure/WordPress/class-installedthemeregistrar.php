@@ -12,7 +12,6 @@ namespace KilnMcp\Infrastructure\WordPress;
 use KilnMcp\Capability\PostDiscovery\AuditReceipt;
 use KilnMcp\Capability\ThemeManagement\ThemeSnapshot;
 use WP_Error;
-use WP_Theme;
 
 /**
  * Registers M13's installed-theme inventory without theme source or mutation.
@@ -103,10 +102,6 @@ final class InstalledThemeRegistrar {
 		$items  = array();
 
 		foreach ( array_slice( wp_get_themes(), 0, 20, true ) as $stylesheet => $theme ) {
-			if ( ! is_string( $stylesheet ) || ! $theme instanceof WP_Theme ) {
-				continue;
-			}
-
 			$items[] = ThemeSnapshot::installed(
 				(string) $theme->get( 'Name' ),
 				$stylesheet,
