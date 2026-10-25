@@ -33,6 +33,7 @@ use KilnMcp\Infrastructure\WordPress\ThemeApprovalStore;
 use KilnMcp\Infrastructure\WordPress\ThemeArtifactStore;
 use KilnMcp\Infrastructure\WordPress\ThemeRollbackRegistrar;
 use KilnMcp\Infrastructure\WordPress\ThemeWordPressOrgRegistrar;
+use KilnMcp\Infrastructure\WordPress\ThemeUpdateRegistrar;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
@@ -100,6 +101,7 @@ final class Plugin {
 		$theme_rollback_registrar      = new ThemeRollbackRegistrar( $audit_store, $theme_approval_store );
 		$theme_install_registrar       = new ThemeInstallRegistrar( $audit_store, $theme_approval_store, $theme_artifact_store );
 		$theme_wordpress_org_registrar = new ThemeWordPressOrgRegistrar( $audit_store, $theme_approval_store );
+		$theme_update_registrar        = new ThemeUpdateRegistrar( $audit_store, $theme_approval_store );
 		$extension_registrar           = new ExtensionRegistrar( $audit_store );
 		$server_registrar              = new KilnMcpServerRegistrar();
 
@@ -128,6 +130,7 @@ final class Plugin {
 		add_action( 'wp_abilities_api_init', array( $theme_rollback_registrar, 'register_ability' ) );
 		add_action( 'wp_abilities_api_init', array( $theme_install_registrar, 'register_ability' ) );
 		add_action( 'wp_abilities_api_init', array( $theme_wordpress_org_registrar, 'register_ability' ) );
+		add_action( 'wp_abilities_api_init', array( $theme_update_registrar, 'register_ability' ) );
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
 		add_action( 'mcp_adapter_init', array( $server_registrar, 'register_server' ), 100 );
 		add_action( 'admin_menu', array( $approval_page, 'register_page' ) );
