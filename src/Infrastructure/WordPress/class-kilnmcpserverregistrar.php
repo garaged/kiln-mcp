@@ -112,6 +112,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/list-tags',
 			'kiln/publish-post',
 			'kiln/read-page',
+			'kiln/rollback-theme',
 			'kiln/read-post',
 			'kiln/restore-post',
 			'kiln/schedule-post-publication',
