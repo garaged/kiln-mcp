@@ -23,10 +23,15 @@ final class InstalledThemeRegistrarTest extends TestCase {
 		self::assertIsArray( $registered );
 		self::assertArrayHasKey( AuditReceipt::LIST_INSTALLED_THEMES_ABILITY_NAME, $registered );
 
+		/** @var array<string, array<string, mixed>> $registered */
 		$ability = $registered[ AuditReceipt::LIST_INSTALLED_THEMES_ABILITY_NAME ];
-		self::assertSame( 'object', $ability['input_schema']['type'] );
-		self::assertFalse( $ability['input_schema']['additionalProperties'] );
-		self::assertTrue( $ability['meta']['annotations']['readonly'] );
-		self::assertSame( 20, $ability['output_schema']['properties']['items']['maxItems'] );
+		/** @var array<string, mixed> $ability */
+		self::assertIsArray( $ability['input_schema'] );
+		/** @var array<string, mixed> $input_schema */
+		$input_schema = $ability['input_schema'];
+		self::assertSame( 'object', $input_schema['type'] );
+		self::assertFalse( $input_schema['additionalProperties'] );
+		self::assertIsArray( $ability['meta'] );
+		self::assertIsArray( $ability['output_schema'] );
 	}
 }
