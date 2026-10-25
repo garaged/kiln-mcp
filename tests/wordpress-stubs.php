@@ -440,6 +440,10 @@ class WP_Theme {
 		return true;
 	}
 
+	public function exists(): bool {
+		return true;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -479,6 +483,9 @@ function wp_get_theme( string $stylesheet = '' ): WP_Theme {
 /**
  * @return bool
  */
+function switch_theme( string $stylesheet ): void {
+}
+
 function wp_get_themes(): array {
 	return array();
 }
