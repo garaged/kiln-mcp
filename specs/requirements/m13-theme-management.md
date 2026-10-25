@@ -14,3 +14,6 @@ Kiln shall execute one exact admitted operation using WordPress-native theme API
 
 ## REQ-M13-005 — validation
 Tests shall prove source rejection, capability denial, approval expiry/replay refusal, exact binding, update/activation behavior, rollback, source redaction, and ARM64 Rancher Desktop acceptance.
+
+## REQ-M13-006 — uploaded archive security scan
+Before retaining, approving, or installing a locally administrator-uploaded theme ZIP, Kiln shall fail closed unless a bounded archive scan accepts it. The scan shall reject malformed or unsafe archive structure (including traversal, links, excessive entry/expansion limits, and unexpected executable payloads) and high-risk PHP execution or obfuscation patterns. It shall scan every PHP-bearing file, retain only a binary pass/fail verdict and fixed reason category, and expose neither source nor match detail. This lightweight static scan is a gate, not a malware-certification claim.
