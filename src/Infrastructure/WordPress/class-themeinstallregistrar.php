@@ -107,7 +107,7 @@ final class ThemeInstallRegistrar {
 			return $this->deny( 'artifact_unavailable', 'kiln_theme_not_admitted' );
 		}
 
-		$before       = wp_get_theme()->get_stylesheet();
+		$before        = wp_get_theme()->get_stylesheet();
 		$artifact_path = $this->artifact_path( $request->artifact_id, $request->identity );
 		if ( null === $artifact_path
 			|| ! hash_equals( $before, $request->expected_active_stylesheet )
@@ -184,7 +184,7 @@ final class ThemeInstallRegistrar {
 	 * @return WP_Error Stable refusal.
 	 */
 	private function deny( string $capability_class, string $error_code ): WP_Error {
-		$this->audit_store->append( AuditReceipt::create( AuditReceipt::INSTALL_UPLOADED_THEME_ABILITY_NAME, 'denied', $capability_class, 0, gmdate( 'c' ) );
+		$this->audit_store->append( AuditReceipt::create( AuditReceipt::INSTALL_UPLOADED_THEME_ABILITY_NAME, 'denied', $capability_class, 0, gmdate( 'c' ) ) );
 
 		return new WP_Error( $error_code, __( 'The requested theme installation is unavailable.', 'kiln-mcp' ) );
 	}
