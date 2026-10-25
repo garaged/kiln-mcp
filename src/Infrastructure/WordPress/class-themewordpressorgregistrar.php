@@ -143,7 +143,7 @@ final class ThemeWordPressOrgRegistrar {
 	 */
 	public static function wordpress_org_theme( string $slug ): ?array {
 		$information = themes_api( 'theme_information', array( 'slug' => $slug ) );
-		if ( is_wp_error( $information ) || ! is_object( $information )
+		if ( is_wp_error( $information )
 			|| ! isset( $information->version, $information->download_link )
 			|| ! is_string( $information->version ) || '' === $information->version
 			|| ! is_string( $information->download_link )
