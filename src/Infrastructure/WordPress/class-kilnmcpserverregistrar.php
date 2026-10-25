@@ -93,12 +93,14 @@ final class KilnMcpServerRegistrar {
 	 */
 	public static function core_ability_names(): array {
 		return array(
+			'kiln/activate-theme',
 			'kiln/create-category',
 			'kiln/create-page-draft',
 			'kiln/create-post-draft',
 			'kiln/create-tag',
 			'kiln/get-active-theme-context',
 			'kiln/list-active-theme-patterns',
+			'kiln/list-installed-themes',
 			'kiln/list-block-template-parts',
 			'kiln/list-block-templates',
 			'kiln/list-categories',
@@ -112,6 +114,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/read-page',
 			'kiln/read-post',
 			'kiln/restore-post',
+			'kiln/rollback-theme',
 			'kiln/schedule-post-publication',
 			'kiln/site-health-summary',
 			'kiln/trash-post',
