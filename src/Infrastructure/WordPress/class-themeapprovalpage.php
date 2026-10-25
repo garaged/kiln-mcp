@@ -151,14 +151,24 @@ final class ThemeApprovalPage {
 	private function retain_uploaded_archive(): array {
 		check_admin_referer( self::NONCE_ACTION );
 
-		$file = $_FILES['kiln_mcp_theme_archive'] ?? null;
-		if ( ! is_array( $file )
-			|| ! isset( $file['name'], $file['size'] )
-			|| ! is_string( $file['name'] )
-			|| ! is_int( $file['size'] )
-			|| 0 >= $file['size']
-			|| 10485760 < $file['size']
-			|| 'zip' !== strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) ) ) {
+		$uploaded_file = isset( $_FILES['kiln_mcp_theme_archive'] ) ? wp_unslash( $_FILES['kiln_mcp_theme_archive'] ) : null;
+		$name          = is_array( $uploaded_file ) && isset( $uploaded_file['name'] ) && is_string( $uploaded_file['name'] ) ? sanitize_file_name( $uploaded_file['name'] ) : '';
+		$tmp_name      = is_array( $uploaded_file ) && isset( $uploaded_file['tmp_name'] ) && is_string( $uploaded_file['tmp_name'] ) ? sanitize_text_field( $uploaded_file['tmp_name'] ) : '';
+		$size          = is_array( $uploaded_file ) && isset( $uploaded_file['size'] ) ? absint( $uploaded_file['size'] ) : 0;
+		$error         = is_array( $uploaded_file ) && isset( $uploaded_file['error'] ) ? absint( $uploaded_file['error'] ) : 1;
+		$file          = array(
+			'name'     => $name,
+			'type'     => 'application/zip',
+			'tmp_name' => $tmp_name,
+			'error'    => $error,
+			'size'     => $size,
+		);
+		if ( '' === $name
+			|| '' === $tmp_name
+			|| 0 !== $error
+			|| 0 >= $size
+			|| 10485760 < $size
+			|| 'zip' !== strtolower( pathinfo( $name, PATHINFO_EXTENSION ) ) ) {
 			return array(
 				'type'    => 'error',
 				'message' => __( 'The local theme ZIP could not be accepted.', 'kiln-mcp' ),
