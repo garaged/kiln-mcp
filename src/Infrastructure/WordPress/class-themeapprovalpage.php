@@ -195,8 +195,7 @@ final class ThemeApprovalPage {
 				'mimes'     => array( 'zip' => 'application/zip' ),
 			)
 		);
-		if ( ! isset( $uploaded['file'] )
-			|| ! is_string( $uploaded['file'] ) ) {
+		if ( ! isset( $uploaded['file'] ) ) {
 			return array(
 				'type'    => 'error',
 				'message' => __( 'The local theme ZIP could not be accepted.', 'kiln-mcp' ),
