@@ -21,6 +21,8 @@ final class InstalledThemeRegistrar {
 	private const CATEGORY = 'kiln-theme-management';
 
 	/**
+	 * Creates the installed-theme adapter.
+	 *
 	 * @param AuditReceiptStore $audit_store Local redacted receipt store.
 	 */
 	public function __construct(
