@@ -174,10 +174,10 @@ final class ThemeApprovalPage {
 	private function issue_uploaded_install_approval(): array {
 		check_admin_referer( self::NONCE_ACTION );
 
-		$raw_target = filter_input( INPUT_POST, 'kiln_mcp_install_stylesheet', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$raw_id     = filter_input( INPUT_POST, 'kiln_mcp_artifact_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$raw_digest = filter_input( INPUT_POST, 'kiln_mcp_artifact_digest', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-		$target     = is_string( $raw_target ) ? sanitize_key( $raw_target ) : '';
+		$raw_target  = filter_input( INPUT_POST, 'kiln_mcp_install_stylesheet', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$raw_id      = filter_input( INPUT_POST, 'kiln_mcp_artifact_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$raw_digest  = filter_input( INPUT_POST, 'kiln_mcp_artifact_digest', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$target      = is_string( $raw_target ) ? sanitize_key( $raw_target ) : '';
 		$artifact_id = is_string( $raw_id ) ? strtolower( $raw_id ) : '';
 		$digest      = is_string( $raw_digest ) ? strtolower( $raw_digest ) : '';
 
