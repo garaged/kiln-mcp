@@ -502,6 +502,22 @@ function wp_is_block_theme(): bool {
 }
 
 /**
+ * @param string               $action Theme directory API action.
+ * @param array<string, mixed> $args   Theme directory API arguments.
+ * @return object|WP_Error Theme information or a refusal.
+ */
+function themes_api( string $action, array $args = array() ): object|WP_Error {
+	return new WP_Error();
+}
+
+/**
+ * @return array<string, mixed>|false
+ */
+function wp_parse_url( string $url, int $component = -1 ): array|false {
+	return parse_url( $url );
+}
+
+/**
  * @param array<string, mixed> $query Block template query.
  * @return array<int, object>
  */
