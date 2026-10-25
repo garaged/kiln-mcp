@@ -76,41 +76,24 @@ final class Plugin {
 			return;
 		}
 
-		$health_registrar          = new SiteHealthSummaryRegistrar( new SiteHealthSummary( $this->version ) );
-
-		$audit_store               = new AuditReceiptStore();
-
-		$approval_store            = new WorkflowApprovalStore();
-
-		$post_registrar            = new PostDiscoveryRegistrar( $audit_store );
-
-		$post_read_registrar       = new PostReadRegistrar( $audit_store );
-
-		$page_context_registrar    = new PageContextRegistrar( $audit_store );
-
-		$page_draft_registrar      = new PageDraftAuthoringRegistrar( $audit_store );
-
+		$health_registrar = new SiteHealthSummaryRegistrar( new SiteHealthSummary( $this->version ) );
+		$audit_store = new AuditReceiptStore();
+		$approval_store = new WorkflowApprovalStore();
+		$post_registrar = new PostDiscoveryRegistrar( $audit_store );
+		$post_read_registrar = new PostReadRegistrar( $audit_store );
+		$page_context_registrar = new PageContextRegistrar( $audit_store );
+		$page_draft_registrar = new PageDraftAuthoringRegistrar( $audit_store );
 		$draft_authoring_registrar = new DraftAuthoringRegistrar( $audit_store );
-
-		$workflow_registrar        = new ContentWorkflowRegistrar( $audit_store, $approval_store );
-
-		$approval_page             = new WorkflowApprovalPage( $approval_store );
-
-		$structure_registrar       = new SiteStructureRegistrar( $audit_store );
-
-		$theme_context_registrar   = new ThemeContextRegistrar( $audit_store );
-
+		$workflow_registrar = new ContentWorkflowRegistrar( $audit_store, $approval_store );
+		$approval_page = new WorkflowApprovalPage( $approval_store );
+		$structure_registrar = new SiteStructureRegistrar( $audit_store );
+		$theme_context_registrar = new ThemeContextRegistrar( $audit_store );
 		$installed_theme_registrar = new InstalledThemeRegistrar( $audit_store );
-
-		$theme_approval_store      = new ThemeApprovalStore();
-
-		$theme_approval_page      = new ThemeApprovalPage( $theme_approval_store );
-
+		$theme_approval_store = new ThemeApprovalStore();
+		$theme_approval_page = new ThemeApprovalPage( $theme_approval_store );
 		$theme_activation_registrar = new ThemeActivationRegistrar( $audit_store, $theme_approval_store );
-
-		$extension_registrar       = new ExtensionRegistrar( $audit_store );
-
-		$server_registrar          = new KilnMcpServerRegistrar();
+		$extension_registrar = new ExtensionRegistrar( $audit_store );
+		$server_registrar = new KilnMcpServerRegistrar();
 
 		add_action( 'wp_abilities_api_categories_init', array( $health_registrar, 'register_category' ) );
 		add_action( 'wp_abilities_api_init', array( $health_registrar, 'register_ability' ) );
