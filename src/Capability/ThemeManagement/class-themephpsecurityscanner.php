@@ -25,10 +25,10 @@ final class ThemePhpSecurityScanner {
 	 */
 	public static function rejection_reason( string $source ): ?string {
 		$patterns = array(
-			'execution'         => '/\\b(?:eval|assert|exec|shell_exec|system|passthru|proc_open|popen)\\s*\\(/i',
-			'preg_replace_e'    => '/\\bpreg_replace\\s*\\(\\s*([\'"])(?:\\\\.|(?!\\1).)*\\/e[a-z]*\\1/is',
-			'dynamic_include'   => '/\\b(?:include|include_once|require|require_once)\\s*(?:\\(\\s*)?\\$/i',
-			'obfuscation'       => '/\\b(?:base64_decode|gzinflate|gzuncompress|str_rot13|convert_uudecode)\\s*\\(/i',
+			'execution'          => '/\\b(?:eval|assert|exec|shell_exec|system|passthru|proc_open|popen)\\s*\\(/i',
+			'preg_replace_e'     => '/\\bpreg_replace\\s*\\(\\s*([\'"])(?:\\\\.|(?!\\1).)*\\/e[a-z]*\\1/is',
+			'dynamic_include'    => '/\\b(?:include|include_once|require|require_once)\\s*(?:\\(\\s*)?\\$/i',
+			'obfuscation'        => '/\\b(?:base64_decode|gzinflate|gzuncompress|str_rot13|convert_uudecode)\\s*\\(/i',
 			'backtick_execution' => '/(?<![\\\\])`(?:\\\\.|[^`])+`/s',
 		);
 
