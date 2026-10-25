@@ -27,6 +27,7 @@ final class ThemeApprovalStore {
 	 * @param string $artifact_or_version Exact identity digest.
 	 * @param string $active_stylesheet   Current active stylesheet.
 	 * @return string Raw token shown exactly once to the administrator.
+	 * @throws \RuntimeException When durable approval storage refuses the record.
 	 */
 	public function issue( string $action, string $target, string $artifact_or_version, string $active_stylesheet ): string {
 		$this->prune();
