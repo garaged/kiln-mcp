@@ -504,9 +504,9 @@ function wp_is_block_theme(): bool {
 /**
  * @param string               $action Theme directory API action.
  * @param array<string, mixed> $args   Theme directory API arguments.
- * @return object|WP_Error Theme information or a refusal.
+ * @return object Theme information or a refusal object.
  */
-function themes_api( string $action, array $args = array() ): object|WP_Error {
+function themes_api( string $action, array $args = array() ): object {
 	return new WP_Error();
 }
 
