@@ -79,6 +79,24 @@ final class ThemeApprovalPage {
 				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
+						<th scope="row"><label for="kiln-mcp-install-stylesheet"><?php esc_html_e( 'Expected stylesheet', 'kiln-mcp' ); ?></label></th>
+						<td><input id="kiln-mcp-install-stylesheet" name="kiln_mcp_install_stylesheet" required type="text" /></td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="kiln-mcp-artifact-id"><?php esc_html_e( 'Artifact ID', 'kiln-mcp' ); ?></label></th>
+						<td><input id="kiln-mcp-artifact-id" name="kiln_mcp_artifact_id" required type="text" /></td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="kiln-mcp-artifact-digest"><?php esc_html_e( 'Artifact digest', 'kiln-mcp' ); ?></label></th>
+						<td><input id="kiln-mcp-artifact-digest" name="kiln_mcp_artifact_digest" required type="text" /></td>
+					</tr>
+				</table>
+				<?php submit_button( __( 'Issue one-time ZIP installation approval', 'kiln-mcp' ), 'secondary', 'kiln_mcp_issue_theme_install_approval' ); ?>
+			</form>
+			<form method="post">
+				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
+				<table class="form-table" role="presentation">
+					<tr>
 						<th scope="row"><label for="kiln-mcp-theme-stylesheet"><?php esc_html_e( 'Theme stylesheet', 'kiln-mcp' ); ?></label></th>
 						<td><input id="kiln-mcp-theme-stylesheet" name="kiln_mcp_theme_stylesheet" required type="text" /></td>
 					</tr>
@@ -100,6 +118,10 @@ final class ThemeApprovalPage {
 	 * @return array{type: string, message: string}|null Renderable page notice.
 	 */
 	private function handle_issue_request(): ?array {
+		if ( isset( $_POST['kiln_mcp_issue_theme_install_approval'] ) ) {
+			return $this->issue_uploaded_install_approval();
+		}
+
 		if ( isset( $_POST['kiln_mcp_retain_theme_archive'] ) ) {
 			return $this->retain_uploaded_archive();
 		}
@@ -142,6 +164,49 @@ final class ThemeApprovalPage {
 		);
 	}
 
+
+
+	/**
+	 * Issues an exact installation approval only for a currently retained artifact.
+	 *
+	 * @return array{type: string, message: string} Renderable page notice.
+	 */
+	private function issue_uploaded_install_approval(): array {
+		check_admin_referer( self::NONCE_ACTION );
+
+		$raw_target = filter_input( INPUT_POST, 'kiln_mcp_install_stylesheet', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$raw_id     = filter_input( INPUT_POST, 'kiln_mcp_artifact_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$raw_digest = filter_input( INPUT_POST, 'kiln_mcp_artifact_digest', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$target     = is_string( $raw_target ) ? sanitize_key( $raw_target ) : '';
+		$artifact_id = is_string( $raw_id ) ? strtolower( $raw_id ) : '';
+		$digest      = is_string( $raw_digest ) ? strtolower( $raw_digest ) : '';
+
+		if ( '' === $target
+			|| 1 !== preg_match( '/\\A[a-f0-9]{32}\\z/D', $artifact_id )
+			|| 1 !== preg_match( '/\\A[a-f0-9]{64}\\z/D', $digest )
+			|| null === $this->artifact_store->path_for( $artifact_id, $digest ) ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'That scanned theme ZIP is not available for approval.', 'kiln-mcp' ),
+			);
+		}
+
+		$token = $this->approval_store->issue(
+			ThemeAction::INSTALL_UPLOADED_ZIP,
+			$target,
+			$digest,
+			wp_get_theme()->get_stylesheet()
+		);
+
+		return array(
+			'type'    => 'success',
+			'message' => sprintf(
+				/* translators: %s: one-time theme approval token. */
+				__( 'One-time approval token (copy now): %s', 'kiln-mcp' ),
+				$token
+			),
+		);
+	}
 
 	/**
 	 * Accepts one local administrator ZIP and retains it only after fail-closed scanning.
