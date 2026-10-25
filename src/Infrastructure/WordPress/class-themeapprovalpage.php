@@ -22,9 +22,11 @@ final class ThemeApprovalPage {
 	 * Creates the local theme approval issuer.
 	 *
 	 * @param ThemeApprovalStore $approval_store Local hash-only approval store.
+	 * @param ThemeArtifactStore $artifact_store Local scanned artifact store.
 	 */
 	public function __construct(
 		private readonly ThemeApprovalStore $approval_store,
+		private readonly ThemeArtifactStore $artifact_store,
 	) {
 	}
 
@@ -63,6 +65,16 @@ final class ThemeApprovalPage {
 					<p><?php echo esc_html( $notice['message'] ); ?></p>
 				</div>
 			<?php endif; ?>
+			<form method="post" enctype="multipart/form-data">
+				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
+				<table class="form-table"
+					<tr>
+						<th scope="row"><label for="kiln-mcp-theme-archive"><?php esc_html_e( 'Theme ZIP', 'kiln-mcp' ); ?></label></th>
+						<td><input accept=".zip,application/zip" id="kiln-mcp-theme-archive" name="kiln_mcp_theme_archive" type="file" /></td>
+					</tr>
+				</table>
+				<?php submit_button( __( 'Scan and retain ZIP', 'kiln-mcp' ), 'secondary', 'kiln_mcp_retain_theme_archive' ); ?>
+			</form>
 			<form method="post">
 				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
 				<table class="form-table" role="presentation">
@@ -88,6 +100,10 @@ final class ThemeApprovalPage {
 	 * @return array{type: string, message: string}|null Renderable page notice.
 	 */
 	private function handle_issue_request(): ?array {
+		if ( isset( $_POST['kiln_mcp_retain_theme_archive'] ) ) {
+			return $this->retain_uploaded_archive();
+		}
+
 		if ( isset( $_POST['kiln_mcp_issue_theme_rollback'] ) ) {
 			return $this->issue_rollback_approval();
 		}
@@ -122,6 +138,69 @@ final class ThemeApprovalPage {
 				/* translators: %s: one-time theme approval token. */
 				__( 'One-time approval token (copy now): %s', 'kiln-mcp' ),
 				$token
+			),
+		);
+	}
+
+
+	/**
+	 * Accepts one local administrator ZIP and retains it only after fail-closed scanning.
+	 *
+	 * @return array{type: string, message: string} Renderable page notice.
+	 */
+	private function retain_uploaded_archive(): array {
+		check_admin_referer( self::NONCE_ACTION );
+
+		$file = $_FILES['kiln_mcp_theme_archive'] ?? null;
+		if ( ! is_array( $file )
+			|| ! isset( $file['name'], $file['size'] )
+			|| ! is_string( $file['name'] )
+			|| ! is_int( $file['size'] )
+			|| 0 >= $file['size']
+			|| 10485760 < $file['size']
+			|| 'zip' !== strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) ) ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'The local theme ZIP could not be accepted.', 'kiln-mcp' ),
+			);
+		}
+
+		if ( ! function_exists( 'wp_handle_upload' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		$uploaded = wp_handle_upload(
+			$file,
+			array(
+				'test_form' => false,
+				'mimes'     => array( 'zip' => 'application/zip' ),
+			)
+		);
+		if ( ! is_array( $uploaded )
+			|| ! isset( $uploaded['file'] )
+			|| ! is_string( $uploaded['file'] ) ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'The local theme ZIP could not be accepted.', 'kiln-mcp' ),
+			);
+		}
+
+		$artifact = $this->artifact_store->retain( $uploaded['file'] );
+		if ( null === $artifact ) {
+			wp_delete_file( $uploaded['file'] );
+			return array(
+				'type'    => 'error',
+				'message' => __( 'The local theme ZIP was refused by Kiln safety checks.', 'kiln-mcp' ),
+			);
+		}
+
+		return array(
+			'type'    => 'success',
+			'message' => sprintf(
+				/* translators: 1: opaque artifact ID, 2: artifact SHA-256 digest. */
+				__( 'Scanned ZIP retained. Artifact ID: %1$s Digest: %2$s', 'kiln-mcp' ),
+				$artifact['id'],
+				$artifact['digest']
 			),
 		);
 	}
