@@ -100,6 +100,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/create-tag',
 			'kiln/get-active-theme-context',
 			'kiln/install-uploaded-theme',
+			'kiln/install-wordpress-org-theme',
 			'kiln/list-active-theme-patterns',
 			'kiln/list-installed-themes',
 			'kiln/list-block-template-parts',
