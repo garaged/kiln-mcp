@@ -27,6 +27,7 @@ final class ThemeApproval {
 	 * @param string $approval_token          Raw one-time token displayed locally.
 	 * @param int    $issued_at               Unix issuance time.
 	 * @return array<string, int|string|null> Persistable hash-only record.
+	 * @throws InvalidArgumentException When the exact approval binding is malformed.
 	 */
 	public static function create( string $action, string $target, string $artifact_or_version, string $active_stylesheet, string $approval_token, int $issued_at ): array {
 		if ( ! ThemeAction::is_supported( $action )
