@@ -20,7 +20,7 @@ use WP_Error;
  */
 final class ThemeActivationRegistrar {
 	private const CATEGORY        = 'kiln-theme-management';
-	private const ROLLBACK_OPTION = 'kiln_mcp_theme_rollback';
+	public const ROLLBACK_OPTION = 'kiln_mcp_theme_rollback';
 
 	/**
 	 * Creates the activation adapter.
