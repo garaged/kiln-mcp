@@ -409,3 +409,43 @@ requirements:
     validation:
       - docs/acceptance/m12-rancher-desktop-arm64.md
       - docs/manual-testing.md
+
+  - id: REQ-M13-001
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - src/Infrastructure/WordPress/class-thememanagementregistrar.php
+      - tests/Unit/ThemeRequestTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M13-002
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - src/Capability/ThemeManagement
+      - src/Infrastructure/WordPress/class-themeartifactstore.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M13-003
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - src/Capability/ThemeManagement/class-themeapproval.php
+      - src/Infrastructure/WordPress/class-themeapprovalstore.php
+      - tests/Unit/ThemeApprovalTest.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M13-004
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - src/Infrastructure/WordPress/class-thememanagementregistrar.php
+      - testing/scripts/container-smoke.sh
+  - id: REQ-M13-005
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - tests/Unit/ThemeRequestTest.php
+      - tests/Unit/ThemeApprovalTest.php
+      - testing/scripts/container-smoke.sh
+      - docs/acceptance/m13-rancher-desktop-arm64.md
+  - id: REQ-M13-006
+    source: specs/requirements/m13-theme-management.md
+    validation:
+      - src/Capability/ThemeManagement/class-themearchivescanner.php
+      - src/Capability/ThemeManagement/class-themephpsecurityscanner.php
+      - tests/Unit/ThemeArchivePolicyTest.php
+      - tests/Unit/ThemePhpSecurityScannerTest.php
+      - testing/scripts/container-smoke.sh
