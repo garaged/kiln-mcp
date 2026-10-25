@@ -39,6 +39,7 @@ final class AuditReceipt {
 	public const LIST_INSTALLED_THEMES_ABILITY_NAME      = 'kiln/list-installed-themes';
 	public const ACTIVATE_THEME_ABILITY_NAME             = 'kiln/activate-theme';
 	public const ROLLBACK_THEME_ABILITY_NAME             = 'kiln/rollback-theme';
+	public const INSTALL_UPLOADED_THEME_ABILITY_NAME     = 'kiln/install-uploaded-theme';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
