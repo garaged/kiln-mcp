@@ -120,8 +120,8 @@ final class ThemeWordPressOrgRegistrar {
 			return $this->deny( 'upgrader_unavailable', 'kiln_theme_effect_failed' );
 		}
 
-		$upgrader = new \Theme_Upgrader( new \Automatic_Upgrader_Skin() );
-		$result   = $upgrader->install( $theme['download_link'], array( 'clear_update_cache' => true ) );
+		$upgrader  = new \Theme_Upgrader( new \Automatic_Upgrader_Skin() );
+		$result    = $upgrader->install( $theme['download_link'], array( 'clear_update_cache' => true ) );
 		$installed = wp_get_theme( $request->target );
 		if ( true !== $result || ! $installed->exists() ) {
 			return $this->deny( 'install_failed', 'kiln_theme_effect_failed' );
