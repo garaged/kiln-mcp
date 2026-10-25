@@ -50,11 +50,7 @@ final class ThemeArchiveScanner {
 			$total_compressed   = 0;
 			for ( $index = 0; $index < $file_count; ++$index ) {
 				$stat = $archive->statIndex( $index );
-				if ( false === $stat
-					|| ! isset( $stat['name'], $stat['size'], $stat['comp_size'] )
-					|| ! is_string( $stat['name'] )
-					|| ! is_int( $stat['size'] )
-					|| ! is_int( $stat['comp_size'] ) ) {
+				if ( false === $stat ) {
 					return 'archive_invalid';
 				}
 
@@ -143,8 +139,8 @@ final class ThemeArchiveScanner {
 	private static function is_link( ZipArchive $archive, int $index ): bool {
 		$operations = 0;
 		$attributes = 0;
-		if ( ! $archive->getExternalAttributesIndex( $index, $operations, $attributes ) ) {
-			return false;
+		if ( ! $archive->getExternalAttributesIndex( $index, $operations, $attributes ) || ! is_int( $attributes ) ) {
+			return true;
 		}
 
 		return 0120000 === ( ( $attributes >> 16 ) & 0170000 );
