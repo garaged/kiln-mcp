@@ -41,13 +41,13 @@ final class ThemeArchiveScanner {
 		}
 
 		try {
-			if ( 0 === $archive->count() || self::MAX_ENTRIES < $archive->numFiles ) {
+			if ( 0 === $archive->count() || self::MAX_ENTRIES < $archive->count() ) {
 				return 'archive_limit';
 			}
 
 			$total_uncompressed = 0;
 			$total_compressed   = 0;
-			for ( $index = 0; $index < $archive->numFiles; ++$index ) {
+			for ( $index = 0; $index < $archive->count(); ++$index ) {
 				$stat = $archive->statIndex( $index );
 				if ( false === $stat
 					|| ! isset( $stat['name'], $stat['size'], $stat['comp_size'] )
