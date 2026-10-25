@@ -436,6 +436,9 @@ function wp_insert_term( string $term, string $taxonomy, array $args = array() )
 
 
 class WP_Theme {
+	public function exists(): bool {
+		return true;
+	}
 	/**
 	 * @return string
 	 */
@@ -468,13 +471,20 @@ class WP_Theme {
 /**
  * @return WP_Theme
  */
-function wp_get_theme(): WP_Theme {
+function wp_get_theme( string $stylesheet = '' ): WP_Theme {
 	return new WP_Theme();
 }
 
 /**
  * @return bool
  */
+function wp_get_themes(): array {
+	return array();
+}
+
+function switch_theme( string $stylesheet ): void {
+}
+
 function wp_is_block_theme(): bool {
 	return false;
 }
