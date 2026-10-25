@@ -23,6 +23,8 @@ final class ThemeActivationRegistrar {
 	private const ROLLBACK_OPTION = 'kiln_mcp_theme_rollback';
 
 	/**
+	 * Creates the activation adapter.
+	 *
 	 * @param AuditReceiptStore  $audit_store    Local redacted receipt store.
 	 * @param ThemeApprovalStore $approval_store Local hash-only approval store.
 	 */
@@ -173,10 +175,10 @@ final class ThemeActivationRegistrar {
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(
-				'target'                    => array( 'type' => 'string' ),
-				'identity'                  => array( 'type' => 'string' ),
+				'target'                     => array( 'type' => 'string' ),
+				'identity'                   => array( 'type' => 'string' ),
 				'expected_active_stylesheet' => array( 'type' => 'string' ),
-				'approval_token'            => array( 'type' => 'string' ),
+				'approval_token'             => array( 'type' => 'string' ),
 			),
 			'required'             => array(
 				'target',
