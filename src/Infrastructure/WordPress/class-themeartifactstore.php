@@ -44,6 +44,7 @@ final class ThemeArtifactStore {
 
 		$id          = bin2hex( random_bytes( 16 ) );
 		$destination = $directory . '/' . $id . '.zip';
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- The upload is moved once into a non-public, deterministic Kiln artifact location before any later theme install.
 		if ( ! rename( $uploaded_path, $destination ) ) {
 			return null;
 		}
@@ -99,8 +100,8 @@ final class ThemeArtifactStore {
 	 */
 	private function prune(): void {
 		$records = array_slice( $this->records(), -self::MAX_ARTIFACTS + 1 );
-		$kept    = array();
-		$ids     = array();
+		$kept = array();
+		$ids  = array();
 
 		foreach ( $records as $record ) {
 			$kept[]  = $record;
@@ -118,7 +119,9 @@ final class ThemeArtifactStore {
 			}
 		}
 
-		update_option( self::OPTION_NAME, $kept, false );
+		if ( ! update_option( self::OPTION_NAME, $kept, false ) ) {
+			return;
+		}
 	}
 
 	/**
