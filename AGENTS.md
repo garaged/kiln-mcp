@@ -21,6 +21,31 @@ OpenSpec is a controlled change-execution aid; it never supersedes normative req
 - Every behavior change updates requirements, traceability, tests, manual acceptance, and an OpenSpec change artifact.
 - Run make ci before requesting review. Do not weaken a gate to make CI pass.
 
+## PHP and WordPress quality discipline
+
+Treat PHP_CodeSniffer, PHPStan, and PHPUnit as implementation constraints, not
+post-implementation cleanup.
+
+- Complete one capability slice through a green `make ci` result before starting
+  the next mutation, transport, or composition slice.
+- Build in dependency order: pure capability contract and unit test; adapter;
+  WordPress stubs/integration test; composition root; dedicated MCP allowlist.
+- Do not leave unused production classes, staging stores, or partial registrars
+  on a branch. Either integrate and test them in the same slice or keep the
+  design in OpenSpec until the dependent path is ready.
+- Every new or changed WordPress API call must update
+  `tests/wordpress-stubs.php` with exact PHP signatures and iterable value
+  types. Avoid duplicate declarations.
+- Make PHPDoc precise enough for PHPStan: use array shapes for public records,
+  preserve literal unions where the contract requires them, and narrow
+  option-storage data before it reaches filesystem, hashing, or capability APIs.
+- Never silence PHPStan or PHPCS broadly. A narrowly scoped suppression needs a
+  documented WordPress API limitation and a focused regression test.
+- When PHP quality fails, inspect the full report, fix all reported issues in
+  that batch, and wait for a green rerun before beginning a new feature slice.
+- Keep composition roots mechanically formatted; after adding a service, verify
+  the entire declaration block rather than only the added lines.
+
 ## Workflow
 
 Create one branch and draft pull request per coherent milestone. Do not merge without explicit user approval.
