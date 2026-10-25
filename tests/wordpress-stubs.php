@@ -440,10 +440,6 @@ class WP_Theme {
 		return true;
 	}
 
-	public function exists(): bool {
-		return true;
-	}
-
 	/**
 	 * @return string
 	 */
@@ -486,6 +482,9 @@ function wp_get_theme( string $stylesheet = '' ): WP_Theme {
 function switch_theme( string $stylesheet ): void {
 }
 
+/**
+ * @return array<string, WP_Theme>
+ */
 function wp_get_themes(): array {
 	return array();
 }
@@ -502,9 +501,5 @@ function get_block_templates( array $query = array(), string $template_type = 'w
 	return array();
 }
 
-/**
- * @return bool
- */
-function wp_delete_file( string $file ): bool {
-	return true;
+function wp_delete_file( string $file ): void {
 }
