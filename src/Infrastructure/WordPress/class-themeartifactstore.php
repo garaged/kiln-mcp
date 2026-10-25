@@ -55,7 +55,7 @@ final class ThemeArtifactStore {
 			'digest'     => $digest,
 			'created_at' => time(),
 		);
-		$records = array_slice( $records, -self::MAX_ARTIFACTS );
+		$records   = array_slice( $records, -self::MAX_ARTIFACTS );
 
 		if ( ! update_option( self::OPTION_NAME, $records, false ) ) {
 			wp_delete_file( $destination );
@@ -100,12 +100,12 @@ final class ThemeArtifactStore {
 	 */
 	private function prune(): void {
 		$records = array_slice( $this->records(), -self::MAX_ARTIFACTS + 1 );
-		$kept = array();
-		$ids  = array();
+		$kept    = array();
+		$ids     = array();
 
 		foreach ( $records as $record ) {
-			$kept[]  = $record;
-			$ids[] = $record['id'];
+			$kept[] = $record;
+			$ids[]  = $record['id'];
 		}
 
 		foreach ( $this->records() as $record ) {
