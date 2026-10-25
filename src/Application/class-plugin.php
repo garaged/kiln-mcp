@@ -26,6 +26,8 @@ use KilnMcp\Infrastructure\WordPress\PostReadRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteHealthSummaryRegistrar;
 use KilnMcp\Infrastructure\WordPress\SiteStructureRegistrar;
 use KilnMcp\Infrastructure\WordPress\ThemeContextRegistrar;
+use KilnMcp\Infrastructure\WordPress\ThemeApprovalPage;
+use KilnMcp\Infrastructure\WordPress\ThemeApprovalStore;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
@@ -86,6 +88,7 @@ final class Plugin {
 		$structure_registrar       = new SiteStructureRegistrar( $audit_store );
 		$theme_context_registrar   = new ThemeContextRegistrar( $audit_store );
 		$installed_theme_registrar = new InstalledThemeRegistrar( $audit_store );
+		$theme_approval_page      = new ThemeApprovalPage( new ThemeApprovalStore() );
 		$extension_registrar       = new ExtensionRegistrar( $audit_store );
 		$server_registrar          = new KilnMcpServerRegistrar();
 
@@ -113,5 +116,6 @@ final class Plugin {
 		add_action( 'post_updated', array( $draft_authoring_registrar, 'record_post_update' ), 10, 3 );
 		add_action( 'mcp_adapter_init', array( $server_registrar, 'register_server' ), 100 );
 		add_action( 'admin_menu', array( $approval_page, 'register_page' ) );
+		add_action( 'admin_menu', array( $theme_approval_page, 'register_page' ) );
 	}
 }
