@@ -535,3 +535,24 @@ function wp_mkdir_p( string $target ): bool {
 function wp_handle_upload( array $file, array $overrides = array(), string|null $time = null ): array {
 	return array();
 }
+
+
+class Automatic_Upgrader_Skin {
+}
+
+class Theme_Upgrader {
+	/**
+	 * @param object $skin Upgrader skin.
+	 */
+	public function __construct( object $skin ) {
+	}
+
+	/**
+	 * @param string               $package Local package path.
+	 * @param array<string, mixed> $args    Installation arguments.
+	 * @return bool|WP_Error
+	 */
+	public function install( string $package, array $args = array() ): bool|WP_Error {
+		return true;
+	}
+}
