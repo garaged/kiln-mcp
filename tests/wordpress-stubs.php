@@ -497,6 +497,19 @@ function wp_get_themes(): array {
 	return array();
 }
 
+/**
+ * @return void
+ */
+function wp_update_themes(): void {
+}
+
+/**
+ * @return mixed
+ */
+function get_site_transient( string $transient ): mixed {
+	return false;
+}
+
 function wp_is_block_theme(): bool {
 	return false;
 }
@@ -572,6 +585,15 @@ class Theme_Upgrader {
 	 * @return bool|WP_Error
 	 */
 	public function install( string $package, array $args = array() ): bool|WP_Error {
+		return true;
+	}
+
+	/**
+	 * @param string               $stylesheet Theme stylesheet.
+	 * @param array<string, mixed> $args       Update arguments.
+	 * @return bool|WP_Error
+	 */
+	public function upgrade( string $stylesheet, array $args = array() ): bool|WP_Error {
 		return true;
 	}
 }
