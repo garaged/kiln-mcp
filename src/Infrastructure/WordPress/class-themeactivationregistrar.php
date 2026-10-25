@@ -19,8 +19,9 @@ use WP_Error;
  * Executes only a state-bound administrator-approved theme activation.
  */
 final class ThemeActivationRegistrar {
-	private const CATEGORY        = 'kiln-theme-management';
-	public const ROLLBACK_OPTION  = 'kiln_mcp_theme_rollback';
+	private const CATEGORY = 'kiln-theme-management';
+
+	public const ROLLBACK_OPTION = 'kiln_mcp_theme_rollback';
 
 	/**
 	 * Creates the activation adapter.
