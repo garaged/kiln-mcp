@@ -16,6 +16,8 @@ use InvalidArgumentException;
  */
 final class ThemeRequest {
 	/**
+	 * Creates one validated, immutable theme-effect request.
+	 *
 	 * @param string      $target                    Stylesheet or WordPress.org slug.
 	 * @param string      $identity                  SHA-256 artifact/version identity.
 	 * @param string      $expected_active_stylesheet Current active stylesheet.
@@ -45,14 +47,14 @@ final class ThemeRequest {
 			$expected_keys[] = 'artifact_id';
 		}
 
-		if ( ! ThemeAction::is_supported( $action ) || $expected_keys !== array_keys( $input ) ) {
+		if ( ! ThemeAction::is_supported( $action ) || array_keys( $input ) !== $expected_keys ) {
 			throw new InvalidArgumentException( 'Theme request is invalid.' );
 		}
 
-		$target = $input['target'];
-		$identity = $input['identity'];
-		$active = $input['expected_active_stylesheet'];
-		$token = $input['approval_token'];
+		$target      = $input['target'];
+		$identity    = $input['identity'];
+		$active      = $input['expected_active_stylesheet'];
+		$token       = $input['approval_token'];
 		$artifact_id = $input['artifact_id'] ?? null;
 
 		if ( ! is_string( $target )
