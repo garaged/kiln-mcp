@@ -15,9 +15,9 @@ use KilnMcp\Capability\ThemeManagement\ThemeArchiveScanner;
  * Keeps staging locations internal while exposing only opaque artifact identities.
  */
 final class ThemeArtifactStore {
-	private const OPTION_NAME    = 'kiln_mcp_theme_artifacts';
-	private const MAX_ARTIFACTS  = 10;
-	private const TTL_SECONDS    = 600;
+	private const OPTION_NAME   = 'kiln_mcp_theme_artifacts';
+	private const MAX_ARTIFACTS = 10;
+	private const TTL_SECONDS   = 600;
 
 	/**
 	 * Scans and retains one internal staging file for a short local approval window.
@@ -40,8 +40,8 @@ final class ThemeArtifactStore {
 			return null;
 		}
 
-		$id      = bin2hex( random_bytes( 16 ) );
-		$records = $this->records();
+		$id       = bin2hex( random_bytes( 16 ) );
+		$records  = $this->records();
 		$records[] = array(
 			'id'         => $id,
 			'digest'     => $digest,
@@ -175,7 +175,7 @@ final class ThemeArtifactStore {
 	 */
 	private function remove( string $path ): void {
 		if ( is_file( $path ) ) {
-			unlink( $path );
+			wp_delete_file( $path );
 		}
 	}
 }
