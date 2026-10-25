@@ -163,7 +163,7 @@ final class ThemeWordPressOrgRegistrar {
 	 * @param string $download_link Candidate catalog package URL.
 	 * @return bool Whether it is an official HTTPS theme ZIP URL.
 	 */
-	private static function is_official_download_link( string $download_link ): bool {
+	public static function is_official_download_link( string $download_link ): bool {
 		$parts = wp_parse_url( $download_link );
 		if ( ! is_array( $parts )
 			|| ! isset( $parts['scheme'], $parts['host'], $parts['path'] )
