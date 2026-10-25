@@ -37,24 +37,26 @@ final class ThemeArchiveScanner {
 		}
 
 		try {
-			if ( 0 === $archive->numFiles ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- ZipArchive public API.
+			$file_count = $archive->numFiles;
+			if ( 0 === $file_count ) {
 				return self::refused( 'empty_archive' );
 			}
 
-			if ( ThemeArchivePolicy::MAX_ENTRY_COUNT < $archive->numFiles ) {
+			if ( ThemeArchivePolicy::MAX_ENTRY_COUNT < $file_count ) {
 				return self::refused( 'archive_entry_limit' );
 			}
 
 			$total_uncompressed = 0;
-			for ( $index = 0; $index < $archive->numFiles; $index++ ) {
+			for ( $index = 0; $index < $file_count; $index++ ) {
 				$stat = $archive->statIndex( $index );
 				if ( false === $stat || ! isset( $stat['name'], $stat['size'], $stat['comp_size'] ) || ! is_string( $stat['name'] ) || ! is_int( $stat['size'] ) || ! is_int( $stat['comp_size'] ) ) {
 					return self::refused( 'archive_open' );
 				}
 
-				$attributes = 0;
+				$attributes       = 0;
 				$operating_system = 0;
-				$is_link = $archive->getExternalAttributesIndex( $index, $operating_system, $attributes ) && 0120000 === ( ( $attributes >> 16 ) & 0170000 );
+				$is_link          = $archive->getExternalAttributesIndex( $index, $operating_system, $attributes ) && 0120000 === ( ( $attributes >> 16 ) & 0170000 );
 				$reason = ThemeArchivePolicy::entry_rejection_reason( $stat['name'], $stat['size'], $stat['comp_size'], $is_link );
 				if ( null !== $reason ) {
 					return self::refused( $reason );
