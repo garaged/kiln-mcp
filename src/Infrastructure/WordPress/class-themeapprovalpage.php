@@ -19,6 +19,8 @@ final class ThemeApprovalPage {
 	private const NONCE_ACTION = 'kiln_mcp_issue_theme_approval';
 
 	/**
+	 * Creates the local theme approval issuer.
+	 *
 	 * @param ThemeApprovalStore $approval_store Local hash-only approval store.
 	 */
 	public function __construct(
