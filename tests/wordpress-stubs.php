@@ -475,6 +475,10 @@ function wp_get_theme(): WP_Theme {
 /**
  * @return bool
  */
+function wp_get_themes(): array {
+	return array();
+}
+
 function wp_is_block_theme(): bool {
 	return false;
 }
