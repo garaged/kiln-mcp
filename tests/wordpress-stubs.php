@@ -486,3 +486,10 @@ function wp_is_block_theme(): bool {
 function get_block_templates( array $query = array(), string $template_type = 'wp_template' ): array {
 	return array();
 }
+
+/**
+ * @return bool
+ */
+function wp_delete_file( string $file ): bool {
+	return true;
+}
