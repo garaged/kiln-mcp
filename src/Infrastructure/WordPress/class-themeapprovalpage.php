@@ -1,6 +1,6 @@
 <?php
 /**
- * Local administrator issuer for exact installed-theme activation approvals.
+ * Local administrator issuer for exact theme effect approvals.
  *
  * @package KilnMcp
  */
@@ -57,7 +57,7 @@ final class ThemeApprovalPage {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Kiln theme approval', 'kiln-mcp' ); ?></h1>
-			<p><?php esc_html_e( 'Issue a one-time, ten-minute approval for one exact installed theme activation. Copy the token now; it is never stored or shown again.', 'kiln-mcp' ); ?></p>
+			<p><?php esc_html_e( 'Issue a one-time, ten-minute approval for one exact theme effect. Copy the token now; it is never stored or shown again.', 'kiln-mcp' ); ?></p>
 			<?php if ( null !== $notice ) : ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?>">
 					<p><?php echo esc_html( $notice['message'] ); ?></p>
@@ -73,6 +73,11 @@ final class ThemeApprovalPage {
 				</table>
 				<?php submit_button( __( 'Issue one-time activation approval', 'kiln-mcp' ), 'primary', 'kiln_mcp_issue_theme_approval' ); ?>
 			</form>
+			<form method="post">
+				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
+				<p><?php esc_html_e( 'Rollback approval restores only the immediate prior theme recorded by Kiln after a successful activation.', 'kiln-mcp' ); ?></p>
+				<?php submit_button( __( 'Issue one-time rollback approval', 'kiln-mcp' ), 'secondary', 'kiln_mcp_issue_theme_rollback' ); ?>
+			</form>
 		</div>
 		<?php
 	}
@@ -83,6 +88,10 @@ final class ThemeApprovalPage {
 	 * @return array{type: string, message: string}|null Renderable page notice.
 	 */
 	private function handle_issue_request(): ?array {
+		if ( isset( $_POST['kiln_mcp_issue_theme_rollback'] ) ) {
+			return $this->issue_rollback_approval();
+		}
+
 		if ( ! isset( $_POST['kiln_mcp_issue_theme_approval'] ) ) {
 			return null;
 		}
@@ -105,6 +114,52 @@ final class ThemeApprovalPage {
 			$stylesheet,
 			hash( 'sha256', (string) $theme->get( 'Version' ) ),
 			wp_get_theme()->get_stylesheet()
+		);
+
+		return array(
+			'type'    => 'success',
+			'message' => sprintf(
+				/* translators: %s: one-time theme approval token. */
+				__( 'One-time approval token (copy now): %s', 'kiln-mcp' ),
+				$token
+			),
+		);
+	}
+
+	/**
+	 * Issues a rollback approval only for the exact immediate prior-theme record.
+	 *
+	 * @return array{type: string, message: string} Renderable page notice.
+	 */
+	private function issue_rollback_approval(): array {
+		check_admin_referer( self::NONCE_ACTION );
+
+		$record = get_option( ThemeActivationRegistrar::ROLLBACK_OPTION, array() );
+		if ( ! is_array( $record )
+			|| array_keys( $record ) !== array( 'previous', 'active' )
+			|| ! is_string( $record['previous'] )
+			|| ! is_string( $record['active'] )
+			|| $record['previous'] === $record['active']
+			|| ! hash_equals( wp_get_theme()->get_stylesheet(), $record['active'] ) ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'No current Kiln rollback is available for approval.', 'kiln-mcp' ),
+			);
+		}
+
+		$theme = wp_get_theme( $record['previous'] );
+		if ( ! $theme->exists() ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'The recorded prior theme is no longer available.', 'kiln-mcp' ),
+			);
+		}
+
+		$token = $this->approval_store->issue(
+			ThemeAction::ROLLBACK,
+			$record['previous'],
+			hash( 'sha256', (string) $theme->get( 'Version' ) ),
+			$record['active']
 		);
 
 		return array(
