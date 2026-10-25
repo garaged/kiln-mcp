@@ -151,6 +151,7 @@ final class ThemeApprovalPage {
 	private function retain_uploaded_archive(): array {
 		check_admin_referer( self::NONCE_ACTION );
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_handle_upload requires WordPress' original upload metadata; each admitted scalar is normalized below.
 		$uploaded_file = isset( $_FILES['kiln_mcp_theme_archive'] ) ? wp_unslash( $_FILES['kiln_mcp_theme_archive'] ) : null;
 		$name          = is_array( $uploaded_file ) && isset( $uploaded_file['name'] ) && is_string( $uploaded_file['name'] ) ? sanitize_file_name( $uploaded_file['name'] ) : '';
 		$tmp_name      = is_array( $uploaded_file ) && isset( $uploaded_file['tmp_name'] ) && is_string( $uploaded_file['tmp_name'] ) ? sanitize_text_field( $uploaded_file['tmp_name'] ) : '';
