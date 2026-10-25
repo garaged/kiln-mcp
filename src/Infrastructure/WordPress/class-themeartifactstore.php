@@ -42,7 +42,7 @@ final class ThemeArtifactStore {
 
 		$id       = bin2hex( random_bytes( 16 ) );
 		$records  = $this->records();
-		$records[] = array(
+		$records[]  = array(
 			'id'         => $id,
 			'digest'     => $digest,
 			'path'       => $internal_path,
