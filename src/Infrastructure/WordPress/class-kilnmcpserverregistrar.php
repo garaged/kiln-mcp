@@ -121,6 +121,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/site-health-summary',
 			'kiln/trash-post',
 			'kiln/update-page-draft',
+			'kiln/update-theme',
 			'kiln/update-post-draft',
 		);
 	}
