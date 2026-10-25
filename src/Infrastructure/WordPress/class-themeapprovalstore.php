@@ -122,7 +122,11 @@ final class ThemeApprovalStore {
 		$valid_records = array();
 		foreach ( $records as $record ) {
 			if ( is_array( $record ) ) {
-				/** @var array<string, mixed> $record */
+				/**
+				 * Narrows one option-storage record to string-keyed data.
+				 *
+				 * @var array<string, mixed> $record
+				 */
 				$valid_records[] = $record;
 			}
 		}
