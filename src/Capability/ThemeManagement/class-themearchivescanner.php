@@ -18,11 +18,11 @@ use ZipArchive;
  * matching scanner detail. This is a guardrail, not a malware certification.
  */
 final class ThemeArchiveScanner {
-	private const MAX_ENTRIES             = 2000;
-	private const MAX_MEMBER_BYTES        = 2097152;
-	private const MAX_UNCOMPRESSED_BYTES  = 26214400;
-	private const MAX_COMPRESSION_RATIO   = 100;
-	private const MAX_PHP_SOURCE_BYTES    = 1048576;
+	private const MAX_ENTRIES            = 2000;
+	private const MAX_MEMBER_BYTES       = 2097152;
+	private const MAX_UNCOMPRESSED_BYTES = 26214400;
+	private const MAX_COMPRESSION_RATIO  = 100;
+	private const MAX_PHP_SOURCE_BYTES   = 1048576;
 
 	/**
 	 * Returns a fixed rejection category, or null only for a fully admitted ZIP.
@@ -41,7 +41,7 @@ final class ThemeArchiveScanner {
 		}
 
 		try {
-			if ( 0 === $archive->numFiles || self::MAX_ENTRIES < $archive->numFiles ) {
+			if ( 0 === $archive->count() || self::MAX_ENTRIES < $archive->numFiles ) {
 				return 'archive_limit';
 			}
 
