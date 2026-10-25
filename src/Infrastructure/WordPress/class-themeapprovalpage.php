@@ -65,6 +65,16 @@ final class ThemeApprovalPage {
 					<p><?php echo esc_html( $notice['message'] ); ?></p>
 				</div>
 			<?php endif; ?>
+			<form method="post">
+				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><label for="kiln-mcp-wordpress-org-slug"><?php esc_html_e( 'WordPress.org theme slug', 'kiln-mcp' ); ?></label></th>
+						<td><input id="kiln-mcp-wordpress-org-slug" name="kiln_mcp_wordpress_org_slug" required type="text" /></td>
+					</tr>
+				</table>
+				<?php submit_button( __( 'Issue one-time WordPress.org installation approval', 'kiln-mcp' ), 'secondary', 'kiln_mcp_issue_wordpress_org_install_approval' ); ?>
+			</form>
 			<form method="post" enctype="multipart/form-data">
 				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
 				<table class="form-table"
@@ -118,6 +128,10 @@ final class ThemeApprovalPage {
 	 * @return array{type: string, message: string}|null Renderable page notice.
 	 */
 	private function handle_issue_request(): ?array {
+		if ( isset( $_POST['kiln_mcp_issue_wordpress_org_install_approval'] ) ) {
+			return $this->issue_wordpress_org_install_approval();
+		}
+
 		if ( isset( $_POST['kiln_mcp_issue_theme_install_approval'] ) ) {
 			return $this->issue_uploaded_install_approval();
 		}
@@ -165,6 +179,41 @@ final class ThemeApprovalPage {
 	}
 
 
+
+	/**
+	 * Issues an exact WordPress.org installation approval for the current release.
+	 *
+	 * @return array{type: string, message: string} Renderable page notice.
+	 */
+	private function issue_wordpress_org_install_approval(): array {
+		check_admin_referer( self::NONCE_ACTION );
+
+		$raw_slug = filter_input( INPUT_POST, 'kiln_mcp_wordpress_org_slug', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$slug     = is_string( $raw_slug ) ? sanitize_key( $raw_slug ) : '';
+		$theme    = '' === $slug ? null : ThemeWordPressOrgRegistrar::wordpress_org_theme( $slug );
+		if ( null === $theme ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'That WordPress.org theme is not available for approval.', 'kiln-mcp' ),
+			);
+		}
+
+		$token = $this->approval_store->issue(
+			ThemeAction::INSTALL_WORDPRESS_ORG,
+			$slug,
+			$theme['identity'],
+			wp_get_theme()->get_stylesheet()
+		);
+
+		return array(
+			'type'    => 'success',
+			'message' => sprintf(
+				/* translators: %s: one-time theme approval token. */
+				__( 'One-time approval token (copy now): %s', 'kiln-mcp' ),
+				$token
+			),
+		);
+	}
 
 	/**
 	 * Issues an exact installation approval only for a currently retained artifact.
