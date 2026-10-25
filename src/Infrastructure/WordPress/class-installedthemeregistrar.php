@@ -91,7 +91,7 @@ final class InstalledThemeRegistrar {
 	 * Returns no more than twenty fixed installed-theme metadata records.
 	 *
 	 * @param array<string, mixed> $input Closed empty input.
-	 * @return array<string, array<int, array<string, bool|string>>|WP_Error Fixed inventory or refusal.
+	 * @return array{items: array<int, array<string, bool|string>>}|WP_Error Fixed inventory or refusal.
 	 */
 	public function list_installed_themes( array $input ): array|WP_Error {
 		if ( array() !== $input ) {
