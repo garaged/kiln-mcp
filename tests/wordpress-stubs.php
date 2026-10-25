@@ -541,10 +541,13 @@ class Automatic_Upgrader_Skin {
 }
 
 class Theme_Upgrader {
+	public object $skin;
+
 	/**
 	 * @param object $skin Upgrader skin.
 	 */
 	public function __construct( object $skin ) {
+		$this->skin = $skin;
 	}
 
 	/**
