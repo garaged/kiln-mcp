@@ -477,7 +477,7 @@ function wp_get_theme( string $stylesheet = '' ): WP_Theme {
 }
 
 /**
- * @return bool
+ * @return void
  */
 function switch_theme( string $stylesheet ): void {
 }
