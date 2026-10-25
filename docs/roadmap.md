@@ -20,7 +20,8 @@
 | Milestone | Larger capability bundle | Primary user value | Security exit gate |
 |---|---|---|---|
 | M10 | Bounded theme-context discovery | Safe active-theme, template, template-part, and pattern awareness before development recommendations | Merged |\n| M11 | Bounded page discovery and read | Safe page planning context before any page authoring | Merged |
-| M12 | Safe page drafting | Create and revise page drafts after page discovery | Draft-only standard pages, `edit_pages`/exact `edit_post`, opaque token, no lifecycle or structural mutation |
+| M12 | Safe page drafting | Create and revise page drafts after page discovery | Merged |
+| M13 | Approval-gated theme management | Install, update, activate, and recover an exact theme safely | Local one-time admin approval; installed, WordPress.org, or local ZIP source; exact action/state binding; health-checked rollback |
 
 ## Definition of done
 
