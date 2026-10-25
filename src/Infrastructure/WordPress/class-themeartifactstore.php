@@ -131,8 +131,7 @@ final class ThemeArtifactStore {
 	 */
 	private function directory(): ?string {
 		$upload_directory = wp_upload_dir();
-		if ( ! is_array( $upload_directory )
-			|| ! isset( $upload_directory['basedir'] )
+		if ( ! isset( $upload_directory['basedir'] )
 			|| ! is_string( $upload_directory['basedir'] )
 			|| '' === $upload_directory['basedir'] ) {
 			return null;
