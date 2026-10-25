@@ -9,5 +9,6 @@ Pending manual acceptance.
 1. A refreshed `feature/m13-theme-management` branch passes `make container-preflight`, `make container-test`, and `make container-down`.
 2. An administrator can approve and activate one installed fixture theme, with the prior active theme recorded.
 3. Refused cases include missing/expired/replayed approvals, unknown source fields, remote URLs, paths, raw archive content, and subscriber calls.
-4. A failed health check rolls back only to the immediate prior installed theme.
-5. The test output and operator page reveal no archive content, source, path, URL, credential, or diagnostic stack detail.
+4. The local upload workflow refuses traversal, links, oversized/expansive archives, unexpected executable payloads, and representative high-risk or obfuscated PHP fixtures; a refused archive cannot receive an approval.
+5. A failed health check rolls back only to the immediate prior installed theme.
+6. The test output and operator page reveal no archive content, source, path, URL, credential, PHP finding, or diagnostic stack detail.
