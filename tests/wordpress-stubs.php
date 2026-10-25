@@ -503,3 +503,27 @@ function get_block_templates( array $query = array(), string $template_type = 'w
 
 function wp_delete_file( string $file ): void {
 }
+
+
+/**
+ * @return array<string, string>
+ */
+function wp_upload_dir( string|null $time = null, bool $create_dir = true, bool $refresh_cache = false ): array {
+	return array( 'basedir' => sys_get_temp_dir() );
+}
+
+/**
+ * @return bool
+ */
+function wp_mkdir_p( string $target ): bool {
+	return true;
+}
+
+/**
+ * @param array<string, mixed> $file      Uploaded file fields.
+ * @param array<string, mixed> $overrides Upload overrides.
+ * @return array<string, string>
+ */
+function wp_handle_upload( array $file, array $overrides = array(), string|null $time = null ): array {
+	return array();
+}
