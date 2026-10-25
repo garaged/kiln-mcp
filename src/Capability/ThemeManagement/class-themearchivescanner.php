@@ -57,7 +57,7 @@ final class ThemeArchiveScanner {
 				$attributes       = 0;
 				$operating_system = 0;
 				$is_link          = $archive->getExternalAttributesIndex( $index, $operating_system, $attributes ) && 0120000 === ( ( $attributes >> 16 ) & 0170000 );
-				$reason          = ThemeArchivePolicy::entry_rejection_reason( $stat['name'], $stat['size'], $stat['comp_size'], $is_link );
+				$reason           = ThemeArchivePolicy::entry_rejection_reason( $stat['name'], $stat['size'], $stat['comp_size'], $is_link );
 				if ( null !== $reason ) {
 					return self::refused( $reason );
 				}
