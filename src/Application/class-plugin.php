@@ -32,6 +32,7 @@ use KilnMcp\Infrastructure\WordPress\ThemeActivationRegistrar;
 use KilnMcp\Infrastructure\WordPress\ThemeApprovalStore;
 use KilnMcp\Infrastructure\WordPress\ThemeArtifactStore;
 use KilnMcp\Infrastructure\WordPress\ThemeRollbackRegistrar;
+use KilnMcp\Infrastructure\WordPress\ThemeWordPressOrgRegistrar;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalPage;
 use KilnMcp\Infrastructure\WordPress\WorkflowApprovalStore;
 
