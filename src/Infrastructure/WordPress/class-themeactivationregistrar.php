@@ -135,14 +135,17 @@ final class ThemeActivationRegistrar {
 			return $this->deny( 'activation_failed', 'kiln_theme_effect_failed' );
 		}
 
-		update_option(
+		if ( ! update_option(
 			self::ROLLBACK_OPTION,
 			array(
 				'previous' => $before,
 				'active'   => $request->target,
 			),
 			false
-		);
+		) ) {
+			switch_theme( $before );
+			return $this->deny( 'rollback_record_failed', 'kiln_theme_effect_failed' );
+		}
 
 		$this->audit_store->append( AuditReceipt::create( AuditReceipt::ACTIVATE_THEME_ABILITY_NAME, 'allowed', 'edit_theme_options', 1, gmdate( 'c' ) ) );
 
