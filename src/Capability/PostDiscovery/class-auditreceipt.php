@@ -40,6 +40,7 @@ final class AuditReceipt {
 	public const ACTIVATE_THEME_ABILITY_NAME             = 'kiln/activate-theme';
 	public const ROLLBACK_THEME_ABILITY_NAME             = 'kiln/rollback-theme';
 	public const INSTALL_UPLOADED_THEME_ABILITY_NAME     = 'kiln/install-uploaded-theme';
+	public const INSTALL_WORDPRESS_ORG_THEME_ABILITY_NAME = 'kiln/install-wordpress-org-theme';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
