@@ -40,9 +40,11 @@ final class ThemeArtifactStore {
 			return null;
 		}
 
-		$id       = bin2hex( random_bytes( 16 ) );
-		$records  = $this->records();
-		$records[]  = array(
+		$id = bin2hex( random_bytes( 16 ) );
+
+		$records = $this->records();
+
+		$records[] = array(
 			'id'         => $id,
 			'digest'     => $digest,
 			'path'       => $internal_path,
