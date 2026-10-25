@@ -36,9 +36,9 @@ final class AuditReceipt {
 	public const READ_PAGE_ABILITY_NAME                  = 'kiln/read-page';
 	public const CREATE_PAGE_DRAFT_ABILITY_NAME          = 'kiln/create-page-draft';
 	public const UPDATE_PAGE_DRAFT_ABILITY_NAME          = 'kiln/update-page-draft';
-	public const LIST_INSTALLED_THEMES_ABILITY_NAME     = 'kiln/list-installed-themes';
-	public const ACTIVATE_THEME_ABILITY_NAME            = 'kiln/activate-theme';
-	public const ROLLBACK_THEME_ABILITY_NAME            = 'kiln/rollback-theme';
+	public const LIST_INSTALLED_THEMES_ABILITY_NAME      = 'kiln/list-installed-themes';
+	public const ACTIVATE_THEME_ABILITY_NAME             = 'kiln/activate-theme';
+	public const ROLLBACK_THEME_ABILITY_NAME             = 'kiln/rollback-theme';
 
 	/**
 	 * Creates one fixed-shape redacted audit receipt.
