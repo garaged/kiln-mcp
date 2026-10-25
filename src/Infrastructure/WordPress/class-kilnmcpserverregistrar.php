@@ -99,6 +99,7 @@ final class KilnMcpServerRegistrar {
 			'kiln/create-tag',
 			'kiln/get-active-theme-context',
 			'kiln/list-active-theme-patterns',
+			'kiln/list-installed-themes',
 			'kiln/list-block-template-parts',
 			'kiln/list-block-templates',
 			'kiln/list-categories',
