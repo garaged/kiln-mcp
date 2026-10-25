@@ -75,6 +75,16 @@ final class ThemeApprovalPage {
 				</table>
 				<?php submit_button( __( 'Issue one-time WordPress.org installation approval', 'kiln-mcp' ), 'secondary', 'kiln_mcp_issue_wordpress_org_install_approval' ); ?>
 			</form>
+			<form method="post">
+				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><label for="kiln-mcp-theme-update-stylesheet"><?php esc_html_e( 'Installed theme stylesheet', 'kiln-mcp' ); ?></label></th>
+						<td><input id="kiln-mcp-theme-update-stylesheet" name="kiln_mcp_theme_update_stylesheet" required type="text" /></td>
+					</tr>
+				</table>
+				<?php submit_button( __( 'Issue one-time theme update approval', 'kiln-mcp' ), 'secondary', 'kiln_mcp_issue_theme_update_approval' ); ?>
+			</form>
 			<form method="post" enctype="multipart/form-data">
 				<?php wp_nonce_field( self::NONCE_ACTION ); ?>
 				<table class="form-table"
@@ -128,6 +138,10 @@ final class ThemeApprovalPage {
 	 * @return array{type: string, message: string}|null Renderable page notice.
 	 */
 	private function handle_issue_request(): ?array {
+		if ( isset( $_POST['kiln_mcp_issue_theme_update_approval'] ) ) {
+			return $this->issue_theme_update_approval();
+		}
+
 		if ( isset( $_POST['kiln_mcp_issue_wordpress_org_install_approval'] ) ) {
 			return $this->issue_wordpress_org_install_approval();
 		}
@@ -179,6 +193,37 @@ final class ThemeApprovalPage {
 	}
 
 
+
+	/**
+	 * Issues an exact installed-theme update approval for its current release.
+	 *
+	 * @return array{type: string, message: string} Renderable page notice.
+	 */
+	private function issue_theme_update_approval(): array {
+		check_admin_referer( self::NONCE_ACTION );
+
+		$raw_stylesheet = filter_input( INPUT_POST, 'kiln_mcp_theme_update_stylesheet', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$stylesheet     = is_string( $raw_stylesheet ) ? sanitize_key( $raw_stylesheet ) : '';
+		$theme          = '' === $stylesheet ? null : wp_get_theme( $stylesheet );
+		$update         = null === $theme || ! $theme->exists() ? null : ThemeUpdateRegistrar::available_update( $stylesheet );
+		if ( null === $update ) {
+			return array(
+				'type'    => 'error',
+				'message' => __( 'That installed theme has no approved update available.', 'kiln-mcp' ),
+			);
+		}
+
+		$token = $this->approval_store->issue( ThemeAction::UPDATE, $stylesheet, $update['identity'], wp_get_theme()->get_stylesheet() );
+
+		return array(
+			'type'    => 'success',
+			'message' => sprintf(
+				/* translators: %s: one-time theme approval token. */
+				__( 'One-time approval token (copy now): %s', 'kiln-mcp' ),
+				$token
+			),
+		);
+	}
 
 	/**
 	 * Issues an exact WordPress.org installation approval for the current release.
