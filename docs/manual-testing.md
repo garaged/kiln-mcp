@@ -1,5 +1,18 @@
 # Manual testing
 
+## Milestone 13
+
+Run the standard isolated WordPress contract:
+
+    make container-preflight
+    make container-test
+    make container-down
+
+Expected result: all prior coverage remains green; M13 registers only bounded installed-theme discovery and approval-gated activation, rollback, WordPress.org installation, scanned local-ZIP installation, and native theme-update effects.
+
+For the required local administrator acceptance—including exact one-time approvals, rejected archive cases, all three admitted sources, rollback, subscriber denial, and redaction—follow [M13 Rancher Desktop ARM64 acceptance](acceptance/m13-rancher-desktop-arm64.md).
+
+
 ## Milestone 11
 
 ### Automated real-WordPress contract

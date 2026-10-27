@@ -354,6 +354,14 @@ function sanitize_key( string $key ): string {
 	return $key;
 }
 
+function sanitize_file_name( string $filename ): string {
+	return $filename;
+}
+
+function sanitize_text_field( string $str ): string {
+	return $str;
+}
+
 function wp_unslash( mixed $value ): mixed {
 	return $value;
 }
@@ -436,6 +444,10 @@ function wp_insert_term( string $term, string $taxonomy, array $args = array() )
 
 
 class WP_Theme {
+	public function exists(): bool {
+		return true;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -468,15 +480,54 @@ class WP_Theme {
 /**
  * @return WP_Theme
  */
-function wp_get_theme(): WP_Theme {
+function wp_get_theme( string $stylesheet = '' ): WP_Theme {
 	return new WP_Theme();
 }
 
 /**
- * @return bool
+ * @return void
  */
+function switch_theme( string $stylesheet ): void {
+}
+
+/**
+ * @return array<string, WP_Theme>
+ */
+function wp_get_themes(): array {
+	return array();
+}
+
+/**
+ * @return void
+ */
+function wp_update_themes(): void {
+}
+
+/**
+ * @return mixed
+ */
+function get_site_transient( string $transient ): mixed {
+	return false;
+}
+
 function wp_is_block_theme(): bool {
 	return false;
+}
+
+/**
+ * @param string               $action Theme directory API action.
+ * @param array<string, mixed> $args   Theme directory API arguments.
+ * @return object Theme information or a refusal object.
+ */
+function themes_api( string $action, array $args = array() ): object {
+	return new WP_Error();
+}
+
+/**
+ * @return array<string, mixed>|false
+ */
+function wp_parse_url( string $url, int $component = -1 ): array|false {
+	return parse_url( $url );
 }
 
 /**
@@ -485,4 +536,64 @@ function wp_is_block_theme(): bool {
  */
 function get_block_templates( array $query = array(), string $template_type = 'wp_template' ): array {
 	return array();
+}
+
+function wp_delete_file( string $file ): void {
+}
+
+
+/**
+ * @return array<string, string>
+ */
+function wp_upload_dir( string|null $time = null, bool $create_dir = true, bool $refresh_cache = false ): array {
+	return array( 'basedir' => sys_get_temp_dir() );
+}
+
+/**
+ * @return bool
+ */
+function wp_mkdir_p( string $target ): bool {
+	return true;
+}
+
+/**
+ * @param array<string, mixed> $file      Uploaded file fields.
+ * @param array<string, mixed> $overrides Upload overrides.
+ * @return array<string, string>
+ */
+function wp_handle_upload( array $file, array $overrides = array(), string|null $time = null ): array {
+	return array();
+}
+
+
+class Automatic_Upgrader_Skin {
+}
+
+class Theme_Upgrader {
+	public object $skin;
+
+	/**
+	 * @param object $skin Upgrader skin.
+	 */
+	public function __construct( object $skin ) {
+		$this->skin = $skin;
+	}
+
+	/**
+	 * @param string               $package Local package path.
+	 * @param array<string, mixed> $args    Installation arguments.
+	 * @return bool|WP_Error
+	 */
+	public function install( string $package, array $args = array() ): bool|WP_Error {
+		return true;
+	}
+
+	/**
+	 * @param string               $stylesheet Theme stylesheet.
+	 * @param array<string, mixed> $args       Update arguments.
+	 * @return bool|WP_Error
+	 */
+	public function upgrade( string $stylesheet, array $args = array() ): bool|WP_Error {
+		return true;
+	}
 }

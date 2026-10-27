@@ -93,12 +93,16 @@ final class KilnMcpServerRegistrar {
 	 */
 	public static function core_ability_names(): array {
 		return array(
+			'kiln/activate-theme',
 			'kiln/create-category',
 			'kiln/create-page-draft',
 			'kiln/create-post-draft',
 			'kiln/create-tag',
 			'kiln/get-active-theme-context',
+			'kiln/install-uploaded-theme',
+			'kiln/install-wordpress-org-theme',
 			'kiln/list-active-theme-patterns',
+			'kiln/list-installed-themes',
 			'kiln/list-block-template-parts',
 			'kiln/list-block-templates',
 			'kiln/list-categories',
@@ -110,12 +114,14 @@ final class KilnMcpServerRegistrar {
 			'kiln/list-tags',
 			'kiln/publish-post',
 			'kiln/read-page',
+			'kiln/rollback-theme',
 			'kiln/read-post',
 			'kiln/restore-post',
 			'kiln/schedule-post-publication',
 			'kiln/site-health-summary',
 			'kiln/trash-post',
 			'kiln/update-page-draft',
+			'kiln/update-theme',
 			'kiln/update-post-draft',
 		);
 	}
